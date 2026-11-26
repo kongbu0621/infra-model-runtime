@@ -1,7 +1,11 @@
 {
+  "before-tests-raw.json": {
+    "bytes": 5252,
+    "sha256": "100e0c3fc7ffc94e53fb5b1bfecdeee41e9874ed6661c1e93d75dae96d23f0cd"
+  },
   "before-tests.log": {
-    "bytes": 5044,
-    "sha256": "e3e2588b2193ae6d738bfd61a737413705c0a30f58a36df1a93e3f8b8477090a"
+    "bytes": 5043,
+    "sha256": "5a3b84ab5ecd6d90b92c0e33e9f95a0a7d57a4f08cfa7bd51c1d99dd70a8de4c"
   },
   "before-validation.json": {
     "bytes": 912,
@@ -9,7 +13,7 @@
   },
   "doc-checks.json": {
     "bytes": 236,
-    "sha256": "80be00059b86b1841a8ca01a95a2108fe405f658b890530d620cc48d0c93ad99"
+    "sha256": "e51d8cc309dde5c316b605a27f62a589feb96ced86190f444f3e43a85b0ddcf0"
   },
   "source-manifest.json": {
     "bytes": 1136,

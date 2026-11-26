@@ -34,6 +34,8 @@
 "$IMR_PYTHON" -I -B -m unittest discover -s "$IMR_SOURCE/tests" -p 'test_r1*.py' -v
 ```
 
+旧失败日志的可读副本仅去除行尾空格，准确原文与 SHA-256 保存在[原日志封装](evidence/2026-11-26-r1-review/before-tests-raw.json)。
+
 原 [evidence/2026-11-26-r1](evidence/2026-11-26-r1/manifest.json)未改；本轮[证据清单](evidence/2026-11-26-r1-review/manifest.json)单列。README Mermaid 未变，仅核对文档链接、表格与图源码保持，不声称重新渲染。
 
 没有网络模型、供应商协议、安装升级、NAS 同步或真实使用效果验证；真实 SIGKILL/断电、Python 3.11、完整 MR/RV/CR 仍未通过。本轮继续原 PR，不合并。按原 R2 串行核心抽取与独立安装 → R3 实际接入/迁移接续。
