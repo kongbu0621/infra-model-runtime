@@ -1,0 +1,15 @@
+{
+  "source_head": "8080f8a85710e92c6bb2664e4b8ec25db51c6233",
+  "source_hashes": {
+    "src/infra_model_runtime/__init__.py": "9d671698d622cff356b3d49a23b9f106b86206ef93bf697cbbc963eb0b6ea747",
+    "src/infra_model_runtime/contracts.py": "ae166203f1a3c6fe8dbbc99786dc9bb9ff5b46ec6d7bea1a83c1babe9d32a835",
+    "src/infra_model_runtime/ports.py": "98d27b667cb404e1f99281d40dafc2983a2e0c68f63f8d86edd6ed6a5fcf3b94",
+    "src/infra_model_runtime/runtime.py": "ecbf72a717ef1df074fd29d3e6a654bb4eae6a200a1f8301a2a507707af172e9",
+    "examples/transaction_consumer.py": "ce87016c08ab2b4121fb2a2f21af7201aef98e26e76671c0859775cd1b7f150d"
+  },
+  "selected_tests": 4,
+  "expected_rejection_failures": 5,
+  "unexpected_errors": 0,
+  "test_code_source": "current reviewed test file; only selected preexisting behavior assertions run",
+  "scope": "failure regression on exact old implementation; not production incident"
+}

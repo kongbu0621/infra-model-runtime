@@ -1,0 +1,93 @@
+"""Valid combined capacity and explicit creation failure boundaries."""
+from dataclasses import replace
+import json
+from pathlib import Path
+import sqlite3
+import unittest
+import test_r1 as baseline
+from infra_model_runtime import ApplicationPort, Config, Observation, Profile, Request, Runtime, RuntimeFailure
+from infra_model_runtime.contracts import encode, fingerprint
+
+
+class CapacityCreationTests(unittest.TestCase):
+    setUp = baseline.R1Tests.setUp
+    failure = baseline.R1Tests.failure
+    snapshot = baseline.R1Tests.snapshot
+
+    def test_full_escaped_history_remains_readable_and_replayable(self):
+        caps = tuple(str(i) + 'c' * 63 for i in range(8))
+        profiles = tuple(Profile(str(i) + 'p' * 63, 'v' * 64, 'm' * 64, caps) for i in range(8))
+        config = Config(profiles, profiles[0].name, 'b' * 64, 'g' * 64,
+                        10**12, 10**12, 10**12, 256)
+        path = self.path.parent / 'escaped.sqlite'
+        rt = Runtime.create(path, config)
+        req = Request('n' * 64, 'r' * 64, 't' * 64, '\x00' * 8192,
+                      tuple(p.name for p in profiles), 1000000, 253402300799999,
+                      admission_ref='a' * 64, required_capabilities=caps)
+        registered = rt.register(req)
+        rt.issue(req.namespace, req.request_id, now_ms=100)
+        controls = [rt.cancel(req.namespace, req.request_id, str(i) + 'x' * 63) for i in range(8)]
+        output = '\x01' * 8192
+        observed = []
+        for revision in range(1, 17):
+            observed.append(rt.observe(req.namespace, req.request_id,
+                                       Observation(revision, True, 'ok', output, 10**12)))
+        with sqlite3.connect(path) as db:
+            raw = db.execute('SELECT body FROM rt_calls').fetchone()[0]
+            before = tuple(db.iterdump())
+        self.assertGreater(len(raw.encode('utf-8')), 524288)
+        self.assertLessEqual(len(raw.encode('utf-8')), 1048576)
+        rt = Runtime(path)
+        self.assertEqual(rt.register(req), registered)
+        for revision in range(1, 17):
+            self.assertEqual(rt.observe(req.namespace, req.request_id,
+                             Observation(revision, True, 'ok', output, 10**12)), observed[revision - 1])
+        for i, receipt in enumerate(controls):
+            self.assertEqual(rt.cancel(req.namespace, req.request_id, str(i) + 'x' * 63), receipt)
+        self.assertEqual(rt.read_result(req.namespace, req.request_id, history=True), output)
+        self.assertEqual(rt.status(req.namespace, req.request_id).observation_revision, 16)
+        budget = rt.budget()
+        self.assertEqual((budget.issued_calls, budget.input_bytes, budget.output_used,
+                          budget.output_reserved, budget.execution_occupied, budget.quarantined),
+                         (1, 8192, 10**12, 0, 0, True))
+        with sqlite3.connect(path) as db:
+            self.assertEqual(tuple(db.iterdump()), before)
+
+    def test_oversize_persisted_json_still_rejects_without_writes(self):
+        with sqlite3.connect(self.path) as db:
+            meta = json.loads(db.execute('SELECT body FROM rt_meta').fetchone()[0])
+            meta['oversize'] = 'x' * 1048576
+            db.execute('UPDATE rt_meta SET body=?,digest=?', (encode(meta), fingerprint(meta)))
+            before = tuple(db.iterdump())
+        self.failure('INTEGRITY_FAILURE', lambda: Runtime(self.path, self.app), 'not_applicable')
+        with sqlite3.connect(self.path) as db:
+            self.assertEqual(tuple(db.iterdump()), before)
+
+    def test_invalid_application_does_not_create_file_and_corrected_input_continues(self):
+        path = self.path.parent / 'preflight.sqlite'
+        invalid = ApplicationPort()
+        invalid.identity = 'invalid identity'
+        self.failure('INVALID_INPUT', lambda: Runtime.create(path, self.config, invalid))
+        self.assertFalse(path.exists())
+        Runtime.create(path, self.config)
+        self.assertEqual(Runtime(path).budget().issued_calls, 0)
+
+    def test_create_existing_store_has_structured_conflict_and_preserves_owner(self):
+        before = self.snapshot()
+        error = self.failure('CONFLICT', lambda: Runtime.create(self.path, self.config))
+        self.assertEqual(error.identity, ('create',))
+        self.assertEqual(self.snapshot(), before)
+        self.assertEqual(Runtime(self.path, self.app).budget().issued_calls, 0)
+
+    def test_create_missing_parent_has_structured_storage_error_then_retries(self):
+        path = self.path.parent / 'missing' / 'runtime.sqlite'
+        error = self.failure('STORAGE_ERROR', lambda: Runtime.create(path, self.config))
+        self.assertEqual(error.identity, ('create',))
+        self.assertFalse(path.exists())
+        path.parent.mkdir()
+        Runtime.create(path, self.config)
+        self.assertEqual(Runtime(path).budget().issued_calls, 0)
+
+
+if __name__ == '__main__':
+    unittest.main()

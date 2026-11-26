@@ -1,0 +1,30 @@
+{
+  "before-tests-raw.json": {
+    "bytes": 5252,
+    "sha256": "100e0c3fc7ffc94e53fb5b1bfecdeee41e9874ed6661c1e93d75dae96d23f0cd"
+  },
+  "before-tests.log": {
+    "bytes": 5043,
+    "sha256": "5a3b84ab5ecd6d90b92c0e33e9f95a0a7d57a4f08cfa7bd51c1d99dd70a8de4c"
+  },
+  "before-validation.json": {
+    "bytes": 912,
+    "sha256": "47a3a6011271847cde240f72eda4bb5be964bdce51a7e418dfebd4240323d2e4"
+  },
+  "doc-checks.json": {
+    "bytes": 236,
+    "sha256": "e51d8cc309dde5c316b605a27f62a589feb96ced86190f444f3e43a85b0ddcf0"
+  },
+  "source-manifest.json": {
+    "bytes": 1136,
+    "sha256": "2479f08ce6dffd392850d4b0950968ce6b3883252c9d9eba61083ff25cc6cc06"
+  },
+  "tests.log": {
+    "bytes": 5012,
+    "sha256": "12339d3a699b106ed1682b6c1c69ed02ca42edb4c30989be9599ce4419a214f0"
+  },
+  "validation.json": {
+    "bytes": 546,
+    "sha256": "0c4a837e91c82b06de1392ba5108db0ff366f91134d53f4571ebe4437449cf1c"
+  }
+}

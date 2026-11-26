@@ -1,0 +1,72 @@
+test_automatic_rollback_cannot_escape_into_autocommit (test_r1_review.R1ReviewTests.test_automatic_rollback_cannot_escape_into_autocommit) ... FAIL
+test_even_nonrollback_sql_error_permanently_closes_port (test_r1_review.R1ReviewTests.test_even_nonrollback_sql_error_permanently_closes_port) ... FAIL
+test_final_audit_cannot_swallow_nested_runtime_operation (test_r1_review.R1ReviewTests.test_final_audit_cannot_swallow_nested_runtime_operation) ... FAIL
+test_missing_control_blocks_reexecution_and_preserves_original (test_r1_review.R1ReviewTests.test_missing_control_blocks_reexecution_and_preserves_original) ...
+  test_missing_control_blocks_reexecution_and_preserves_original (test_r1_review.R1ReviewTests.test_missing_control_blocks_reexecution_and_preserves_original) (operation='application') ... FAIL
+  test_missing_control_blocks_reexecution_and_preserves_original (test_r1_review.R1ReviewTests.test_missing_control_blocks_reexecution_and_preserves_original) (operation='configure') ... FAIL
+
+======================================================================
+FAIL: test_automatic_rollback_cannot_escape_into_autocommit (test_r1_review.R1ReviewTests.test_automatic_rollback_cannot_escape_into_autocommit)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/r1-review-20261126/old-runtime/tests/test_r1_review.py", line 32, in test_automatic_rollback_cannot_escape_into_autocommit
+    self.assertEqual(self.snapshot(), before)
+AssertionError: {'app[34 chars], 1, 0, 1)], 'rt_calls': [], 'rt_controls': [][648 chars]5')]} != {'app[34 chars], 1, 1, 1)], 'rt_calls': [], 'rt_controls': [][648 chars]5')]}
+Diff is 886 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_even_nonrollback_sql_error_permanently_closes_port (test_r1_review.R1ReviewTests.test_even_nonrollback_sql_error_permanently_closes_port)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/r1-review-20261126/old-runtime/tests/test_r1_review.py", line 51, in test_even_nonrollback_sql_error_permanently_closes_port
+    self.assertEqual(errors, ['PORT_ERROR', 'PORT_VIOLATION'])
+AssertionError: Lists differ: ['PORT_ERROR'] != ['PORT_ERROR', 'PORT_VIOLATION']
+
+Second list contains 1 additional elements.
+First extra element 1:
+'PORT_VIOLATION'
+
+- ['PORT_ERROR']
++ ['PORT_ERROR', 'PORT_VIOLATION']
+
+======================================================================
+FAIL: test_final_audit_cannot_swallow_nested_runtime_operation (test_r1_review.R1ReviewTests.test_final_audit_cannot_swallow_nested_runtime_operation)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/r1-review-20261126/old-runtime/tests/test_r1_review.py", line 66, in test_final_audit_cannot_swallow_nested_runtime_operation
+    self.failure('PORT_VIOLATION', lambda: self.runtime.register(self.request()))
+  File "/tmp/r1-review-20261126/old-runtime/tests/test_r1.py", line 43, in failure
+    with self.assertRaises(RuntimeFailure) as caught:
+AssertionError: RuntimeFailure not raised
+
+======================================================================
+FAIL: test_missing_control_blocks_reexecution_and_preserves_original (test_r1_review.R1ReviewTests.test_missing_control_blocks_reexecution_and_preserves_original) (operation='application')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/r1-review-20261126/old-runtime/tests/test_r1_review.py", line 85, in test_missing_control_blocks_reexecution_and_preserves_original
+    self.failure('INTEGRITY_FAILURE', execute)
+  File "/tmp/r1-review-20261126/old-runtime/tests/test_r1.py", line 43, in failure
+    with self.assertRaises(RuntimeFailure) as caught:
+AssertionError: RuntimeFailure not raised
+
+======================================================================
+FAIL: test_missing_control_blocks_reexecution_and_preserves_original (test_r1_review.R1ReviewTests.test_missing_control_blocks_reexecution_and_preserves_original) (operation='configure')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/r1-review-20261126/old-runtime/tests/test_r1_review.py", line 85, in test_missing_control_blocks_reexecution_and_preserves_original
+    self.failure('INTEGRITY_FAILURE', execute)
+  File "/tmp/r1-review-20261126/old-runtime/tests/test_r1.py", line 45, in failure
+    self.assertEqual((caught.exception.code, caught.exception.commit_state), (code, state))
+AssertionError: Tuples differ: ('CONFLICT', 'not_committed') != ('INTEGRITY_FAILURE', 'not_committed')
+
+First differing element 0:
+'CONFLICT'
+'INTEGRITY_FAILURE'
+
+- ('CONFLICT', 'not_committed')
++ ('INTEGRITY_FAILURE', 'not_committed')
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.119s
+
+FAILED (failures=5)

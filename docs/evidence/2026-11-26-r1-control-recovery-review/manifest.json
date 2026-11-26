@@ -1,0 +1,18 @@
+{
+  "doc-checks.json": {
+    "bytes": 236,
+    "sha256": "14351cc7ee86ab4fd97ff316c653d53eeb9c782278e091e31cd0e370332eea0c"
+  },
+  "source-manifest.json": {
+    "bytes": 2020,
+    "sha256": "a6c4b3bd8fcb06c1877a260ddd30580e2576a5b03afc809304e4c66df6b7df40"
+  },
+  "tests.log": {
+    "bytes": 10548,
+    "sha256": "bfa1f386996906ff708d64ca961a0a7750496ca10388c016b0a80624d9f13080"
+  },
+  "validation.json": {
+    "bytes": 776,
+    "sha256": "d1dc59c09a835797e4160b4437bf568255466e225d8365be1043d2c09e905b42"
+  }
+}
