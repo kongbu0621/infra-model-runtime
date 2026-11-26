@@ -1,6 +1,6 @@
 # R1 最小合同与同库事务原型
 
-2026-11-26，`r1.*.v1` candidate。准确运行源码为 `0e9b069f1c9060432c993994354d9d7641a370f4`，验证见 [R1 记录](R1_VALIDATION.md)。这是可执行的源码原型，不是已发行包；没有网络、供应商协议、凭据解析、真实模型或现有业务库迁移。R2 将复用/抽取协议和配置实现，不能将本原型作为第二套生产调用器继续扩建。
+2026-11-26，`r1.state.v2` / `r1.store.v2` candidate，其余版本保持 v1。准确运行源码为 `306d9599a7064a0160e3322e0e3b281bc42e367b`，验证见 [R1 记录](R1_VALIDATION.md)与[事务复核](R1_REVIEW.md)。这是可执行的源码原型，不是已发行包；没有网络、供应商协议、凭据解析、真实模型或现有业务库迁移。R2 将复用/抽取协议和配置实现，不能将本原型作为第二套生产调用器继续扩建。
 
 ## 值对象与操作
 
@@ -14,7 +14,7 @@
 | `Receipt` | 操作、原身份、修订和指纹；登记回执稳定，后续状态另查 |
 | `IssuePermit` | 只在首次发放成功提交后返回的随机令牌及冻结目标；状态查询和重试不返回令牌 |
 | `Observation` | 递增修订、终结事实、unknown/ok/error、有界输出及可选累计输出单位；由可信调用器提供，尚无供应商证据解析 |
-| `CallState` | 冻结配置、issued/cancelled/terminal/outcome、用量、usage_final、未结预留、观察修订；不可用单个 SUCCESS 替代 |
+| `CallState` | 冻结配置、issued/cancelled/terminal/outcome、用量、usage_final、未结预留、观察修订、结果准确 UTF-8 字节的 result_sha256（无正文为 None）；不含结果正文，不可用单个 SUCCESS 替代 |
 | `RuntimeFailure` | 版本、错误码、合法操作身份、not_committed/committed/unknown/not_applicable；只描述本次本地操作，不推断远端事实 |
 
 | 入口 | 行为 |
@@ -34,11 +34,11 @@ Request 的完整输入含 input_text，不允许改正文后重用同一 Runtim
 
 ## 事务端口与所有权
 
-Runtime 拥有 `rt_*` 表；应用通过 `ApplicationPort` 与 `LocalTransaction` 操作自己拥有的 `app_*` 表。`initialize/register/issue/settle/cancel/read/audit` 在原 SQLite 事务内运行；`audit` 在操作之前和组合写入提交之前双向核对应用关联与 Runtime 不可变事实。缺一侧或账务投影不同即拒绝，不当作空状态恢复；即使没有应用表，也核对持久登记计数与 Runtime 行数，阻止单侧行缺失后重新登记。
+Runtime 拥有 `rt_*` 表；应用通过 `ApplicationPort` 与 `LocalTransaction` 操作自己拥有的 `app_*` 表。`initialize/register/issue/settle/cancel/read/audit` 在原 SQLite 事务内运行；`audit` 在操作之前和组合写入提交之前双向核对应用关联与 Runtime 不可变事实。缺一侧或账务投影不同即拒绝，不当作空状态恢复；即使没有应用表，也核对持久登记/控制计数与相应行数，阻止单侧行缺失后重新登记或重执行控制命令。应用结果投影应绑定 result_sha256，业务合格与当前许可分别判断。旧 r1.store.v1 合成库明确拒绝，不静默升级或重建。
 
 本原型所有写操作使用一个本地 SQLite 文件和 `BEGIN IMMEDIATE` 排序，读取使用一致快照。没有外部配置文件或内容读写，因此没有模拟原应用的文件锁/文件发布。R2/R3 须接续原 model-control 锁序与外部内容、原工作区绑定检查，不能用本轮 SQLite 证据替代它们。
 
-端口限本次回调、线程和连接；退出即失效。只允许受限 SELECT 和应用表读写，初始化另允许应用建表；拒绝 Runtime 表、事务控制、PRAGMA、ATTACH、触发器和用户函数。关闭语句缓存，防止已编译 SQL 绕过 authorizer。语句错误/限制被回调捕获也会使本次事务失败；嵌套 Runtime 调用同样不能被吞掉后提交。读取/audit 端口只读。
+端口限本次回调、线程和连接；退出即失效。只允许受限 SELECT 和应用表读写，初始化另允许应用建表；拒绝 Runtime 表、事务控制、PRAGMA、ATTACH、触发器和用户函数。关闭语句缓存，防止已编译 SQL 绕过 authorizer。语句错误/限制使端口持续失效，后续 SQL 不再执行；SQL 前后及回调出口均检查事务仍在，避免 SQLite 自动回滚后进入自动提交。错误被回调捕获也会使本次事务失败；嵌套 Runtime 调用同样不能被吞掉后提交。读取/audit 端口只读。
 
 这些约束用于可信同进程集成，**不是恶意 Python/SQL 或外部 I/O 沙箱**。回调不得访问私有连接、保留句柄、执行网络/文件/Ledger I/O 或长任务。外部准备须在事务外完成，业务端口在事务内复查原引用和资格。回调异常导致双方整体回滚；业务输出不合格应保存不可采用判断，不抛异常阻止真实费用结算。
 
