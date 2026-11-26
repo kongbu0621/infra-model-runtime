@@ -1,0 +1,17 @@
+{
+  "platform": "Linux aarch64",
+  "python": "3.12.3",
+  "source_commit": "ec9419b146994b6e001be2ab2f99880c6185f6cd",
+  "package_version": "0.1.0a1",
+  "build_tools": {
+    "setuptools": "84.0.0",
+    "wheel": "0.48.0",
+    "packaging": "26.3"
+  },
+  "runtime_dependencies": [],
+  "source_tests": 102,
+  "installed_tests": 102,
+  "real_model_calls": 0,
+  "independent_synthetic_posts": 2,
+  "minimum_python_311_runtime_tested": false
+}
