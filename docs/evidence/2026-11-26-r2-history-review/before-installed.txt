@@ -1,0 +1,334 @@
+Actual installed module: <project-venv>/lib/python3.12/site-packages/infra_model_runtime/__init__.py
+test_application_control_command_obeys_public_value_contract (test_r2_history_integrity.ModelHistoryTests.test_application_control_command_obeys_public_value_contract) ... 
+  test_application_control_command_obeys_public_value_contract (test_r2_history_integrity.ModelHistoryTests.test_application_control_command_obeys_public_value_contract) (value_type='NoneType') ... FAIL
+  test_application_control_command_obeys_public_value_contract (test_r2_history_integrity.ModelHistoryTests.test_application_control_command_obeys_public_value_contract) (value_type='bool') ... FAIL
+  test_application_control_command_obeys_public_value_contract (test_r2_history_integrity.ModelHistoryTests.test_application_control_command_obeys_public_value_contract) (value_type='int') ... FAIL
+  test_application_control_command_obeys_public_value_contract (test_r2_history_integrity.ModelHistoryTests.test_application_control_command_obeys_public_value_contract) (value_type='float') ... FAIL
+  test_application_control_command_obeys_public_value_contract (test_r2_history_integrity.ModelHistoryTests.test_application_control_command_obeys_public_value_contract) (value_type='list') ... FAIL
+  test_application_control_command_obeys_public_value_contract (test_r2_history_integrity.ModelHistoryTests.test_application_control_command_obeys_public_value_contract) (value_type='dict') ... FAIL
+  test_application_control_command_obeys_public_value_contract (test_r2_history_integrity.ModelHistoryTests.test_application_control_command_obeys_public_value_contract) (value_type='str') ... FAIL
+test_approval_must_match_configuration_at_its_history_position (test_r2_history_integrity.ModelHistoryTests.test_approval_must_match_configuration_at_its_history_position) ... FAIL
+test_configuration_expected_revision_is_exact (test_r2_history_integrity.ModelHistoryTests.test_configuration_expected_revision_is_exact) ... 
+  test_configuration_expected_revision_is_exact (test_r2_history_integrity.ModelHistoryTests.test_configuration_expected_revision_is_exact) (value='True') ... FAIL
+  test_configuration_expected_revision_is_exact (test_r2_history_integrity.ModelHistoryTests.test_configuration_expected_revision_is_exact) (value='1.0') ... FAIL
+  test_configuration_expected_revision_is_exact (test_r2_history_integrity.ModelHistoryTests.test_configuration_expected_revision_is_exact) (value='0') ... FAIL
+  test_configuration_expected_revision_is_exact (test_r2_history_integrity.ModelHistoryTests.test_configuration_expected_revision_is_exact) (value='2') ... FAIL
+test_configuration_revision_order_cannot_be_swapped (test_r2_history_integrity.ModelHistoryTests.test_configuration_revision_order_cannot_be_swapped) ... FAIL
+test_dispatch_deadline_is_integer_not_numerically_equal_float (test_r2_history_integrity.ModelHistoryTests.test_dispatch_deadline_is_integer_not_numerically_equal_float) ... FAIL
+test_missing_model_schema_is_an_integrity_error (test_r2_history_integrity.ModelHistoryTests.test_missing_model_schema_is_an_integrity_error) ... 
+  test_missing_model_schema_is_an_integrity_error (test_r2_history_integrity.ModelHistoryTests.test_missing_model_schema_is_an_integrity_error) (table='rt_model_meta', defect='table') ... FAIL
+  test_missing_model_schema_is_an_integrity_error (test_r2_history_integrity.ModelHistoryTests.test_missing_model_schema_is_an_integrity_error) (table='rt_model_meta', defect='column') ... FAIL
+  test_missing_model_schema_is_an_integrity_error (test_r2_history_integrity.ModelHistoryTests.test_missing_model_schema_is_an_integrity_error) (table='rt_model_configs', defect='table') ... FAIL
+  test_missing_model_schema_is_an_integrity_error (test_r2_history_integrity.ModelHistoryTests.test_missing_model_schema_is_an_integrity_error) (table='rt_model_configs', defect='column') ... FAIL
+  test_missing_model_schema_is_an_integrity_error (test_r2_history_integrity.ModelHistoryTests.test_missing_model_schema_is_an_integrity_error) (table='rt_model_controls', defect='table') ... FAIL
+  test_missing_model_schema_is_an_integrity_error (test_r2_history_integrity.ModelHistoryTests.test_missing_model_schema_is_an_integrity_error) (table='rt_model_controls', defect='column') ... FAIL
+  test_missing_model_schema_is_an_integrity_error (test_r2_history_integrity.ModelHistoryTests.test_missing_model_schema_is_an_integrity_error) (table='rt_model_jobs', defect='table') ... FAIL
+  test_missing_model_schema_is_an_integrity_error (test_r2_history_integrity.ModelHistoryTests.test_missing_model_schema_is_an_integrity_error) (table='rt_model_jobs', defect='column') ... FAIL
+  test_missing_model_schema_is_an_integrity_error (test_r2_history_integrity.ModelHistoryTests.test_missing_model_schema_is_an_integrity_error) (table='rt_model_payloads', defect='table') ... FAIL
+  test_missing_model_schema_is_an_integrity_error (test_r2_history_integrity.ModelHistoryTests.test_missing_model_schema_is_an_integrity_error) (table='rt_model_payloads', defect='column') ... FAIL
+  test_missing_model_schema_is_an_integrity_error (test_r2_history_integrity.ModelHistoryTests.test_missing_model_schema_is_an_integrity_error) (table='rt_model_copies', defect='table') ... FAIL
+  test_missing_model_schema_is_an_integrity_error (test_r2_history_integrity.ModelHistoryTests.test_missing_model_schema_is_an_integrity_error) (table='rt_model_copies', defect='column') ... FAIL
+test_sqlite_io_and_busy_are_not_relabelled_as_integrity (test_r2_history_integrity.ModelHistoryTests.test_sqlite_io_and_busy_are_not_relabelled_as_integrity) ... ok
+test_valid_configuration_aba_and_old_control_replay_remain_legal (test_r2_history_integrity.ModelHistoryTests.test_valid_configuration_aba_and_old_control_replay_remain_legal) ... ok
+
+======================================================================
+FAIL: test_application_control_command_obeys_public_value_contract (test_r2_history_integrity.ModelHistoryTests.test_application_control_command_obeys_public_value_contract) (value_type='NoneType')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<review-evidence>/before-tests/test_r2_history_integrity.py", line 105, in test_application_control_command_obeys_public_value_contract
+    self.rejects_without_repair()
+  File "<review-evidence>/before-tests/test_r2_history_integrity.py", line 55, in rejects_without_repair
+    with self.assertRaises(RuntimeFailure) as caught:operation()
+AssertionError: RuntimeFailure not raised
+
+======================================================================
+FAIL: test_application_control_command_obeys_public_value_contract (test_r2_history_integrity.ModelHistoryTests.test_application_control_command_obeys_public_value_contract) (value_type='bool')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<review-evidence>/before-tests/test_r2_history_integrity.py", line 105, in test_application_control_command_obeys_public_value_contract
+    self.rejects_without_repair()
+  File "<review-evidence>/before-tests/test_r2_history_integrity.py", line 55, in rejects_without_repair
+    with self.assertRaises(RuntimeFailure) as caught:operation()
+AssertionError: RuntimeFailure not raised
+
+======================================================================
+FAIL: test_application_control_command_obeys_public_value_contract (test_r2_history_integrity.ModelHistoryTests.test_application_control_command_obeys_public_value_contract) (value_type='int')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<review-evidence>/before-tests/test_r2_history_integrity.py", line 105, in test_application_control_command_obeys_public_value_contract
+    self.rejects_without_repair()
+  File "<review-evidence>/before-tests/test_r2_history_integrity.py", line 55, in rejects_without_repair
+    with self.assertRaises(RuntimeFailure) as caught:operation()
+AssertionError: RuntimeFailure not raised
+
+======================================================================
+FAIL: test_application_control_command_obeys_public_value_contract (test_r2_history_integrity.ModelHistoryTests.test_application_control_command_obeys_public_value_contract) (value_type='float')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<review-evidence>/before-tests/test_r2_history_integrity.py", line 105, in test_application_control_command_obeys_public_value_contract
+    self.rejects_without_repair()
+  File "<review-evidence>/before-tests/test_r2_history_integrity.py", line 55, in rejects_without_repair
+    with self.assertRaises(RuntimeFailure) as caught:operation()
+AssertionError: RuntimeFailure not raised
+
+======================================================================
+FAIL: test_application_control_command_obeys_public_value_contract (test_r2_history_integrity.ModelHistoryTests.test_application_control_command_obeys_public_value_contract) (value_type='list')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<review-evidence>/before-tests/test_r2_history_integrity.py", line 105, in test_application_control_command_obeys_public_value_contract
+    self.rejects_without_repair()
+  File "<review-evidence>/before-tests/test_r2_history_integrity.py", line 55, in rejects_without_repair
+    with self.assertRaises(RuntimeFailure) as caught:operation()
+AssertionError: RuntimeFailure not raised
+
+======================================================================
+FAIL: test_application_control_command_obeys_public_value_contract (test_r2_history_integrity.ModelHistoryTests.test_application_control_command_obeys_public_value_contract) (value_type='dict')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<review-evidence>/before-tests/test_r2_history_integrity.py", line 105, in test_application_control_command_obeys_public_value_contract
+    self.rejects_without_repair()
+  File "<review-evidence>/before-tests/test_r2_history_integrity.py", line 55, in rejects_without_repair
+    with self.assertRaises(RuntimeFailure) as caught:operation()
+AssertionError: RuntimeFailure not raised
+
+======================================================================
+FAIL: test_application_control_command_obeys_public_value_contract (test_r2_history_integrity.ModelHistoryTests.test_application_control_command_obeys_public_value_contract) (value_type='str')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<review-evidence>/before-tests/test_r2_history_integrity.py", line 105, in test_application_control_command_obeys_public_value_contract
+    self.rejects_without_repair()
+  File "<review-evidence>/before-tests/test_r2_history_integrity.py", line 55, in rejects_without_repair
+    with self.assertRaises(RuntimeFailure) as caught:operation()
+AssertionError: RuntimeFailure not raised
+
+======================================================================
+FAIL: test_approval_must_match_configuration_at_its_history_position (test_r2_history_integrity.ModelHistoryTests.test_approval_must_match_configuration_at_its_history_position)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<review-evidence>/before-tests/test_r2_history_integrity.py", line 76, in test_approval_must_match_configuration_at_its_history_position
+    self.rejects_without_repair()
+  File "<review-evidence>/before-tests/test_r2_history_integrity.py", line 55, in rejects_without_repair
+    with self.assertRaises(RuntimeFailure) as caught:operation()
+AssertionError: RuntimeFailure not raised
+
+======================================================================
+FAIL: test_configuration_expected_revision_is_exact (test_r2_history_integrity.ModelHistoryTests.test_configuration_expected_revision_is_exact) (value='True')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<review-evidence>/before-tests/test_r2_history_integrity.py", line 91, in test_configuration_expected_revision_is_exact
+    self.rejects_without_repair()
+  File "<review-evidence>/before-tests/test_r2_history_integrity.py", line 55, in rejects_without_repair
+    with self.assertRaises(RuntimeFailure) as caught:operation()
+AssertionError: RuntimeFailure not raised
+
+======================================================================
+FAIL: test_configuration_expected_revision_is_exact (test_r2_history_integrity.ModelHistoryTests.test_configuration_expected_revision_is_exact) (value='1.0')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<review-evidence>/before-tests/test_r2_history_integrity.py", line 91, in test_configuration_expected_revision_is_exact
+    self.rejects_without_repair()
+  File "<review-evidence>/before-tests/test_r2_history_integrity.py", line 55, in rejects_without_repair
+    with self.assertRaises(RuntimeFailure) as caught:operation()
+AssertionError: RuntimeFailure not raised
+
+======================================================================
+FAIL: test_configuration_expected_revision_is_exact (test_r2_history_integrity.ModelHistoryTests.test_configuration_expected_revision_is_exact) (value='0')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<review-evidence>/before-tests/test_r2_history_integrity.py", line 91, in test_configuration_expected_revision_is_exact
+    self.rejects_without_repair()
+  File "<review-evidence>/before-tests/test_r2_history_integrity.py", line 55, in rejects_without_repair
+    with self.assertRaises(RuntimeFailure) as caught:operation()
+AssertionError: RuntimeFailure not raised
+
+======================================================================
+FAIL: test_configuration_expected_revision_is_exact (test_r2_history_integrity.ModelHistoryTests.test_configuration_expected_revision_is_exact) (value='2')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<review-evidence>/before-tests/test_r2_history_integrity.py", line 91, in test_configuration_expected_revision_is_exact
+    self.rejects_without_repair()
+  File "<review-evidence>/before-tests/test_r2_history_integrity.py", line 55, in rejects_without_repair
+    with self.assertRaises(RuntimeFailure) as caught:operation()
+AssertionError: RuntimeFailure not raised
+
+======================================================================
+FAIL: test_configuration_revision_order_cannot_be_swapped (test_r2_history_integrity.ModelHistoryTests.test_configuration_revision_order_cannot_be_swapped)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<review-evidence>/before-tests/test_r2_history_integrity.py", line 66, in test_configuration_revision_order_cannot_be_swapped
+    self.rejects_without_repair()
+  File "<review-evidence>/before-tests/test_r2_history_integrity.py", line 55, in rejects_without_repair
+    with self.assertRaises(RuntimeFailure) as caught:operation()
+AssertionError: RuntimeFailure not raised
+
+======================================================================
+FAIL: test_dispatch_deadline_is_integer_not_numerically_equal_float (test_r2_history_integrity.ModelHistoryTests.test_dispatch_deadline_is_integer_not_numerically_equal_float)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<review-evidence>/before-tests/test_r2_history_integrity.py", line 118, in test_dispatch_deadline_is_integer_not_numerically_equal_float
+    self.rejects_without_repair();self.path.write_bytes(original)
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<review-evidence>/before-tests/test_r2_history_integrity.py", line 55, in rejects_without_repair
+    with self.assertRaises(RuntimeFailure) as caught:operation()
+AssertionError: RuntimeFailure not raised
+
+======================================================================
+FAIL: test_missing_model_schema_is_an_integrity_error (test_r2_history_integrity.ModelHistoryTests.test_missing_model_schema_is_an_integrity_error) (table='rt_model_meta', defect='table')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<review-evidence>/before-tests/test_r2_history_integrity.py", line 134, in test_missing_model_schema_is_an_integrity_error
+    self.rejects_without_repair()
+  File "<review-evidence>/before-tests/test_r2_history_integrity.py", line 56, in rejects_without_repair
+    self.assertEqual(caught.exception.code,'INTEGRITY_FAILURE')
+AssertionError: 'STORAGE_ERROR' != 'INTEGRITY_FAILURE'
+- STORAGE_ERROR
++ INTEGRITY_FAILURE
+
+
+======================================================================
+FAIL: test_missing_model_schema_is_an_integrity_error (test_r2_history_integrity.ModelHistoryTests.test_missing_model_schema_is_an_integrity_error) (table='rt_model_meta', defect='column')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<review-evidence>/before-tests/test_r2_history_integrity.py", line 134, in test_missing_model_schema_is_an_integrity_error
+    self.rejects_without_repair()
+  File "<review-evidence>/before-tests/test_r2_history_integrity.py", line 56, in rejects_without_repair
+    self.assertEqual(caught.exception.code,'INTEGRITY_FAILURE')
+AssertionError: 'STORAGE_ERROR' != 'INTEGRITY_FAILURE'
+- STORAGE_ERROR
++ INTEGRITY_FAILURE
+
+
+======================================================================
+FAIL: test_missing_model_schema_is_an_integrity_error (test_r2_history_integrity.ModelHistoryTests.test_missing_model_schema_is_an_integrity_error) (table='rt_model_configs', defect='table')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<review-evidence>/before-tests/test_r2_history_integrity.py", line 134, in test_missing_model_schema_is_an_integrity_error
+    self.rejects_without_repair()
+  File "<review-evidence>/before-tests/test_r2_history_integrity.py", line 56, in rejects_without_repair
+    self.assertEqual(caught.exception.code,'INTEGRITY_FAILURE')
+AssertionError: 'STORAGE_ERROR' != 'INTEGRITY_FAILURE'
+- STORAGE_ERROR
++ INTEGRITY_FAILURE
+
+
+======================================================================
+FAIL: test_missing_model_schema_is_an_integrity_error (test_r2_history_integrity.ModelHistoryTests.test_missing_model_schema_is_an_integrity_error) (table='rt_model_configs', defect='column')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<review-evidence>/before-tests/test_r2_history_integrity.py", line 134, in test_missing_model_schema_is_an_integrity_error
+    self.rejects_without_repair()
+  File "<review-evidence>/before-tests/test_r2_history_integrity.py", line 56, in rejects_without_repair
+    self.assertEqual(caught.exception.code,'INTEGRITY_FAILURE')
+AssertionError: 'STORAGE_ERROR' != 'INTEGRITY_FAILURE'
+- STORAGE_ERROR
++ INTEGRITY_FAILURE
+
+
+======================================================================
+FAIL: test_missing_model_schema_is_an_integrity_error (test_r2_history_integrity.ModelHistoryTests.test_missing_model_schema_is_an_integrity_error) (table='rt_model_controls', defect='table')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<review-evidence>/before-tests/test_r2_history_integrity.py", line 134, in test_missing_model_schema_is_an_integrity_error
+    self.rejects_without_repair()
+  File "<review-evidence>/before-tests/test_r2_history_integrity.py", line 56, in rejects_without_repair
+    self.assertEqual(caught.exception.code,'INTEGRITY_FAILURE')
+AssertionError: 'STORAGE_ERROR' != 'INTEGRITY_FAILURE'
+- STORAGE_ERROR
++ INTEGRITY_FAILURE
+
+
+======================================================================
+FAIL: test_missing_model_schema_is_an_integrity_error (test_r2_history_integrity.ModelHistoryTests.test_missing_model_schema_is_an_integrity_error) (table='rt_model_controls', defect='column')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<review-evidence>/before-tests/test_r2_history_integrity.py", line 134, in test_missing_model_schema_is_an_integrity_error
+    self.rejects_without_repair()
+  File "<review-evidence>/before-tests/test_r2_history_integrity.py", line 56, in rejects_without_repair
+    self.assertEqual(caught.exception.code,'INTEGRITY_FAILURE')
+AssertionError: 'STORAGE_ERROR' != 'INTEGRITY_FAILURE'
+- STORAGE_ERROR
++ INTEGRITY_FAILURE
+
+
+======================================================================
+FAIL: test_missing_model_schema_is_an_integrity_error (test_r2_history_integrity.ModelHistoryTests.test_missing_model_schema_is_an_integrity_error) (table='rt_model_jobs', defect='table')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<review-evidence>/before-tests/test_r2_history_integrity.py", line 134, in test_missing_model_schema_is_an_integrity_error
+    self.rejects_without_repair()
+  File "<review-evidence>/before-tests/test_r2_history_integrity.py", line 56, in rejects_without_repair
+    self.assertEqual(caught.exception.code,'INTEGRITY_FAILURE')
+AssertionError: 'STORAGE_ERROR' != 'INTEGRITY_FAILURE'
+- STORAGE_ERROR
++ INTEGRITY_FAILURE
+
+
+======================================================================
+FAIL: test_missing_model_schema_is_an_integrity_error (test_r2_history_integrity.ModelHistoryTests.test_missing_model_schema_is_an_integrity_error) (table='rt_model_jobs', defect='column')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<review-evidence>/before-tests/test_r2_history_integrity.py", line 134, in test_missing_model_schema_is_an_integrity_error
+    self.rejects_without_repair()
+  File "<review-evidence>/before-tests/test_r2_history_integrity.py", line 56, in rejects_without_repair
+    self.assertEqual(caught.exception.code,'INTEGRITY_FAILURE')
+AssertionError: 'STORAGE_ERROR' != 'INTEGRITY_FAILURE'
+- STORAGE_ERROR
++ INTEGRITY_FAILURE
+
+
+======================================================================
+FAIL: test_missing_model_schema_is_an_integrity_error (test_r2_history_integrity.ModelHistoryTests.test_missing_model_schema_is_an_integrity_error) (table='rt_model_payloads', defect='table')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<review-evidence>/before-tests/test_r2_history_integrity.py", line 134, in test_missing_model_schema_is_an_integrity_error
+    self.rejects_without_repair()
+  File "<review-evidence>/before-tests/test_r2_history_integrity.py", line 56, in rejects_without_repair
+    self.assertEqual(caught.exception.code,'INTEGRITY_FAILURE')
+AssertionError: 'STORAGE_ERROR' != 'INTEGRITY_FAILURE'
+- STORAGE_ERROR
++ INTEGRITY_FAILURE
+
+
+======================================================================
+FAIL: test_missing_model_schema_is_an_integrity_error (test_r2_history_integrity.ModelHistoryTests.test_missing_model_schema_is_an_integrity_error) (table='rt_model_payloads', defect='column')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<review-evidence>/before-tests/test_r2_history_integrity.py", line 134, in test_missing_model_schema_is_an_integrity_error
+    self.rejects_without_repair()
+  File "<review-evidence>/before-tests/test_r2_history_integrity.py", line 56, in rejects_without_repair
+    self.assertEqual(caught.exception.code,'INTEGRITY_FAILURE')
+AssertionError: 'STORAGE_ERROR' != 'INTEGRITY_FAILURE'
+- STORAGE_ERROR
++ INTEGRITY_FAILURE
+
+
+======================================================================
+FAIL: test_missing_model_schema_is_an_integrity_error (test_r2_history_integrity.ModelHistoryTests.test_missing_model_schema_is_an_integrity_error) (table='rt_model_copies', defect='table')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<review-evidence>/before-tests/test_r2_history_integrity.py", line 134, in test_missing_model_schema_is_an_integrity_error
+    self.rejects_without_repair()
+  File "<review-evidence>/before-tests/test_r2_history_integrity.py", line 56, in rejects_without_repair
+    self.assertEqual(caught.exception.code,'INTEGRITY_FAILURE')
+AssertionError: 'STORAGE_ERROR' != 'INTEGRITY_FAILURE'
+- STORAGE_ERROR
++ INTEGRITY_FAILURE
+
+
+======================================================================
+FAIL: test_missing_model_schema_is_an_integrity_error (test_r2_history_integrity.ModelHistoryTests.test_missing_model_schema_is_an_integrity_error) (table='rt_model_copies', defect='column')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<review-evidence>/before-tests/test_r2_history_integrity.py", line 134, in test_missing_model_schema_is_an_integrity_error
+    self.rejects_without_repair()
+  File "<review-evidence>/before-tests/test_r2_history_integrity.py", line 56, in rejects_without_repair
+    self.assertEqual(caught.exception.code,'INTEGRITY_FAILURE')
+AssertionError: 'STORAGE_ERROR' != 'INTEGRITY_FAILURE'
+- STORAGE_ERROR
++ INTEGRITY_FAILURE
+
+
+----------------------------------------------------------------------
+Ran 8 tests in 0.725s
+
+FAILED (failures=26)

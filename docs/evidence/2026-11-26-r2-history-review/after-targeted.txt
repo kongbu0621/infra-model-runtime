@@ -1,0 +1,13 @@
+test_application_control_command_obeys_public_value_contract (test_r2_history_integrity.ModelHistoryTests.test_application_control_command_obeys_public_value_contract) ... ok
+test_approval_must_match_configuration_at_its_history_position (test_r2_history_integrity.ModelHistoryTests.test_approval_must_match_configuration_at_its_history_position) ... ok
+test_configuration_expected_revision_is_exact (test_r2_history_integrity.ModelHistoryTests.test_configuration_expected_revision_is_exact) ... ok
+test_configuration_revision_order_cannot_be_swapped (test_r2_history_integrity.ModelHistoryTests.test_configuration_revision_order_cannot_be_swapped) ... ok
+test_dispatch_deadline_is_integer_not_numerically_equal_float (test_r2_history_integrity.ModelHistoryTests.test_dispatch_deadline_is_integer_not_numerically_equal_float) ... ok
+test_missing_model_schema_is_an_integrity_error (test_r2_history_integrity.ModelHistoryTests.test_missing_model_schema_is_an_integrity_error) ... ok
+test_sqlite_io_and_busy_are_not_relabelled_as_integrity (test_r2_history_integrity.ModelHistoryTests.test_sqlite_io_and_busy_are_not_relabelled_as_integrity) ... ok
+test_valid_configuration_aba_and_old_control_replay_remain_legal (test_r2_history_integrity.ModelHistoryTests.test_valid_configuration_aba_and_old_control_replay_remain_legal) ... ok
+
+----------------------------------------------------------------------
+Ran 8 tests in 0.848s
+
+OK
