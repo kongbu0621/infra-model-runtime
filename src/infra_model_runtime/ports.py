@@ -43,6 +43,8 @@ class LocalTransaction:
         return sqlite3.SQLITE_OK if allowed else sqlite3.SQLITE_DENY
 
     def execute(self, sql, parameters=()):
+        # Track this invocation, not an exception being handled by the caller.
+        primary_error = False
         try:
             require(self._active and threading.get_ident() == self._thread, "PORT_CLOSED")
             # SQLite may automatically roll back the enclosing transaction on
@@ -77,17 +79,39 @@ class LocalTransaction:
                 require(size <= 32768, "PORT_LIMIT")
                 require(self._connection.in_transaction, "PORT_VIOLATION")
                 return Rows(rows, cursor.rowcount)
+            except BaseException:
+                primary_error = True
+                raise
             finally:
-                cursor.close()
+                try:
+                    cursor.close()
+                except BaseException:
+                    if not primary_error:
+                        raise
         except BaseException as exc:
+            primary_error = True
             self._poisoned = True
             if isinstance(exc, sqlite3.DatabaseError):
                 raise RuntimeFailure("PORT_ERROR") from None
             raise
         finally:
             if self._active and threading.get_ident() == self._thread:
-                self._connection.set_progress_handler(None, 0)
-                self._connection.set_authorizer(None)
+                cleanup_error = None
+                # Always attempt both resets so one failure cannot skip the
+                # other guard. Any cleanup failure invalidates this port even
+                # when callback code catches it; the owner must roll back.
+                for reset in (lambda: self._connection.set_progress_handler(None, 0),
+                              lambda: self._connection.set_authorizer(None)):
+                    try:
+                        reset()
+                    except BaseException as exc:
+                        self._poisoned = True
+                        if cleanup_error is None:
+                            cleanup_error = exc
+                if cleanup_error is not None and not primary_error:
+                    if isinstance(cleanup_error, sqlite3.DatabaseError):
+                        raise RuntimeFailure("PORT_ERROR") from None
+                    raise cleanup_error
 
 
 class ApplicationPort:
