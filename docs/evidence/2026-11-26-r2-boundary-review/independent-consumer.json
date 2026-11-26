@@ -1,0 +1,1 @@
+{"protocols": ["/v1/chat/completions", "/v1/responses"], "sends": 2, "results": [{"ok": true}, {"ok": true}], "output_used": 4, "output_reserved": 0, "execution_occupied": 0}

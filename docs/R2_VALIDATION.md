@@ -1,5 +1,9 @@
 # R2 串行候选包验证
 
+当前安装已接续至 `afccbde`，源码/安装各 110 项通过，准确 wheel 与五类修复见 [边界复核](R2_BOUNDARY_REVIEW.md)。下方 `ec9419b` / 102 项保留为前轮历史证据，不能作为当前安装绑定。
+
+## 首轮交付与前轮安装
+
 2026-11-26，GX10 / Linux aarch64 / Python 3.12.3 / 本地 ext4。固定运行源码和测试为 `ec9419b146994b6e001be2ab2f99880c6185f6cd`，包版本 `0.1.0a1`，候选合同见 [R2 合同](R2_CONTRACT.md)。后续文档提交不改变这 12 个运行模块的安装绑定。
 
 wheel：`infra_model_runtime-0.1.0a1-py3-none-any.whl`，SHA-256：`174e0cdabe1eaaf9588bac3880dfd8ff0932cc288cca7bd94e53e4cf7c7d0043`。逐模块摘要、执行结果和证据摘要见[本轮证据](evidence/2026-11-26-r2-serial-package/manifest.json)及[构建绑定](evidence/2026-11-26-r2-serial-package/build-manifest.json)。

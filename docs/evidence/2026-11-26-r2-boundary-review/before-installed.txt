@@ -1,0 +1,88 @@
+<project-venv>/lib/python3.12/site-packages/infra_model_runtime/__init__.py
+test_export_rechecks_read_right_at_intent_commit_before_external_io (test_r2_review.ReviewTests.test_export_rechecks_read_right_at_intent_commit_before_external_io) ... FAIL
+test_export_stops_before_write_when_read_reveals_changed_store_binding (test_r2_review.ReviewTests.test_export_stops_before_write_when_read_reveals_changed_store_binding) ... FAIL
+test_generation_rejects_opaque_values_without_deepcopy (test_r2_review.ReviewTests.test_generation_rejects_opaque_values_without_deepcopy) ... FAIL
+test_http_child_uses_parent_package_even_when_cwd_shadows_it (test_r2_review.ReviewTests.test_http_child_uses_parent_package_even_when_cwd_shadows_it) ... FAIL
+test_r1_rejects_persisted_mixed_version_even_with_valid_digests (test_r2_review.ReviewTests.test_r1_rejects_persisted_mixed_version_even_with_valid_digests) ... FAIL
+test_r1_rejects_r2_observation_before_mutating_original_call (test_r2_review.ReviewTests.test_r1_rejects_r2_observation_before_mutating_original_call) ... FAIL
+
+======================================================================
+FAIL: test_export_rechecks_read_right_at_intent_commit_before_external_io (test_r2_review.ReviewTests.test_export_rechecks_read_right_at_intent_commit_before_external_io)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<review>/tests/test_r2_review.py", line 97, in test_export_rechecks_read_right_at_intent_commit_before_external_io
+    self.assertEqual(port.calls,[],'export performed I/O after pre-intent revocation')
+AssertionError: Lists differ: ['read', 'put', 'read'] != []
+
+First list contains 3 additional elements.
+First extra element 0:
+'read'
+
+- ['read', 'put', 'read']
++ [] : export performed I/O after pre-intent revocation
+
+======================================================================
+FAIL: test_export_stops_before_write_when_read_reveals_changed_store_binding (test_r2_review.ReviewTests.test_export_stops_before_write_when_read_reveals_changed_store_binding)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<review>/tests/test_r2_review.py", line 113, in test_export_stops_before_write_when_read_reveals_changed_store_binding
+    self.assertEqual(port.writes,0,'bytes were written after a visible target change')
+AssertionError: 1 != 0 : bytes were written after a visible target change
+
+======================================================================
+FAIL: test_generation_rejects_opaque_values_without_deepcopy (test_r2_review.ReviewTests.test_generation_rejects_opaque_values_without_deepcopy)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<review>/tests/test_r2_review.py", line 122, in test_generation_rejects_opaque_values_without_deepcopy
+    Generation('example','job','answer',value,('openai',),32,1000)
+  File "<string>", line 11, in __init__
+  File "<project-venv>/lib/python3.12/site-packages/infra_model_runtime/model.py", line 28, in __post_init__
+    self.request()
+  File "<project-venv>/lib/python3.12/site-packages/infra_model_runtime/model.py", line 31, in request
+    return Request(**asdict(self), required_capabilities=('text', 'json_object'),
+                     ^^^^^^^^^^^^
+  File "/usr/lib/python3.12/dataclasses.py", line 1322, in asdict
+    return _asdict_inner(obj, dict_factory)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/dataclasses.py", line 1332, in _asdict_inner
+    f.name: _asdict_inner(getattr(obj, f.name), dict)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/dataclasses.py", line 1379, in _asdict_inner
+    return copy.deepcopy(obj)
+           ^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/copy.py", line 143, in deepcopy
+    y = copier(memo)
+        ^^^^^^^^^^^^
+  File "<review>/tests/test_r2_review.py", line 119, in __deepcopy__
+    def __deepcopy__(self,memo):self.copied=True;raise AssertionError('caller deepcopy executed')
+                                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: caller deepcopy executed
+
+======================================================================
+FAIL: test_http_child_uses_parent_package_even_when_cwd_shadows_it (test_r2_review.ReviewTests.test_http_child_uses_parent_package_even_when_cwd_shadows_it)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<review>/tests/test_r2_review.py", line 48, in test_http_child_uses_parent_package_even_when_cwd_shadows_it
+    self.assertFalse((self.root/'shadow-used').exists(),'child loaded caller-directory package')
+AssertionError: True is not false : child loaded caller-directory package
+
+======================================================================
+FAIL: test_r1_rejects_persisted_mixed_version_even_with_valid_digests (test_r2_review.ReviewTests.test_r1_rejects_persisted_mixed_version_even_with_valid_digests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<review>/tests/test_r2_review.py", line 72, in test_r1_rejects_persisted_mixed_version_even_with_valid_digests
+    with self.assertRaises(RuntimeFailure) as caught:Runtime(path)
+AssertionError: RuntimeFailure not raised
+
+======================================================================
+FAIL: test_r1_rejects_r2_observation_before_mutating_original_call (test_r2_review.ReviewTests.test_r1_rejects_r2_observation_before_mutating_original_call)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<review>/tests/test_r2_review.py", line 55, in test_r1_rejects_r2_observation_before_mutating_original_call
+    with self.assertRaises(RuntimeFailure) as caught:
+AssertionError: RuntimeFailure not raised
+
+----------------------------------------------------------------------
+Ran 6 tests in 0.192s
+
+FAILED (failures=6)
