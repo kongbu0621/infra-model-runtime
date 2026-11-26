@@ -12,6 +12,7 @@ from .contracts import (Budget, CallState, Config, IssuePermit, Observation,
                         Profile, Receipt, Request, RuntimeFailure, encode,
                         fingerprint, identifier, integer, require, restore, text)
 from .ports import ApplicationPort, LocalTransaction
+from .storage import validate_call, validate_control
 
 
 # Two current payloads and sixteen observation payloads can require up to
@@ -156,6 +157,8 @@ class Runtime:
 
     def _audit(self, db):
         facts = tuple((restore(Request, call["request"]), self._state(call)) for call in self._calls(db))
+        revision = self._metadata(db)["revision"]
+        require(all(state.configuration_revision <= revision for _, state in facts), "INTEGRITY_FAILURE")
         self._hook(db, "audit", facts, readonly=True)
 
     @staticmethod
@@ -186,6 +189,15 @@ class Runtime:
             restore(Config, value["config"])
             integer(value["revision"], 1)
             integer(value["clock_ms"], 0, 253402300799999)
+            controls = db.execute("SELECT operation,control_id,body,digest FROM rt_controls LIMIT 129").fetchall()
+            require(len(controls) == value["control_count"], "INTEGRITY_FAILURE")
+            revisions = []
+            for operation, control_id, body, digest in controls:
+                revision = validate_control(self._unpack((body, digest)), operation, control_id)
+                if operation == "configure":
+                    revisions.append(revision)
+            require(value["revision"] == len(revisions) + 1 and
+                    sorted(revisions) == list(range(2, len(revisions) + 2)), "INTEGRITY_FAILURE")
             return value
         except RuntimeFailure as exc:
             if exc.code in ("NOT_FOUND", "INVALID_INPUT"):
@@ -204,14 +216,7 @@ class Runtime:
 
     def _call(self, db, namespace, request_id):
         row = db.execute("SELECT body,digest FROM rt_calls WHERE namespace=? AND request_id=?", (namespace, request_id)).fetchone()
-        value = self._unpack(row)
-        request = restore(Request, value["request"])
-        require((request.namespace, request.request_id) == (namespace, request_id), "INTEGRITY_FAILURE")
-        restore(Profile, value["profile"])
-        for key in ("issued", "cancelled", "terminal", "quarantined", "usage_final"):
-            require(type(value[key]) is bool, "INTEGRITY_FAILURE")
-        require(not value["terminal"] or value["issued"], "INTEGRITY_FAILURE")
-        return value
+        return validate_call(self._unpack(row), namespace, request_id)
 
     @staticmethod
     def _save_call(db, value):
@@ -251,8 +256,9 @@ class Runtime:
             return restore(Receipt, saved["receipt"])
         require(db.execute("SELECT count(*) FROM rt_controls").fetchone()[0] < 128, "LIMIT")
 
-    def _save_control(self, db, operation, control_id, intent, receipt):
-        meta = self._metadata(db)
+    def _save_control(self, db, operation, control_id, intent, receipt, *, meta=None):
+        if meta is None:
+            meta = self._metadata(db)
         value = dict(intent=intent, receipt=asdict(receipt))
         db.execute("INSERT INTO rt_controls VALUES(?,?,?,?)", (operation, control_id, encode(value), fingerprint(value)))
         meta["control_count"] += 1
@@ -274,8 +280,7 @@ class Runtime:
                     (meta["config"]["budget_pool"], meta["config"]["resource_group"]), "CONFLICT")
             meta.update(config=asdict(config), revision=meta["revision"] + 1)
             receipt = Receipt("configure", (control_id,), meta["revision"], intent)
-            self._save_meta(db, meta)
-            self._save_control(db, "configure", control_id, intent, receipt)
+            self._save_control(db, "configure", control_id, intent, receipt, meta=meta)
             return receipt
 
     def change_application(self, control_id, command, callback):
