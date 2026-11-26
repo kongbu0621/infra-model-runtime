@@ -8,7 +8,7 @@ import time
 from urllib.parse import urlsplit
 
 from . import configuration as config
-from .protocol import MAX_RESPONSE, json_value
+from .protocol import MAX_RESPONSE
 from ._boundary import encoded
 
 HEADER_LIMIT = 16384
@@ -139,30 +139,35 @@ def _stop(process):
         pass
 
 
+# Match only JSON escape spellings. Credentials are printable ASCII, so non-ASCII
+# escapes cannot contribute a credential byte and remain untouched. Each pass
+# shrinks or preserves the bounded input; never recursively parse peer JSON.
+_JSON_ESCAPE = re.compile(rb'\\(?:u([0-9a-fA-F]{4})|(["\\/bfnrt]))')
+_JSON_SIMPLE = {b'"':b'"', b'\\':b'\\', b'/':b'/', b'b':b'\b',
+                b'f':b'\f', b'n':b'\n', b'r':b'\r', b't':b'\t'}
+
+
+def _ascii_json_escape(match):
+    if match[1] is not None:
+        value = int(match[1], 16)
+        return bytes((value,)) if value < 128 else match[0]
+    return _JSON_SIMPLE[match[2]]
+
+
 def _echoes_secret(raw, secret):
-    if secret.encode('ascii') in raw:
+    token = secret.encode('ascii')
+    if token in raw:
         return True
-    try:
-        envelope=json_value(raw)
-    except (ValueError, TypeError, UnicodeError, RecursionError):
-        return False
-    # Decode the provider envelope and one embedded business JSON value. Both
-    # passes have protocol byte/depth/node bounds; arbitrary nested decoding is
-    # deliberately excluded. Never persist either recognized credential form.
-    pending=[(envelope,True)]
-    while pending:
-        value, embedded=pending.pop()
-        if type(value) is dict:
-            pending.extend((v,embedded) for pair in value.items() for v in pair)
-        elif type(value) is list:
-            pending.extend((v,embedded) for v in value)
-        elif type(value) is str:
-            if secret in value:return True
-            if embedded and value.lstrip().startswith(('{','[')):
-                try:
-                    pending.append((json_value(value.encode('utf-8')),False))
-                except (ValueError, TypeError, UnicodeError, RecursionError):
-                    pass
+    # Inspect the provider envelope and one embedded JSON encoding even when
+    # framing, UTF-8, duplicate keys, or JSON limits make full parsing impossible.
+    # Scan a private copy only; non-secret captures retain their exact wire bytes.
+    for _ in range(2):
+        decoded = _JSON_ESCAPE.sub(_ascii_json_escape, raw)
+        if token in decoded:
+            return True
+        if decoded == raw:
+            break
+        raw = decoded
     return False
 
 
