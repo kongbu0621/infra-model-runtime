@@ -465,6 +465,10 @@ class ModelRuntime:
         with s._transaction(('payload', namespace, request_id, role), readonly=True) as db:
             call = s._call(db, namespace, request_id)
             s._hook(db, 'read', restore(Request, call['request']), s._state(call), True, None, readonly=True)
+            if role == 'response':
+                # Absence before capture is a normal state. Once capture exists,
+                # the audited payload must exist too, including a zero-byte body.
+                require(s._job(db, namespace, request_id)['capture'] is not None, 'UNAVAILABLE')
             return s._payload(db, namespace, request_id, role)
 
 
