@@ -1,0 +1,24 @@
+{
+  "runtime_source_commit": "8e52debf73f22a306bc607d5174d8a9e11d7a41e",
+  "test_source_commit": "8e52debf73f22a306bc607d5174d8a9e11d7a41e",
+  "previous_runtime_source": "c720608edfaa1c22ebf05edaca8f32638e2c34a3",
+  "new_regression_methods": 6,
+  "previous_failure_subcases": 18,
+  "source_tests": 129,
+  "installed_tests": 129,
+  "real_models": "NOT_RUN",
+  "only_synthetic_credentials": true,
+  "paths_redacted_in_published_logs": true,
+  "files": {
+    "before-source.txt": "98b1d5b9e980e7804c8c35c6ff03e0f3801a85e7b20b9ab7c1b9c0580c1ecfd8",
+    "before-installed.txt": "8fb4983cd513427b4543cb2029c0e82f9c1ee0130bc9425df0c1fcd0db9a9d8c",
+    "after-targeted.txt": "ec235faf323899b3b8ded596a2b533a86c2d34582f97fd28547b9cd03ac85ab2",
+    "source-tests.txt": "7e3017cdc7317d9c3cc71c6e2a07385211ffd0a22e703d41fa328fb9ba52d30e",
+    "installed-tests.txt": "201361ada2bc6c58006d48e817628e7cee79926df646ca5da36ceeebf2dc2f05",
+    "compile.json": "43ed623986001dac6ff523f5c5f814c65c78778eb1aa4d80e644f851cca6048e",
+    "build-manifest.json": "3927476f387ed2cc5aa358cc7ed3ee582785e03c7e5a8397cf79afbb64afb9dd",
+    "environment-preservation.json": "f95b03551a3458812dcf0d0a0ebb97fbf50ec8a22ee42bf7f5b64dde6a4ebb2c",
+    "independent-consumer.json": "6c418b0721769cf9c40bb66a250a060eb7aa07b0c1da80680859e89ebf9026c2",
+    "version-transition.json": "9b388626da77097cb9a37260dc118d5a881b01904c1af6637f7c3fdebfc629f5"
+  }
+}
