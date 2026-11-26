@@ -1,0 +1,22 @@
+{
+  "status": "PASS",
+  "date": "2026-11-26",
+  "source_commit": "0e9b069f1c9060432c993994354d9d7641a370f4",
+  "python": "3.12.3",
+  "platform": "aarch64",
+  "sqlite": "3.45.1",
+  "source_files": 7,
+  "compiled_optimization_levels": [
+    0,
+    1,
+    2
+  ],
+  "test_count": 29,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 0,
+  "mode": "explicit source import from outside repository; existing project interpreter; temporary synthetic SQLite databases",
+  "network_model_calls": 0,
+  "package_installed": false,
+  "business_deployment_changed": false
+}
