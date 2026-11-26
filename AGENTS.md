@@ -1,6 +1,6 @@
 # Working in this repository
 
-当前接续为 R2 串行包候选，先读 docs/R2_CONTRACT.md、docs/R2_VALIDATION.md 与 docs/R2_COPY_REVIEW.md。运行/公共原候选安装保持 9536de7，新增测试 0626a14；源码/安装各 138 项通过，含三个新增方法内的 48 组内容导出提交与 I/O 恢复组合。12 模块、原 wheel/RECORD 与完整环境保持，本轮无新运行修复或安装。前轮响应可用性修复与六个旧库接续证据保留。消费者业务安装未变；运行包复用 R1 事务核心，r2.store.v1 与旧 R1 合成库互相拒绝。后续按 R3 消费/迁移缺口接续，所有新 PR 不自动合并。
+当前接续为 R2 串行包候选，先读 docs/R2_CONTRACT.md、docs/R2_VALIDATION.md 与 docs/R2_CONTROL_REVIEW.md。运行/公共原候选安装保持 9536de7，新增测试 c3a4797；源码/安装各 141 项通过，新增三个方法包含 70 组后续控制与原调用结算组合。明确 recover 可先结算再因状态读权返回 DENIED，不得把读错误当作结算回滚。12 模块、原 wheel/RECORD 与环境保持，本轮无新运行修复或安装。历轮载荷分类、导出及旧库接续证据保持各自时点。消费者业务安装未变；后续按 R3 消费/迁移接续，所有新 PR 不自动合并。
 
 ## R1 历史基线
 
