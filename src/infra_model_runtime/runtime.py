@@ -14,6 +14,12 @@ from .contracts import (Budget, CallState, Config, IssuePermit, Observation,
 from .ports import ApplicationPort, LocalTransaction
 
 
+# Two current payloads and sixteen observation payloads can require up to
+# 18 * 8192 * 6 escaped JSON bytes, plus bounded IDs, receipts and metadata.
+# Keep the serialized bound consistent with the public combined capacities.
+_MAX_STORED_JSON_BYTES = 1048576
+
+
 class Runtime:
     """Owns rt_* records; hooks own app_* records in the same transaction.
 
@@ -34,13 +40,23 @@ class Runtime:
     def create(cls, path, config, application=None):
         require(type(config) is Config)
         path = Path(path).absolute()
-        # Explicit creation only. Failure leaves an incomplete file for inspection.
-        fd = os.open(path, os.O_CREAT | os.O_EXCL | os.O_WRONLY, 0o600)
-        os.close(fd)
+        application = application if application is not None else ApplicationPort()
+        identifier(application.identity)
+        # Preflight before touching the path. Storage failures after exclusive
+        # creation may still leave an incomplete file for inspection.
+        try:
+            fd = os.open(path, os.O_CREAT | os.O_EXCL | os.O_WRONLY, 0o600)
+        except FileExistsError:
+            raise RuntimeFailure("CONFLICT", identity=("create",)) from None
+        except OSError:
+            raise RuntimeFailure("STORAGE_ERROR", identity=("create",)) from None
+        try:
+            os.close(fd)
+        except OSError:
+            raise RuntimeFailure("STORAGE_ERROR", identity=("create",)) from None
         instance = object.__new__(cls)
         instance.path = path
-        instance.application = application if application is not None else ApplicationPort()
-        identifier(instance.application.identity)
+        instance.application = application
         instance._active = False
         instance._store_id = secrets.token_hex(16)
         with instance._transaction(("create",), initializing=True) as db:
@@ -146,7 +162,7 @@ class Runtime:
     def _unpack(row):
         require(row is not None, "NOT_FOUND")
         raw, digest = row
-        require(type(raw) is str and len(raw.encode("utf-8")) <= 524288, "INTEGRITY_FAILURE")
+        require(type(raw) is str and len(raw.encode("utf-8")) <= _MAX_STORED_JSON_BYTES, "INTEGRITY_FAILURE")
         try:
             value = json.loads(raw)
             require(encode(value) == raw and fingerprint(value) == digest, "INTEGRITY_FAILURE")
