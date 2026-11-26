@@ -28,7 +28,10 @@ class Generation:
         self.request()
 
     def request(self):
-        return Request(**asdict(self), required_capabilities=('text', 'json_object'),
+        # Validate caller values before any serialization/deep-copy can run them.
+        return Request(self.namespace, self.request_id, self.task, self.input_text,
+                       self.allowed_profiles, self.output_limit, self.deadline_ms,
+                       self.admission_ref, required_capabilities=('text', 'json_object'),
                        output_contract='json_object.v1', version='r2.request.v1')
 
 
@@ -448,10 +451,14 @@ class ModelRuntime:
 
     def copy_payload(self, namespace, request_id, role, port):
         """Optional idempotent export, verified by exact readback; never regenerates."""
-        identifier(port.identity)
+        target = port.identity
+        identifier(target)
         raw = self.read_payload(namespace, request_id, role)
-        s = self._store;target = port.identity
+        s = self._store
         with s._transaction(('copy-intent', namespace, request_id, role)) as db:
+            # Order the export grant with application revocation before external I/O.
+            call = s._call(db, namespace, request_id)
+            s._hook(db, 'read', restore(Request, call['request']), s._state(call), True, None, readonly=True)
             key = ContentKey(s._metadata(db)['store_id'], namespace, request_id, role,
                              hashlib.sha256(raw).hexdigest(), len(raw))
             row = db.execute('SELECT body,digest FROM rt_model_copies WHERE namespace=? AND request_id=? AND role=?',
@@ -465,8 +472,10 @@ class ModelRuntime:
                 require(item['target'] == target and item['key'] == asdict(key), 'CONFLICT')
         require(port.identity == target, 'STALE')
         found = port.read(key)
+        require(port.identity == target, 'STALE')
         if found is None:
             port.put_if_absent(key, raw)
+            require(port.identity == target, 'STALE')
             found = port.read(key)
         require(type(found) is bytes and found == raw, 'INTEGRITY_FAILURE')
         require(port.identity == target, 'STALE')

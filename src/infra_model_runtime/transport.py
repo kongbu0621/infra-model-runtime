@@ -1,7 +1,6 @@
 """Bounded subprocess HTTP transport: deadline also covers DNS and slow peers."""
 import http.client
 import json
-import os
 import re
 import subprocess
 import sys
@@ -232,10 +231,13 @@ def invoke(profile, suffix, wire, secret):
     # Bind the child to this exact package, including unpacked-wheel validation.
     from pathlib import Path
     package = str(Path(__file__).resolve().parents[1])
-    env = dict(os.environ, PYTHONPATH=package, PYTHONDONTWRITEBYTECODE='1')
+    # -m puts the caller's cwd ahead of PYTHONPATH. Isolate Python startup and
+    # explicitly load the parent's package; credentials still travel only on stdin.
+    bootstrap = ('import sys; sys.path.insert(0, sys.argv[1]); '
+                 'from infra_model_runtime.transport import _child; _child()')
     deadline = time.monotonic()+profile['timeout_seconds']
-    process = subprocess.Popen([sys.executable,'-B','-m',__name__], stdin=subprocess.PIPE,
-                               stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, env=env, close_fds=True)
+    process = subprocess.Popen([sys.executable,'-I','-B','-c',bootstrap,package], stdin=subprocess.PIPE,
+                               stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, close_fds=True)
     output = b''
     try:
         # communicate enforces an absolute wall deadline, including sending input to the child.

@@ -439,6 +439,8 @@ class Runtime:
         require(type(observation) in (Observation, WireObservation))
         data = asdict(observation)
         call = self._call(db, namespace, request_id)
+        require((call['request']['version'], observation.version) in (
+            ('r1.request.v1', 'r1.observation.v1'), ('r2.request.v1', 'r2.observation.v1')))
         require(call["issued"], "NOT_ISSUED")
         old = call["observations"].get(str(observation.revision))
         if old is not None:

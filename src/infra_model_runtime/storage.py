@@ -62,6 +62,9 @@ def validate_call(value, namespace, request_id):
             entry = observations[key]
             shape(entry, ('observation', 'receipt'))
             observation = restore(Observation, entry['observation'])
+            require((request.version, observation.version) in (
+                ('r1.request.v1', 'r1.observation.v1'), ('r2.request.v1', 'r2.observation.v1')),
+                'INTEGRITY_FAILURE')
             require(observation.revision == int(key), 'INTEGRITY_FAILURE')
             exact_receipt(entry['receipt'], 'observe', (namespace, request_id),
                           observation.revision, fingerprint(entry['observation']))
