@@ -4,11 +4,12 @@ import hashlib
 import hmac
 import json
 import secrets
+import sqlite3
 import time
 from . import configuration, credentials, protocol, transport
 from ._boundary import encoded, field
 from .contracts import (Config, Profile, Request, Receipt, WireObservation, RuntimeFailure,
-                        encode, fingerprint, identifier, integer, require, restore)
+                        encode, fingerprint, identifier, integer, require, restore, text)
 from .runtime import Runtime
 from .content import ContentKey
 
@@ -171,6 +172,7 @@ class _ModelStore(Runtime):
                     require(self._data(db, 'rt_model_configs', item['receipt']['revision']) == intent['config'], 'INTEGRITY_FAILURE')
                 elif operation == 'application':
                     require(set(intent) == {'command'}, 'INTEGRITY_FAILURE')
+                    text(intent['command'])
                     require(core['intent'] == fingerprint(intent['command']), 'INTEGRITY_FAILURE')
                 else:
                     require(core['intent'] == fingerprint(dict(operation=operation, intent=intent)), 'INTEGRITY_FAILURE')
@@ -185,9 +187,21 @@ class _ModelStore(Runtime):
             require(len(histories) == meta['control_count'], 'INTEGRITY_FAILURE')
             require(sorted(i['sequence'] for i in histories.values()) == list(range(1, len(histories)+1)), 'INTEGRITY_FAILURE')
             expected_approvals = {}
+            current_revision = 1
+            historical_cfg = self._data(db, 'rt_model_configs', current_revision)
             for key, item in sorted(histories.items(), key=lambda pair: pair[1]['sequence']):
+                intent = item['intent']
+                if item['operation'] == 'configure':
+                    integer(intent['expected'], 1, 128)
+                    require(intent['expected'] == current_revision and
+                            item['receipt']['revision'] == current_revision + 1, 'INTEGRITY_FAILURE')
+                    current_revision += 1
+                    historical_cfg = intent['config']
+                elif item['operation'] == 'approve':
+                    require(historical_cfg['profiles'].get(intent['profile_name']) == intent['profile'], 'INTEGRITY_FAILURE')
                 if item['operation'] in ('approve', 'revoke'):
-                    expected_approvals[item['intent']['profile_name']] = key
+                    expected_approvals[intent['profile_name']] = key
+            require(current_revision == meta['revision'], 'INTEGRITY_FAILURE')
             require(control['approvals'] == expected_approvals, 'INTEGRITY_FAILURE')
             require(db.execute('SELECT count(*) FROM rt_model_meta').fetchone()[0] == 1, 'INTEGRITY_FAILURE')
             for name, key in control['approvals'].items():
@@ -215,6 +229,7 @@ class _ModelStore(Runtime):
                 expected_payloads.update(((ns, rid, 'input'), (ns, rid, 'wire')))
                 if call['issued']:
                     integer(job['dispatch_at_ms'], 1, 253402300799999)
+                    integer(job['dispatch_deadline_ms'], 1, 253402300799999)
                     require(job['dispatch_deadline_ms'] == min(r.deadline_ms, job['dispatch_at_ms'] + job['profile']['timeout_seconds'] * 1000), 'INTEGRITY_FAILURE')
                     require(job['dispatch_at_ms'] < job['dispatch_deadline_ms'] and job['dispatch_at_ms'] <= meta['clock_ms'], 'INTEGRITY_FAILURE')
                 else:
@@ -238,6 +253,10 @@ class _ModelStore(Runtime):
                 raw = self._payload(db, ns, rid, role)
                 expected = ContentKey(meta['store_id'], ns, rid, role, hashlib.sha256(raw).hexdigest(), len(raw))
                 require(encode(item['key']) == encode(asdict(expected)), 'INTEGRITY_FAILURE')
+        except sqlite3.OperationalError as exc:
+            if getattr(exc, 'sqlite_errorcode', None) == sqlite3.SQLITE_ERROR:
+                raise RuntimeFailure('INTEGRITY_FAILURE') from None
+            raise
         except (KeyError, TypeError, ValueError, RuntimeFailure) as exc:
             raise RuntimeFailure('INTEGRITY_FAILURE') from None
 
