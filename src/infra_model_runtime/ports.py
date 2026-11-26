@@ -45,6 +45,10 @@ class LocalTransaction:
     def execute(self, sql, parameters=()):
         try:
             require(self._active and threading.get_ident() == self._thread, "PORT_CLOSED")
+            # SQLite may automatically roll back the enclosing transaction on
+            # a statement error. Never execute a later statement in autocommit,
+            # even when trusted callback code catches that first error.
+            require(not self._poisoned and self._connection.in_transaction, "PORT_VIOLATION")
             require(type(sql) is str and len(sql.encode("utf-8")) <= 8192, "PORT_VIOLATION")
             require(type(parameters) is tuple and len(parameters) <= 64, "PORT_VIOLATION")
             for value in parameters:
@@ -71,6 +75,7 @@ class LocalTransaction:
                 size = sum(len(v.encode("utf-8") if type(v) is str else v)
                            for row in rows for v in row if type(v) in (str, bytes))
                 require(size <= 32768, "PORT_LIMIT")
+                require(self._connection.in_transaction, "PORT_VIOLATION")
                 return Rows(rows, cursor.rowcount)
             finally:
                 cursor.close()

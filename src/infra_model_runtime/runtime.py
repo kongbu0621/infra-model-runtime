@@ -1,6 +1,7 @@
 """R1 single-file SQLite transaction prototype. Deliberately no transport."""
 from contextlib import contextmanager
 from dataclasses import asdict
+import hashlib
 import json
 import os
 from pathlib import Path
@@ -46,8 +47,9 @@ class Runtime:
             db.execute("CREATE TABLE rt_meta (id INTEGER PRIMARY KEY, body TEXT NOT NULL, digest TEXT NOT NULL)")
             db.execute("CREATE TABLE rt_calls (namespace TEXT, request_id TEXT, body TEXT NOT NULL, digest TEXT NOT NULL, PRIMARY KEY(namespace, request_id))")
             db.execute("CREATE TABLE rt_controls (operation TEXT, control_id TEXT, body TEXT NOT NULL, digest TEXT NOT NULL, PRIMARY KEY(operation, control_id))")
-            instance._save_meta(db, dict(schema="r1.store.v1", store_id=instance._store_id,
-                application=instance.application.identity, config=asdict(config), revision=1, clock_ms=0, request_count=0))
+            instance._save_meta(db, dict(schema="r1.store.v2", store_id=instance._store_id,
+                application=instance.application.identity, config=asdict(config), revision=1,
+                clock_ms=0, request_count=0, control_count=0))
             instance._hook(db, "initialize", schema=True)
         return instance
 
@@ -77,9 +79,11 @@ class Runtime:
                 self._metadata(db)
                 self._audit(db)
             yield db
-            require(not self._reentry_violation, "PORT_VIOLATION")
+            require(not self._reentry_violation and db.in_transaction, "PORT_VIOLATION")
             if not readonly:
+                self._metadata(db)
                 self._audit(db)
+            require(not self._reentry_violation and db.in_transaction, "PORT_VIOLATION")
             after = self.path.lstat()
             require((before.st_dev, before.st_ino) == (after.st_dev, after.st_ino), "INTEGRITY_FAILURE")
             self._checkpoint("before_commit")
@@ -129,7 +133,7 @@ class Runtime:
                 raise
             except Exception:
                 raise RuntimeFailure("PORT_ERROR") from None
-            require(not tx._poisoned, "PORT_VIOLATION")
+            require(not tx._poisoned and db.in_transaction and not self._reentry_violation, "PORT_VIOLATION")
             return result
         finally:
             tx._active = False
@@ -153,13 +157,15 @@ class Runtime:
     def _metadata(self, db):
         try:
             value = self._unpack(db.execute("SELECT body,digest FROM rt_meta WHERE id=1").fetchone())
-            require(set(value) == {"schema", "store_id", "application", "config", "revision", "clock_ms", "request_count"}, "INTEGRITY_FAILURE")
-            require(value["schema"] == "r1.store.v1" and value["application"] == self.application.identity, "INTEGRITY_FAILURE")
+            require(set(value) == {"schema", "store_id", "application", "config", "revision", "clock_ms", "request_count", "control_count"}, "INTEGRITY_FAILURE")
+            require(value["schema"] == "r1.store.v2" and value["application"] == self.application.identity, "INTEGRITY_FAILURE")
             require(type(value["store_id"]) is str and len(value["store_id"]) == 32, "INTEGRITY_FAILURE")
             tables = {row[0] for row in db.execute("SELECT name FROM sqlite_master WHERE type='table'")}
             require({"rt_meta", "rt_calls", "rt_controls"} <= tables, "INTEGRITY_FAILURE")
             integer(value["request_count"], 0, 256)
             require(db.execute("SELECT count(*) FROM rt_calls").fetchone()[0] == value["request_count"], "INTEGRITY_FAILURE")
+            integer(value["control_count"], 0, 128)
+            require(db.execute("SELECT count(*) FROM rt_controls").fetchone()[0] == value["control_count"], "INTEGRITY_FAILURE")
             require(self._store_id is None or self._store_id == value["store_id"], "INTEGRITY_FAILURE")
             restore(Config, value["config"])
             integer(value["revision"], 1)
@@ -207,7 +213,8 @@ class Runtime:
         r = call["request"]
         return CallState(r["namespace"], r["request_id"], restore(Profile, call["profile"]),
             call["configuration_revision"], call["issued"], call["cancelled"], call["terminal"],
-            call["outcome"], call["output_units"], call["usage_final"], call["output_reserved"], call["observation_revision"])
+            call["outcome"], call["output_units"], call["usage_final"], call["output_reserved"], call["observation_revision"],
+            None if call["output_text"] is None else hashlib.sha256(call["output_text"].encode("utf-8")).hexdigest())
 
     def _budget(self, db):
         calls = self._calls(db)
@@ -228,10 +235,12 @@ class Runtime:
             return restore(Receipt, saved["receipt"])
         require(db.execute("SELECT count(*) FROM rt_controls").fetchone()[0] < 128, "LIMIT")
 
-    @staticmethod
-    def _save_control(db, operation, control_id, intent, receipt):
+    def _save_control(self, db, operation, control_id, intent, receipt):
+        meta = self._metadata(db)
         value = dict(intent=intent, receipt=asdict(receipt))
         db.execute("INSERT INTO rt_controls VALUES(?,?,?,?)", (operation, control_id, encode(value), fingerprint(value)))
+        meta["control_count"] += 1
+        self._save_meta(db, meta)
 
     def configure(self, control_id, expected_revision, config):
         identifier(control_id)
@@ -274,7 +283,7 @@ class Runtime:
                     raise
                 except Exception:
                     raise RuntimeFailure("PORT_ERROR") from None
-                require(not tx._poisoned, "PORT_VIOLATION")
+                require(not tx._poisoned and db.in_transaction and not self._reentry_violation, "PORT_VIOLATION")
             finally:
                 tx._active = False
             receipt = Receipt("application", (control_id,), 1, intent)

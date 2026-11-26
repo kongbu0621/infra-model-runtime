@@ -165,7 +165,8 @@ class CallState:
     usage_final: bool
     output_reserved: int
     observation_revision: int
-    version: str = "r1.state.v1"
+    result_sha256: str | None
+    version: str = "r1.state.v2"
 
 
 @dataclass(frozen=True)
