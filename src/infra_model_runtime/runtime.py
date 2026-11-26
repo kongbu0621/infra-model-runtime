@@ -136,8 +136,12 @@ class Runtime:
                 # sqlite close is not used to confirm or undo a transaction.
                 try:
                     db.close()
-                except BaseException:
+                except BaseException as exc:
                     if not primary_error:
+                        # A stop signal during cleanup is still a stop signal;
+                        # recovery must query the original operation identity.
+                        if not isinstance(exc, Exception):
+                            raise
                         raise RuntimeFailure("STORAGE_ERROR", "not_applicable" if readonly else
                                              ("committed" if committed else "unknown"), identity) from None
 
