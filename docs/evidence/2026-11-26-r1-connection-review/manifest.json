@@ -1,0 +1,34 @@
+{
+  "before-tests.json": {
+    "bytes": 99742,
+    "sha256": "11d01f7b83319b6a1b1c14ea92d8c2e144f3560655bbfae22a53f94bb23e6680"
+  },
+  "doc-checks.json": {
+    "bytes": 236,
+    "sha256": "b0e6a3bdf8a178498c334afd76e3a1a527ffc66077d1b177e86585a1a708d312"
+  },
+  "observation-matrix-script.txt": {
+    "bytes": 4039,
+    "sha256": "0e656b09872bc0228ff59cb457d587d411216fab2aac2b37f4d0ccc2007a9963"
+  },
+  "observation-matrix.json": {
+    "bytes": 65819,
+    "sha256": "429a8f1f33e4dc66df804271df7fd2f9fbc8fc1709918e33c032923e23a57b59"
+  },
+  "probe-before.json": {
+    "bytes": 112,
+    "sha256": "a49fb85863ef0dea5372159bad7af6e415a10e85bfd92f7876266b0c033523ef"
+  },
+  "source-manifest.json": {
+    "bytes": 1874,
+    "sha256": "dde85096d960e14e8d55c9c6ffb578bb00fe2d331dac5fed32f3e137469dcb29"
+  },
+  "tests.log": {
+    "bytes": 9971,
+    "sha256": "777b761a56c8082830f78eed3cffef4f0d2808c46564a87ea4fc792a64c06c2a"
+  },
+  "validation.json": {
+    "bytes": 547,
+    "sha256": "bf3af66d9a96c8e7ea8c07e10ada236ce75aaa9216de7715254847dad51facf5"
+  }
+}

@@ -2,7 +2,7 @@
 
 ## 当前接续：R1 源码原型（2026-11-26）
 
-已交付 [R1 最小合同/同库事务原型](R1_CONTRACT.md)，经[事务复核](R1_REVIEW.md)、[容量与入口复核](R1_CAPACITY_REVIEW.md)、[清理与许可复核](R1_CLEANUP_POLICY_REVIEW.md)及[存储语义复核](R1_STORAGE_REVIEW.md)，当前 57 项公共源码合成检查通过，包含真实双进程竞争、组合回滚和提交确认丢失。它证明所列事务接缝可独立运行；[准确范围](R1_VALIDATION.md)不包括供应商、安装、旧业务迁移或完整 MR/RV/CR。接口仍 candidate，真实端点输入保持 NOT_RUN。
+已交付 [R1 最小合同/同库事务原型](R1_CONTRACT.md)，经[事务复核](R1_REVIEW.md)、[容量与入口复核](R1_CAPACITY_REVIEW.md)、[清理与许可复核](R1_CLEANUP_POLICY_REVIEW.md)、[存储语义复核](R1_STORAGE_REVIEW.md)及[连接中断/合法组合复核](R1_CONNECTION_REVIEW.md)，当前 63 项公共源码合成检查通过，包含真实双进程竞争、组合回滚和提交确认丢失。它证明所列事务接缝可独立运行；[准确范围](R1_VALIDATION.md)不包括供应商、安装、旧业务迁移或完整 MR/RV/CR。接口仍 candidate，真实端点输入保持 NOT_RUN。
 
 下一步先审阅本原型及消费侧适配证据，再按 R2 抽取已有串行协议/配置/持久核心，完成独立包与安装态验证，然后 R3 接入原应用。R1 原型应被抽取核心接续，不作为第二套生产实现。下方阶段目标和历史状态继续保留。
 

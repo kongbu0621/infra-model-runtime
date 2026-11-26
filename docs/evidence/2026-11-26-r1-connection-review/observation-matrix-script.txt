@@ -1,0 +1,60 @@
+"""Run with old source in write mode, then current source in verify mode."""
+from dataclasses import asdict
+from pathlib import Path
+import hashlib,json,shutil,sqlite3,sys
+source=Path(sys.argv[1]).resolve();mode=sys.argv[2];folder=Path(sys.argv[3])
+sys.path.insert(0,str(source/'src'))
+from infra_model_runtime import Config,Profile,Request,Runtime,Observation,RuntimeFailure
+import infra_model_runtime
+assert Path(infra_model_runtime.__file__).resolve().is_relative_to(source)
+def normalized(value):return json.loads(json.dumps(value,sort_keys=True))
+def signature(value):return hashlib.sha256(json.dumps(value,sort_keys=True,separators=(',',':')).encode()).hexdigest()
+def snapshot(path):
+ with sqlite3.connect(path) as db:
+  names=[r[0] for r in db.execute("SELECT name FROM sqlite_master WHERE type='table' ORDER BY name")]
+  return {n:db.execute('SELECT * FROM '+n+' ORDER BY rowid').fetchall() for n in names}
+request=Request('matrix','one','task','original',('local',),10,1000)
+config=Config((Profile('local','v1','model'),),'local')
+options=[dict(terminal=outcome!='unknown',outcome=outcome,output_text=output,output_units=usage)
+ for outcome,output in [('unknown',None),('error',None),('ok','answer-a'),('ok','answer-b')]
+ for usage in (None,0,3,10,11)]
+if mode=='write':
+ folder.mkdir(exist_ok=True);base=folder/'base.sqlite';rt=Runtime.create(base,config)
+ rt.register(request);rt.issue('matrix','one',now_ms=100)
+ cases=[]
+ for i,first in enumerate(options):
+  for j,second in enumerate(options):
+   name=f'{i:02d}-{j:02d}';path=folder/(name+'.sqlite');shutil.copyfile(base,path);rt=Runtime(path)
+   a=Observation(revision=2,**first);b=Observation(revision=7,**second)
+   first_receipt=rt.observe('matrix','one',a);before=signature(snapshot(path))
+   try:
+    receipt=rt.observe('matrix','one',b);result='accepted';second_receipt=asdict(receipt)
+   except RuntimeFailure as error:
+    result=error.code;second_receipt=None
+    assert error.commit_state=='not_committed' and signature(snapshot(path))==before
+   state=rt.status('matrix','one')
+   cases.append(dict(name=name,first=first,second=second,result=result,first_receipt=asdict(first_receipt),second_receipt=second_receipt,budget=asdict(rt.budget()),state=asdict(state),snapshot_sha256=signature(snapshot(path)),output=rt.read_result('matrix','one',history=True) if state.outcome=='ok' else None))
+ (folder/'index.json').write_text(json.dumps(cases,sort_keys=True))
+ print(json.dumps({'cases_written':len(cases)}))
+else:
+ cases=json.loads((folder/'index.json').read_text());results=[];counts={}
+ for case in cases:
+  path=folder/(case['name']+'.sqlite');rt=Runtime(path)
+  assert signature(snapshot(path))==case['snapshot_sha256']
+  assert normalized(asdict(rt.budget()))==case['budget']
+  state=rt.status('matrix','one');assert normalized(asdict(state))==case['state']
+  if case['output'] is not None:assert rt.read_result('matrix','one',history=True)==case['output']
+  else:
+   try:rt.read_result('matrix','one',history=True)
+   except RuntimeFailure as error:assert error.code=='UNAVAILABLE' and error.commit_state=='not_applicable'
+   else:raise AssertionError('unexpected result')
+  a=Observation(revision=2,**case['first']);b=Observation(revision=7,**case['second'])
+  assert normalized(asdict(rt.observe('matrix','one',a)))==case['first_receipt']
+  try:
+   receipt=rt.observe('matrix','one',b)
+   assert case['result']=='accepted' and normalized(asdict(receipt))==case['second_receipt']
+  except RuntimeFailure as error:assert error.code==case['result'] and error.commit_state=='not_committed'
+  assert signature(snapshot(path))==case['snapshot_sha256']
+  counts[case['result']]=counts.get(case['result'],0)+1
+  results.append({'case':case['name'],'result':case['result'],'snapshot_sha256':case['snapshot_sha256']})
+ print(json.dumps({'status':'PASS','pair_cases':len(cases),'result_counts':counts,'old_writer_and_new_reader_separate_processes':True,'exact_budget_state_receipts_output_and_full_snapshot':True,'options':options,'case_results':results},indent=2))
