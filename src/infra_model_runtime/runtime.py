@@ -321,23 +321,29 @@ class Runtime:
         text(command)
         intent = fingerprint(command)
         with self._transaction(("application", control_id)) as db:
-            old = self._control(db, "application", control_id, intent)
-            if old is not None:
-                return old
-            tx = LocalTransaction(db)
+            return self._change_application(db, control_id, command, callback)
+
+    def _change_application(self, db, control_id, command, callback):
+        identifier(control_id)
+        text(command)
+        intent = fingerprint(command)
+        old = self._control(db, "application", control_id, intent)
+        if old is not None:
+            return old
+        tx = LocalTransaction(db)
+        try:
             try:
-                try:
-                    callback(tx, command)
-                except RuntimeFailure:
-                    raise
-                except Exception:
-                    raise RuntimeFailure("PORT_ERROR") from None
-                require(not tx._poisoned and db.in_transaction and not self._reentry_violation, "PORT_VIOLATION")
-            finally:
-                tx._active = False
-            receipt = Receipt("application", (control_id,), 1, intent)
-            self._save_control(db, "application", control_id, intent, receipt)
-            return receipt
+                callback(tx, command)
+            except RuntimeFailure:
+                raise
+            except Exception:
+                raise RuntimeFailure("PORT_ERROR") from None
+            require(not tx._poisoned and db.in_transaction and not self._reentry_violation, "PORT_VIOLATION")
+        finally:
+            tx._active = False
+        receipt = Receipt("application", (control_id,), 1, intent)
+        self._save_control(db, "application", control_id, intent, receipt)
+        return receipt
 
     def register(self, request):
         require(type(request) is Request)

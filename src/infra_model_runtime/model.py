@@ -157,7 +157,7 @@ class _ModelStore(Runtime):
                 require(set(item) == {'operation', 'intent', 'receipt', 'sequence'}, 'INTEGRITY_FAILURE')
                 integer(item['sequence'], 1, 128)
                 operation = item['operation'];intent = item['intent']
-                require(operation in ('approve', 'revoke', 'configure'), 'INTEGRITY_FAILURE')
+                require(operation in ('approve', 'revoke', 'configure', 'application'), 'INTEGRITY_FAILURE')
                 core_op = 'configure' if operation == 'configure' else 'application'
                 core = self._unpack(db.execute('SELECT body,digest FROM rt_controls WHERE operation=? AND control_id=?', (core_op, key)).fetchone())
                 require(encode(core['receipt']) == encode(item['receipt']), 'INTEGRITY_FAILURE')
@@ -166,6 +166,9 @@ class _ModelStore(Runtime):
                     configuration.parse(encoded(intent['config']))
                     require(core['intent'] == fingerprint(dict(expected=intent['expected'], config=asdict(_core(intent['config'])))), 'INTEGRITY_FAILURE')
                     require(self._data(db, 'rt_model_configs', item['receipt']['revision']) == intent['config'], 'INTEGRITY_FAILURE')
+                elif operation == 'application':
+                    require(set(intent) == {'command'}, 'INTEGRITY_FAILURE')
+                    require(core['intent'] == fingerprint(intent['command']), 'INTEGRITY_FAILURE')
                 else:
                     require(core['intent'] == fingerprint(dict(operation=operation, intent=intent)), 'INTEGRITY_FAILURE')
                     if operation == 'approve':
@@ -498,3 +501,20 @@ class ModelRuntime:
         with s._transaction(('control-status', control_id), readonly=True) as db:
             item = s._data(db, 'rt_model_controls', control_id)
             return restore(Receipt, item['receipt'])
+
+
+    def change_application(self, control_id, command, callback):
+        """One bounded application command and its receipt in the same transaction."""
+        identifier(control_id)
+        from .contracts import text
+        text(command);s = self._store;intent = dict(command=command)
+        with s._transaction(('application', control_id)) as db:
+            row = db.execute('SELECT body,digest FROM rt_model_controls WHERE id=?', (control_id,)).fetchone()
+            if row is not None:
+                old = s._unpack(row)
+                require(old['operation'] == 'application' and old['intent'] == intent, 'CONFLICT')
+                return restore(Receipt, old['receipt'])
+            receipt = s._change_application(db, control_id, command, callback)
+            s._put(db, 'rt_model_controls', control_id, dict(operation='application', intent=intent,
+                receipt=asdict(receipt), sequence=s._metadata(db)['control_count']))
+            return receipt

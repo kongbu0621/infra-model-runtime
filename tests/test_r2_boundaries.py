@@ -182,6 +182,30 @@ class R2BoundaryTests(unittest.TestCase):
         self.assertEqual(self.runtime.budget().issued_calls,0)
         self.assertEqual(len(self.sends),0)
 
+    def test_application_control_shares_dispatch_order_and_replays_once(self):
+        from infra_model_runtime import ApplicationPort
+        class App(ApplicationPort):
+            identity='application-control'
+            def initialize(self,tx):
+                tx.execute('CREATE TABLE app_rules (allowed INTEGER)')
+                tx.execute('INSERT INTO app_rules VALUES (1)')
+            def issue(self,tx,*args):
+                if tx.execute('SELECT allowed FROM app_rules').values!=((1,),):raise RuntimeFailure('DENIED')
+        path=Path(self.tmp.name)/'app-control.sqlite';app=App()
+        self.runtime=ModelRuntime.create(path,encoded(self.cfg),app);self.approve();self.submit()
+        def deny(tx,command):tx.execute('UPDATE app_rules SET allowed=0')
+        receipt=self.runtime.change_application('deny','deny',deny)
+        self.assertEqual(self.runtime.change_application('deny','deny',lambda *a:self.fail('callback repeated')),receipt)
+        self.error('DENIED',self.run_job)
+        self.assertEqual(self.runtime.budget().issued_calls,0)
+        def failed(tx,command):
+            tx.execute('UPDATE app_rules SET allowed=1');raise RuntimeError('controlled')
+        self.error('PORT_ERROR',lambda:self.runtime.change_application('allow','allow',failed))
+        self.runtime=ModelRuntime(path,app);self.error('DENIED',self.run_job)
+        self.runtime.change_application('allow','allow',lambda tx,cmd:tx.execute('UPDATE app_rules SET allowed=1'))
+        self.assertTrue(self.run_job().call.terminal)
+        self.assertEqual(len(self.sends),1)
+
     def test_noncanonical_configuration_order_is_accepted_and_canonicalized(self):
         cfg=configuration();cfg['profiles']=dict(reversed(list(cfg['profiles'].items())))
         path=Path(self.tmp.name)/'order.sqlite'
