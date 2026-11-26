@@ -62,8 +62,10 @@ class Profile:
     enabled: bool = True
 
     def __post_init__(self):
-        for value in (self.name, self.revision, self.model):
+        for value in (self.name, self.revision):
             identifier(value)
+        text(self.model, 256)
+        require(bool(self.model) and not any(ord(c) < 32 for c in self.model))
         names(self.capabilities)
         require(type(self.enabled) is bool)
 
@@ -88,9 +90,9 @@ class Config:
             identifier(value)
         require(self.default in {p.name for p in self.profiles})
         for value in (self.call_limit, self.input_byte_limit, self.output_unit_limit):
-            integer(value)
+            integer(value, maximum=2**63-1 if self.version == "r2.config.v1" else 10**12)
         integer(self.max_requests, 1, 256)
-        require(type(self.version) is str and self.version == "r1.config.v1")
+        require(type(self.version) is str and self.version in ("r1.config.v1", "r2.config.v1"))
 
 
 @dataclass(frozen=True)
@@ -110,14 +112,14 @@ class Request:
     def __post_init__(self):
         for value in (self.namespace, self.request_id, self.task):
             identifier(value)
-        text(self.input_text)
+        text(self.input_text, 65536 if self.version == "r2.request.v1" else 8192)
         names(self.allowed_profiles)
         names(self.required_capabilities)
-        integer(self.output_limit, 1, 1000000)
+        integer(self.output_limit, 1, 2**31-1 if self.version == "r2.request.v1" else 1000000)
         integer(self.deadline_ms, 1, 253402300799999)
         if self.admission_ref is not None:
             identifier(self.admission_ref)
-        require(self.output_contract == "text.v1" and self.version == "r1.request.v1")
+        require((self.version, self.output_contract) in (("r1.request.v1", "text.v1"), ("r2.request.v1", "json_object.v1")))
 
 
 @dataclass(frozen=True)
@@ -190,6 +192,8 @@ class Budget:
 
 def restore(cls, value):
     """Decode an internal snapshot, revalidating exact fields and types."""
+    if cls is Observation and type(value) is dict and value.get("version") == "r2.observation.v1":
+        cls = WireObservation
     require(type(value) is dict and set(value) == set(cls.__dataclass_fields__), "INTEGRITY_FAILURE")
     value = dict(value)
     if cls is Config:
@@ -202,3 +206,33 @@ def restore(cls, value):
         return cls(**value)
     except (TypeError, ValueError, RuntimeFailure):
         raise RuntimeFailure("INTEGRITY_FAILURE") from None
+
+
+@dataclass(frozen=True)
+class WireObservation:
+    """Protocol-derived facts: a partial count is never final settlement."""
+    revision: int
+    terminal: bool
+    outcome: str
+    output_text: str | None = None
+    output_units: int | None = None
+    usage_final: bool = False
+    quarantine: bool = False
+    version: str = "r2.observation.v1"
+
+    def __post_init__(self):
+        integer(self.revision, 1, 16)
+        require(type(self.terminal) is bool and type(self.usage_final) is bool and type(self.quarantine) is bool)
+        require(self.outcome in ("unknown", "ok", "error") and self.terminal == (self.outcome != "unknown"))
+        require((self.output_text is not None) == (self.outcome == "ok"))
+        if self.output_text is not None:
+            text(self.output_text, 65536)
+        if self.output_units is not None:
+            integer(self.output_units, maximum=2**63-1)
+        require(not self.usage_final or (self.terminal and self.output_units is not None))
+        require(self.version == "r2.observation.v1")
+
+
+def final_usage(observation):
+    return (observation.usage_final if type(observation) is WireObservation else
+            observation.terminal and observation.output_units is not None)

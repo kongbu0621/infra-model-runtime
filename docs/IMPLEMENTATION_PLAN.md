@@ -1,5 +1,7 @@
 # 分阶段实施与验收
 
+2026-11-26 R2 接续：已实现独立串行候选包，复用同库事务核心并接入两协议与内置有界载荷；实际 API/容量/配置权威见 [R2 合同](R2_CONTRACT.md)，源码与安装验证见 [R2 记录](R2_VALIDATION.md)。旧 R1 和设计时点说明保留；R3 接入/迁移、多模型并行及真实服务未因此完成。
+
 ## 当前接续：R1 源码原型（2026-11-26）
 
 已交付 [R1 最小合同/同库事务原型](R1_CONTRACT.md)，经[事务复核](R1_REVIEW.md)、[容量与入口复核](R1_CAPACITY_REVIEW.md)、[清理与许可复核](R1_CLEANUP_POLICY_REVIEW.md)、[存储语义复核](R1_STORAGE_REVIEW.md)、[连接中断/合法组合复核](R1_CONNECTION_REVIEW.md)及[控制/结算恢复补验](R1_CONTROL_RECOVERY_REVIEW.md)，当前 67 项公共源码合成检查通过，包含真实双进程竞争、组合回滚和提交确认丢失。它证明所列事务接缝可独立运行；[准确范围](R1_VALIDATION.md)不包括供应商、安装、旧业务迁移或完整 MR/RV/CR。接口仍 candidate，真实端点输入保持 NOT_RUN。

@@ -5,6 +5,7 @@ They do not authenticate history against a hostile/coherent database rewrite.
 """
 from dataclasses import asdict
 import re
+from .contracts import WireObservation, final_usage
 from .contracts import (Observation, Profile, Receipt, Request, RuntimeFailure,
                         encode, fingerprint, identifier, integer, require, restore)
 
@@ -71,12 +72,12 @@ def validate_call(value, namespace, request_id):
             if observation.output_units is not None:
                 require(known is None or observation.output_units >= known, 'INTEGRITY_FAILURE')
                 known = observation.output_units
-            final = expected['usage_final'] or (observation.terminal and observation.output_units is not None)
+            final = expected['usage_final'] or final_usage(observation)
             expected.update(terminal=observation.terminal, outcome=observation.outcome,
                 output_text=observation.output_text, output_units=known, usage_final=final,
                 output_reserved=0 if final else max(0, request.output_limit - (known or 0)),
                 observation_revision=observation.revision,
-                quarantined=expected['quarantined'] or (known or 0) > request.output_limit)
+                quarantined=expected['quarantined'] or (known or 0) > request.output_limit or getattr(observation, "quarantine", False))
         require(encode({key: value[key] for key in expected}) == encode(expected), 'INTEGRITY_FAILURE')
         return value
     except (KeyError, TypeError, ValueError, RuntimeFailure):

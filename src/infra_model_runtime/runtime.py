@@ -8,6 +8,7 @@ from pathlib import Path
 import secrets
 import sqlite3
 import stat
+from .contracts import WireObservation, final_usage
 from .contracts import (Budget, CallState, Config, IssuePermit, Observation,
                         Profile, Receipt, Request, RuntimeFailure, encode,
                         fingerprint, identifier, integer, require, restore, text)
@@ -28,6 +29,9 @@ class Runtime:
     permit is returned ONLY by the successful first issue call. Queries and
     retries never recover it. No method executes a model or clears UNKNOWN.
     """
+    _schema = "r1.store.v2"
+    _json_limit = _MAX_STORED_JSON_BYTES
+
     def __init__(self, path, application=None):
         self.path = Path(path).absolute()
         self.application = application if application is not None else ApplicationPort()
@@ -39,7 +43,12 @@ class Runtime:
 
     @classmethod
     def create(cls, path, config, application=None):
+        return cls._create(path, config, application, lambda instance, db: None)
+
+    @classmethod
+    def _create(cls, path, config, application, setup):
         require(type(config) is Config)
+        require(config.version == ("r1.config.v1" if cls._schema == "r1.store.v2" else "r2.config.v1"))
         path = Path(path).absolute()
         application = application if application is not None else ApplicationPort()
         identifier(application.identity)
@@ -64,9 +73,10 @@ class Runtime:
             db.execute("CREATE TABLE rt_meta (id INTEGER PRIMARY KEY, body TEXT NOT NULL, digest TEXT NOT NULL)")
             db.execute("CREATE TABLE rt_calls (namespace TEXT, request_id TEXT, body TEXT NOT NULL, digest TEXT NOT NULL, PRIMARY KEY(namespace, request_id))")
             db.execute("CREATE TABLE rt_controls (operation TEXT, control_id TEXT, body TEXT NOT NULL, digest TEXT NOT NULL, PRIMARY KEY(operation, control_id))")
-            instance._save_meta(db, dict(schema="r1.store.v2", store_id=instance._store_id,
+            instance._save_meta(db, dict(schema=instance._schema, store_id=instance._store_id,
                 application=instance.application.identity, config=asdict(config), revision=1,
                 clock_ms=0, request_count=0, control_count=0))
+            setup(instance, db)
             instance._hook(db, "initialize", schema=True)
         return instance
 
@@ -161,15 +171,18 @@ class Runtime:
 
     def _audit(self, db):
         facts = tuple((restore(Request, call["request"]), self._state(call)) for call in self._calls(db))
+        version = "r1" if self._schema == "r1.store.v2" else "r2"
+        require(self._metadata(db)["config"]["version"] == version + ".config.v1" and
+                all(r.version == version + ".request.v1" for r, _ in facts), "INTEGRITY_FAILURE")
         revision = self._metadata(db)["revision"]
         require(all(state.configuration_revision <= revision for _, state in facts), "INTEGRITY_FAILURE")
         self._hook(db, "audit", facts, readonly=True)
 
-    @staticmethod
-    def _unpack(row):
+    @classmethod
+    def _unpack(cls, row):
         require(row is not None, "NOT_FOUND")
         raw, digest = row
-        require(type(raw) is str and len(raw.encode("utf-8")) <= _MAX_STORED_JSON_BYTES, "INTEGRITY_FAILURE")
+        require(type(raw) is str and len(raw.encode("utf-8")) <= cls._json_limit, "INTEGRITY_FAILURE")
         try:
             value = json.loads(raw)
             require(encode(value) == raw and fingerprint(value) == digest, "INTEGRITY_FAILURE")
@@ -181,7 +194,7 @@ class Runtime:
         try:
             value = self._unpack(db.execute("SELECT body,digest FROM rt_meta WHERE id=1").fetchone())
             require(set(value) == {"schema", "store_id", "application", "config", "revision", "clock_ms", "request_count", "control_count"}, "INTEGRITY_FAILURE")
-            require(value["schema"] == "r1.store.v2" and value["application"] == self.application.identity, "INTEGRITY_FAILURE")
+            require(value["schema"] == self._schema and value["application"] == self.application.identity, "INTEGRITY_FAILURE")
             require(type(value["store_id"]) is str and len(value["store_id"]) == 32, "INTEGRITY_FAILURE")
             tables = {row[0] for row in db.execute("SELECT name FROM sqlite_master WHERE type='table'")}
             require({"rt_meta", "rt_calls", "rt_controls"} <= tables, "INTEGRITY_FAILURE")
@@ -241,10 +254,13 @@ class Runtime:
             call["outcome"], call["output_units"], call["usage_final"], call["output_reserved"], call["observation_revision"],
             None if call["output_text"] is None else hashlib.sha256(call["output_text"].encode("utf-8")).hexdigest())
 
+    def _input_size(self, db, call):
+        return len(call["request"]["input_text"].encode("utf-8"))
+
     def _budget(self, db):
         calls = self._calls(db)
         return Budget(sum(c["issued"] for c in calls),
-            sum(len(c["request"]["input_text"].encode("utf-8")) for c in calls if c["issued"]),
+            sum(self._input_size(db, c) for c in calls if c["issued"]),
             sum(c["output_units"] or 0 for c in calls), sum(c["output_reserved"] for c in calls),
             sum(c["issued"] and not c["terminal"] for c in calls), any(c["quarantined"] for c in calls))
 
@@ -274,18 +290,26 @@ class Runtime:
         require(type(config) is Config)
         intent = fingerprint(dict(expected=expected_revision, config=asdict(config)))
         with self._transaction(("configure", control_id)) as db:
-            old = self._control(db, "configure", control_id, intent)
-            if old is not None:
-                return old
-            meta = self._metadata(db)
-            require(meta["revision"] == expected_revision, "CONFLICT")
-            if self._calls(db):
-                require((config.budget_pool, config.resource_group) ==
-                    (meta["config"]["budget_pool"], meta["config"]["resource_group"]), "CONFLICT")
-            meta.update(config=asdict(config), revision=meta["revision"] + 1)
-            receipt = Receipt("configure", (control_id,), meta["revision"], intent)
-            self._save_control(db, "configure", control_id, intent, receipt, meta=meta)
-            return receipt
+            return self._configure(db, control_id, expected_revision, config)
+
+    def _configure(self, db, control_id, expected_revision, config):
+        require(type(config) is Config and config.version == self._metadata(db)["config"]["version"])
+        identifier(control_id)
+        integer(expected_revision, 1)
+        require(type(config) is Config)
+        intent = fingerprint(dict(expected=expected_revision, config=asdict(config)))
+        old = self._control(db, "configure", control_id, intent)
+        if old is not None:
+            return old
+        meta = self._metadata(db)
+        require(meta["revision"] == expected_revision, "CONFLICT")
+        if self._calls(db):
+            require((config.budget_pool, config.resource_group) ==
+                (meta["config"]["budget_pool"], meta["config"]["resource_group"]), "CONFLICT")
+        meta.update(config=asdict(config), revision=meta["revision"] + 1)
+        receipt = Receipt("configure", (control_id,), meta["revision"], intent)
+        self._save_control(db, "configure", control_id, intent, receipt, meta=meta)
+        return receipt
 
     def change_application(self, control_id, command, callback):
         """Persist one application command and control receipt atomically.
@@ -320,55 +344,67 @@ class Runtime:
         snapshot = asdict(request)
         signature = fingerprint(snapshot)
         with self._transaction(("register", request.namespace, request.request_id)) as db:
-            row = db.execute("SELECT 1 FROM rt_calls WHERE namespace=? AND request_id=?", (request.namespace, request.request_id)).fetchone()
-            if row is not None:
-                old = self._call(db, request.namespace, request.request_id)
-                require(fingerprint(old["request"]) == signature, "CONFLICT")
-                return restore(Receipt, old["receipt"])
-            meta = self._metadata(db)
-            config = restore(Config, meta["config"])
-            require(len(self._calls(db)) < config.max_requests, "LIMIT")
-            profile = next(p for p in config.profiles if p.name == config.default)
-            require(profile.enabled and profile.name in request.allowed_profiles, "DENIED")
-            require(set(request.required_capabilities) <= set(profile.capabilities), "DENIED")
-            receipt = Receipt("register", (request.namespace, request.request_id), meta["revision"], signature)
-            self._hook(db, "register", request, receipt)
-            self._save_call(db, dict(request=snapshot, profile=asdict(profile), configuration_revision=meta["revision"],
-                receipt=asdict(receipt), issued=False, cancelled=False, terminal=False, outcome="unknown",
-                output_text=None, output_units=None, usage_final=False, output_reserved=0, observation_revision=0,
-                observations={}, cancellations={}, quarantined=False))
-            meta["request_count"] += 1
-            self._save_meta(db, meta)
-            return receipt
+            return self._register(db, request)
+
+    def _register(self, db, request):
+        require(type(request) is Request and request.version == ("r1.request.v1" if self._schema == "r1.store.v2" else "r2.request.v1"))
+        require(type(request) is Request)
+        snapshot = asdict(request)
+        signature = fingerprint(snapshot)
+        row = db.execute("SELECT 1 FROM rt_calls WHERE namespace=? AND request_id=?", (request.namespace, request.request_id)).fetchone()
+        if row is not None:
+            old = self._call(db, request.namespace, request.request_id)
+            require(fingerprint(old["request"]) == signature, "CONFLICT")
+            return restore(Receipt, old["receipt"])
+        meta = self._metadata(db)
+        config = restore(Config, meta["config"])
+        require(len(self._calls(db)) < config.max_requests, "LIMIT")
+        profile = next(p for p in config.profiles if p.name == config.default)
+        require(profile.enabled and profile.name in request.allowed_profiles, "DENIED")
+        require(set(request.required_capabilities) <= set(profile.capabilities), "DENIED")
+        receipt = Receipt("register", (request.namespace, request.request_id), meta["revision"], signature)
+        self._hook(db, "register", request, receipt)
+        self._save_call(db, dict(request=snapshot, profile=asdict(profile), configuration_revision=meta["revision"],
+            receipt=asdict(receipt), issued=False, cancelled=False, terminal=False, outcome="unknown",
+            output_text=None, output_units=None, usage_final=False, output_reserved=0, observation_revision=0,
+            observations={}, cancellations={}, quarantined=False))
+        meta["request_count"] += 1
+        self._save_meta(db, meta)
+        return receipt
 
     def issue(self, namespace, request_id, *, now_ms):
         identifier(namespace); identifier(request_id)
         integer(now_ms, 1, 253402300799999)
         with self._transaction(("issue", namespace, request_id)) as db:
-            call = self._call(db, namespace, request_id)
-            request = restore(Request, call["request"])
-            require(not call["issued"], "ALREADY_ISSUED")
-            require(not call["cancelled"], "CANCELLED")
-            require(now_ms < request.deadline_ms, "EXPIRED")
-            meta = self._metadata(db)
-            require(now_ms >= meta["clock_ms"], "CLOCK_ERROR")
-            config = restore(Config, meta["config"])
-            frozen = restore(Profile, call["profile"])
-            profile = next((p for p in config.profiles if p.name == frozen.name), None)
-            require(profile == frozen and profile.enabled, "STALE")
-            budget = self._budget(db)
-            require(not budget.quarantined, "QUARANTINED")
-            require(budget.execution_occupied == 0, "BUSY")
-            require(budget.issued_calls + 1 <= config.call_limit and
-                budget.input_bytes + len(request.input_text.encode("utf-8")) <= config.input_byte_limit and
-                budget.output_used + budget.output_reserved + request.output_limit <= config.output_unit_limit, "LIMIT")
-            self._hook(db, "issue", request, self._state(call), now_ms)
-            token = secrets.token_hex(16)
-            call.update(issued=True, output_reserved=request.output_limit, permit_digest=fingerprint(token))
-            meta["clock_ms"] = now_ms
-            self._save_call(db, call)
-            self._save_meta(db, meta)
-            return IssuePermit(namespace, request_id, token, frozen)
+            return self._issue(db, namespace, request_id, now_ms)
+
+    def _issue(self, db, namespace, request_id, now_ms):
+        identifier(namespace); identifier(request_id)
+        integer(now_ms, 1, 253402300799999)
+        call = self._call(db, namespace, request_id)
+        request = restore(Request, call["request"])
+        require(not call["issued"], "ALREADY_ISSUED")
+        require(not call["cancelled"], "CANCELLED")
+        require(now_ms < request.deadline_ms, "EXPIRED")
+        meta = self._metadata(db)
+        require(now_ms >= meta["clock_ms"], "CLOCK_ERROR")
+        config = restore(Config, meta["config"])
+        frozen = restore(Profile, call["profile"])
+        profile = next((p for p in config.profiles if p.name == frozen.name), None)
+        require(profile == frozen and profile.enabled, "STALE")
+        budget = self._budget(db)
+        require(not budget.quarantined, "QUARANTINED")
+        require(budget.execution_occupied == 0, "BUSY")
+        require(budget.issued_calls + 1 <= config.call_limit and
+            budget.input_bytes + self._input_size(db, call) <= config.input_byte_limit and
+            budget.output_used + budget.output_reserved + request.output_limit <= config.output_unit_limit, "LIMIT")
+        self._hook(db, "issue", request, self._state(call), now_ms)
+        token = secrets.token_hex(16)
+        call.update(issued=True, output_reserved=request.output_limit, permit_digest=fingerprint(token))
+        meta["clock_ms"] = now_ms
+        self._save_call(db, call)
+        self._save_meta(db, meta)
+        return IssuePermit(namespace, request_id, token, frozen)
 
     def cancel(self, namespace, request_id, control_id):
         for value in (namespace, request_id, control_id):
@@ -387,35 +423,41 @@ class Runtime:
 
     def observe(self, namespace, request_id, observation):
         identifier(namespace); identifier(request_id)
-        require(type(observation) is Observation)
+        require(type(observation) in (Observation, WireObservation))
         data = asdict(observation)
         with self._transaction(("observe", namespace, request_id, str(observation.revision))) as db:
-            call = self._call(db, namespace, request_id)
-            require(call["issued"], "NOT_ISSUED")
-            old = call["observations"].get(str(observation.revision))
-            if old is not None:
-                require(old["observation"] == json.loads(encode(data)), "CONFLICT")
-                return restore(Receipt, old["receipt"])
-            require(observation.revision > call["observation_revision"], "STALE")
-            if call["terminal"]:
-                require(observation.terminal and observation.outcome == call["outcome"] and
-                        observation.output_text == call["output_text"], "CONFLICT")
-            known = call["output_units"]
-            if observation.output_units is not None:
-                require(known is None or observation.output_units >= known, "CONFLICT")
-                known = observation.output_units
-            request = restore(Request, call["request"])
-            call.update(terminal=observation.terminal, outcome=observation.outcome,
-                        output_text=observation.output_text, output_units=known,
-                        observation_revision=observation.revision)
-            call["usage_final"] = call["usage_final"] or (observation.terminal and observation.output_units is not None)
-            call["output_reserved"] = 0 if call["usage_final"] else max(0, request.output_limit - (known or 0))
-            call["quarantined"] = call["quarantined"] or (known or 0) > request.output_limit
-            self._hook(db, "settle", request, self._state(call), observation)
-            receipt = Receipt("observe", (namespace, request_id), observation.revision, fingerprint(data))
-            call["observations"][str(observation.revision)] = dict(observation=data, receipt=asdict(receipt))
-            self._save_call(db, call)
-            return receipt
+            return self._observe(db, namespace, request_id, observation)
+
+    def _observe(self, db, namespace, request_id, observation):
+        identifier(namespace); identifier(request_id)
+        require(type(observation) in (Observation, WireObservation))
+        data = asdict(observation)
+        call = self._call(db, namespace, request_id)
+        require(call["issued"], "NOT_ISSUED")
+        old = call["observations"].get(str(observation.revision))
+        if old is not None:
+            require(old["observation"] == json.loads(encode(data)), "CONFLICT")
+            return restore(Receipt, old["receipt"])
+        require(observation.revision > call["observation_revision"], "STALE")
+        if call["terminal"]:
+            require(observation.terminal and observation.outcome == call["outcome"] and
+                    observation.output_text == call["output_text"], "CONFLICT")
+        known = call["output_units"]
+        if observation.output_units is not None:
+            require(known is None or observation.output_units >= known, "CONFLICT")
+            known = observation.output_units
+        request = restore(Request, call["request"])
+        call.update(terminal=observation.terminal, outcome=observation.outcome,
+                    output_text=observation.output_text, output_units=known,
+                    observation_revision=observation.revision)
+        call["usage_final"] = call["usage_final"] or final_usage(observation)
+        call["output_reserved"] = 0 if call["usage_final"] else max(0, request.output_limit - (known or 0))
+        call["quarantined"] = call["quarantined"] or (known or 0) > request.output_limit or getattr(observation, "quarantine", False)
+        self._hook(db, "settle", request, self._state(call), observation)
+        receipt = Receipt("observe", (namespace, request_id), observation.revision, fingerprint(data))
+        call["observations"][str(observation.revision)] = dict(observation=data, receipt=asdict(receipt))
+        self._save_call(db, call)
+        return receipt
 
     def status(self, namespace, request_id):
         identifier(namespace); identifier(request_id)
