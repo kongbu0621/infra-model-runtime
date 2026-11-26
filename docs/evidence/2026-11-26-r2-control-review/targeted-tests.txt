@@ -1,0 +1,8 @@
+test_captured_accounting_survives_later_controls (test_r2_control_recovery.ControlRecoveryTests.test_captured_accounting_survives_later_controls) ... ok
+test_read_revocation_keeps_accounting_and_blocks_content (test_r2_control_recovery.ControlRecoveryTests.test_read_revocation_keeps_accounting_and_blocks_content) ... ok
+test_uncaptured_dispatch_keeps_unknown_under_later_controls (test_r2_control_recovery.ControlRecoveryTests.test_uncaptured_dispatch_keeps_unknown_under_later_controls) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 7.171s
+
+OK

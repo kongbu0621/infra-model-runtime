@@ -1,5 +1,9 @@
 # Working in this repository
 
+当前接续为 R2 串行包候选，先读 docs/R2_CONTRACT.md、docs/R2_VALIDATION.md 与 docs/R2_CONTROL_REVIEW.md。运行/公共原候选安装保持 9536de7，新增测试 c3a4797；源码/安装各 141 项通过，新增三个方法包含 70 组后续控制与原调用结算组合。明确 recover 可先结算再因状态读权返回 DENIED，不得把读错误当作结算回滚。12 模块、原 wheel/RECORD 与环境保持，本轮无新运行修复或安装。历轮载荷分类、导出及旧库接续证据保持各自时点。消费者业务安装未变；后续按 R3 消费/迁移接续，所有新 PR 不自动合并。
+
+## R1 历史基线
+
 先读 README、docs/REQUIREMENTS.md、docs/ARCHITECTURE.md、docs/IMPLEMENTATION_PLAN.md。当前为 R1 源码合同/事务原型；具体 API 与边界见 docs/R1_CONTRACT.md，准确验证见 docs/R1_VALIDATION.md、docs/R1_REVIEW.md、docs/R1_CAPACITY_REVIEW.md、docs/R1_CLEANUP_POLICY_REVIEW.md、docs/R1_STORAGE_REVIEW.md、docs/R1_CONNECTION_REVIEW.md 与 docs/R1_CONTROL_RECOVERY_REVIEW.md。当前 state/store 为 v2，拒绝旧合成布局；67 项源码检查通过；最新只补控制/结算的 64 组恢复检查，运行载荷保持 4398a55，尚未安装。没有网络发送、供应商实现、安装包或真实模型证据；不能直接替换应用现用 S1/S2。
 
 R1 以本地单 SQLite 事务维护 Runtime 与应用记录一致；应用经公开端口操作自己表。未知发放不得恢复令牌，部分用量不等于最终用量，业务不可采用不阻止真实终结/用量落账。端口可信且禁外部 I/O，不是恶意代码沙箱。后续 R2 抽取现有串行核心，R3 接入与迁移，不另建第二套生产调用器。

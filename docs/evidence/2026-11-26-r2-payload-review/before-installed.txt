@@ -1,0 +1,322 @@
+test_captured_empty_response_is_readable_and_exported_once (test_r2_payload_availability.PayloadAvailabilityTests.test_captured_empty_response_is_readable_and_exported_once) ... ok
+test_existing_capture_lost_bytes_still_fail_integrity_and_can_be_restored (test_r2_payload_availability.PayloadAvailabilityTests.test_existing_capture_lost_bytes_still_fail_integrity_and_can_be_restored) ... ok
+test_missing_request_is_not_found_without_export_or_new_records (test_r2_payload_availability.PayloadAvailabilityTests.test_missing_request_is_not_found_without_export_or_new_records) ... ok
+test_permission_is_checked_before_unavailable_and_export_has_no_io (test_r2_payload_availability.PayloadAvailabilityTests.test_permission_is_checked_before_unavailable_and_export_has_no_io) ... 
+  test_permission_is_checked_before_unavailable_and_export_has_no_io (test_r2_payload_availability.PayloadAvailabilityTests.test_permission_is_checked_before_unavailable_and_export_has_no_io) (operation='read') ... FAIL
+  test_permission_is_checked_before_unavailable_and_export_has_no_io (test_r2_payload_availability.PayloadAvailabilityTests.test_permission_is_checked_before_unavailable_and_export_has_no_io) (operation='copy') ... FAIL
+test_uncaptured_states_are_unavailable_and_preserve_original_facts (test_r2_payload_availability.PayloadAvailabilityTests.test_uncaptured_states_are_unavailable_and_preserve_original_facts) ... 
+  test_uncaptured_states_are_unavailable_and_preserve_original_facts (test_r2_payload_availability.PayloadAvailabilityTests.test_uncaptured_states_are_unavailable_and_preserve_original_facts) (operation='read', profile='openai', phase='registered') ... FAIL
+  test_uncaptured_states_are_unavailable_and_preserve_original_facts (test_r2_payload_availability.PayloadAvailabilityTests.test_uncaptured_states_are_unavailable_and_preserve_original_facts) (operation='copy', profile='openai', phase='registered') ... FAIL
+  test_uncaptured_states_are_unavailable_and_preserve_original_facts (test_r2_payload_availability.PayloadAvailabilityTests.test_uncaptured_states_are_unavailable_and_preserve_original_facts) (operation='read', profile='openai', phase='cancelled-before') ... FAIL
+  test_uncaptured_states_are_unavailable_and_preserve_original_facts (test_r2_payload_availability.PayloadAvailabilityTests.test_uncaptured_states_are_unavailable_and_preserve_original_facts) (operation='copy', profile='openai', phase='cancelled-before') ... FAIL
+  test_uncaptured_states_are_unavailable_and_preserve_original_facts (test_r2_payload_availability.PayloadAvailabilityTests.test_uncaptured_states_are_unavailable_and_preserve_original_facts) (operation='read', profile='openai', phase='after_dispatch') ... FAIL
+  test_uncaptured_states_are_unavailable_and_preserve_original_facts (test_r2_payload_availability.PayloadAvailabilityTests.test_uncaptured_states_are_unavailable_and_preserve_original_facts) (operation='copy', profile='openai', phase='after_dispatch') ... FAIL
+  test_uncaptured_states_are_unavailable_and_preserve_original_facts (test_r2_payload_availability.PayloadAvailabilityTests.test_uncaptured_states_are_unavailable_and_preserve_original_facts) (operation='read', profile='openai', phase='after_remote') ... FAIL
+  test_uncaptured_states_are_unavailable_and_preserve_original_facts (test_r2_payload_availability.PayloadAvailabilityTests.test_uncaptured_states_are_unavailable_and_preserve_original_facts) (operation='copy', profile='openai', phase='after_remote') ... FAIL
+  test_uncaptured_states_are_unavailable_and_preserve_original_facts (test_r2_payload_availability.PayloadAvailabilityTests.test_uncaptured_states_are_unavailable_and_preserve_original_facts) (operation='read', profile='openai', phase='before_capture_commit') ... FAIL
+  test_uncaptured_states_are_unavailable_and_preserve_original_facts (test_r2_payload_availability.PayloadAvailabilityTests.test_uncaptured_states_are_unavailable_and_preserve_original_facts) (operation='copy', profile='openai', phase='before_capture_commit') ... FAIL
+  test_uncaptured_states_are_unavailable_and_preserve_original_facts (test_r2_payload_availability.PayloadAvailabilityTests.test_uncaptured_states_are_unavailable_and_preserve_original_facts) (operation='read', profile='openai', phase='cancelled-after') ... FAIL
+  test_uncaptured_states_are_unavailable_and_preserve_original_facts (test_r2_payload_availability.PayloadAvailabilityTests.test_uncaptured_states_are_unavailable_and_preserve_original_facts) (operation='copy', profile='openai', phase='cancelled-after') ... FAIL
+  test_uncaptured_states_are_unavailable_and_preserve_original_facts (test_r2_payload_availability.PayloadAvailabilityTests.test_uncaptured_states_are_unavailable_and_preserve_original_facts) (operation='read', profile='local', phase='registered') ... FAIL
+  test_uncaptured_states_are_unavailable_and_preserve_original_facts (test_r2_payload_availability.PayloadAvailabilityTests.test_uncaptured_states_are_unavailable_and_preserve_original_facts) (operation='copy', profile='local', phase='registered') ... FAIL
+  test_uncaptured_states_are_unavailable_and_preserve_original_facts (test_r2_payload_availability.PayloadAvailabilityTests.test_uncaptured_states_are_unavailable_and_preserve_original_facts) (operation='read', profile='local', phase='cancelled-before') ... FAIL
+  test_uncaptured_states_are_unavailable_and_preserve_original_facts (test_r2_payload_availability.PayloadAvailabilityTests.test_uncaptured_states_are_unavailable_and_preserve_original_facts) (operation='copy', profile='local', phase='cancelled-before') ... FAIL
+  test_uncaptured_states_are_unavailable_and_preserve_original_facts (test_r2_payload_availability.PayloadAvailabilityTests.test_uncaptured_states_are_unavailable_and_preserve_original_facts) (operation='read', profile='local', phase='after_dispatch') ... FAIL
+  test_uncaptured_states_are_unavailable_and_preserve_original_facts (test_r2_payload_availability.PayloadAvailabilityTests.test_uncaptured_states_are_unavailable_and_preserve_original_facts) (operation='copy', profile='local', phase='after_dispatch') ... FAIL
+  test_uncaptured_states_are_unavailable_and_preserve_original_facts (test_r2_payload_availability.PayloadAvailabilityTests.test_uncaptured_states_are_unavailable_and_preserve_original_facts) (operation='read', profile='local', phase='after_remote') ... FAIL
+  test_uncaptured_states_are_unavailable_and_preserve_original_facts (test_r2_payload_availability.PayloadAvailabilityTests.test_uncaptured_states_are_unavailable_and_preserve_original_facts) (operation='copy', profile='local', phase='after_remote') ... FAIL
+  test_uncaptured_states_are_unavailable_and_preserve_original_facts (test_r2_payload_availability.PayloadAvailabilityTests.test_uncaptured_states_are_unavailable_and_preserve_original_facts) (operation='read', profile='local', phase='before_capture_commit') ... FAIL
+  test_uncaptured_states_are_unavailable_and_preserve_original_facts (test_r2_payload_availability.PayloadAvailabilityTests.test_uncaptured_states_are_unavailable_and_preserve_original_facts) (operation='copy', profile='local', phase='before_capture_commit') ... FAIL
+  test_uncaptured_states_are_unavailable_and_preserve_original_facts (test_r2_payload_availability.PayloadAvailabilityTests.test_uncaptured_states_are_unavailable_and_preserve_original_facts) (operation='read', profile='local', phase='cancelled-after') ... FAIL
+  test_uncaptured_states_are_unavailable_and_preserve_original_facts (test_r2_payload_availability.PayloadAvailabilityTests.test_uncaptured_states_are_unavailable_and_preserve_original_facts) (operation='copy', profile='local', phase='cancelled-after') ... FAIL
+
+======================================================================
+FAIL: test_permission_is_checked_before_unavailable_and_export_has_no_io (test_r2_payload_availability.PayloadAvailabilityTests.test_permission_is_checked_before_unavailable_and_export_has_no_io) (operation='read')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<runtime-checkout>/tests/test_r2_payload_availability.py", line 63, in reject_payload
+    self.assertEqual(caught.exception.code, code)
+AssertionError: 'INTEGRITY_FAILURE' != 'UNAVAILABLE'
+- INTEGRITY_FAILURE
++ UNAVAILABLE
+
+
+======================================================================
+FAIL: test_permission_is_checked_before_unavailable_and_export_has_no_io (test_r2_payload_availability.PayloadAvailabilityTests.test_permission_is_checked_before_unavailable_and_export_has_no_io) (operation='copy')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<runtime-checkout>/tests/test_r2_payload_availability.py", line 63, in reject_payload
+    self.assertEqual(caught.exception.code, code)
+AssertionError: 'INTEGRITY_FAILURE' != 'UNAVAILABLE'
+- INTEGRITY_FAILURE
++ UNAVAILABLE
+
+
+======================================================================
+FAIL: test_uncaptured_states_are_unavailable_and_preserve_original_facts (test_r2_payload_availability.PayloadAvailabilityTests.test_uncaptured_states_are_unavailable_and_preserve_original_facts) (operation='read', profile='openai', phase='registered')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<runtime-checkout>/tests/test_r2_payload_availability.py", line 63, in reject_payload
+    self.assertEqual(caught.exception.code, code)
+AssertionError: 'INTEGRITY_FAILURE' != 'UNAVAILABLE'
+- INTEGRITY_FAILURE
++ UNAVAILABLE
+
+
+======================================================================
+FAIL: test_uncaptured_states_are_unavailable_and_preserve_original_facts (test_r2_payload_availability.PayloadAvailabilityTests.test_uncaptured_states_are_unavailable_and_preserve_original_facts) (operation='copy', profile='openai', phase='registered')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<runtime-checkout>/tests/test_r2_payload_availability.py", line 63, in reject_payload
+    self.assertEqual(caught.exception.code, code)
+AssertionError: 'INTEGRITY_FAILURE' != 'UNAVAILABLE'
+- INTEGRITY_FAILURE
++ UNAVAILABLE
+
+
+======================================================================
+FAIL: test_uncaptured_states_are_unavailable_and_preserve_original_facts (test_r2_payload_availability.PayloadAvailabilityTests.test_uncaptured_states_are_unavailable_and_preserve_original_facts) (operation='read', profile='openai', phase='cancelled-before')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<runtime-checkout>/tests/test_r2_payload_availability.py", line 63, in reject_payload
+    self.assertEqual(caught.exception.code, code)
+AssertionError: 'INTEGRITY_FAILURE' != 'UNAVAILABLE'
+- INTEGRITY_FAILURE
++ UNAVAILABLE
+
+
+======================================================================
+FAIL: test_uncaptured_states_are_unavailable_and_preserve_original_facts (test_r2_payload_availability.PayloadAvailabilityTests.test_uncaptured_states_are_unavailable_and_preserve_original_facts) (operation='copy', profile='openai', phase='cancelled-before')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<runtime-checkout>/tests/test_r2_payload_availability.py", line 63, in reject_payload
+    self.assertEqual(caught.exception.code, code)
+AssertionError: 'INTEGRITY_FAILURE' != 'UNAVAILABLE'
+- INTEGRITY_FAILURE
++ UNAVAILABLE
+
+
+======================================================================
+FAIL: test_uncaptured_states_are_unavailable_and_preserve_original_facts (test_r2_payload_availability.PayloadAvailabilityTests.test_uncaptured_states_are_unavailable_and_preserve_original_facts) (operation='read', profile='openai', phase='after_dispatch')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<runtime-checkout>/tests/test_r2_payload_availability.py", line 63, in reject_payload
+    self.assertEqual(caught.exception.code, code)
+AssertionError: 'INTEGRITY_FAILURE' != 'UNAVAILABLE'
+- INTEGRITY_FAILURE
++ UNAVAILABLE
+
+
+======================================================================
+FAIL: test_uncaptured_states_are_unavailable_and_preserve_original_facts (test_r2_payload_availability.PayloadAvailabilityTests.test_uncaptured_states_are_unavailable_and_preserve_original_facts) (operation='copy', profile='openai', phase='after_dispatch')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<runtime-checkout>/tests/test_r2_payload_availability.py", line 63, in reject_payload
+    self.assertEqual(caught.exception.code, code)
+AssertionError: 'INTEGRITY_FAILURE' != 'UNAVAILABLE'
+- INTEGRITY_FAILURE
++ UNAVAILABLE
+
+
+======================================================================
+FAIL: test_uncaptured_states_are_unavailable_and_preserve_original_facts (test_r2_payload_availability.PayloadAvailabilityTests.test_uncaptured_states_are_unavailable_and_preserve_original_facts) (operation='read', profile='openai', phase='after_remote')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<runtime-checkout>/tests/test_r2_payload_availability.py", line 63, in reject_payload
+    self.assertEqual(caught.exception.code, code)
+AssertionError: 'INTEGRITY_FAILURE' != 'UNAVAILABLE'
+- INTEGRITY_FAILURE
++ UNAVAILABLE
+
+
+======================================================================
+FAIL: test_uncaptured_states_are_unavailable_and_preserve_original_facts (test_r2_payload_availability.PayloadAvailabilityTests.test_uncaptured_states_are_unavailable_and_preserve_original_facts) (operation='copy', profile='openai', phase='after_remote')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<runtime-checkout>/tests/test_r2_payload_availability.py", line 63, in reject_payload
+    self.assertEqual(caught.exception.code, code)
+AssertionError: 'INTEGRITY_FAILURE' != 'UNAVAILABLE'
+- INTEGRITY_FAILURE
++ UNAVAILABLE
+
+
+======================================================================
+FAIL: test_uncaptured_states_are_unavailable_and_preserve_original_facts (test_r2_payload_availability.PayloadAvailabilityTests.test_uncaptured_states_are_unavailable_and_preserve_original_facts) (operation='read', profile='openai', phase='before_capture_commit')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<runtime-checkout>/tests/test_r2_payload_availability.py", line 63, in reject_payload
+    self.assertEqual(caught.exception.code, code)
+AssertionError: 'INTEGRITY_FAILURE' != 'UNAVAILABLE'
+- INTEGRITY_FAILURE
++ UNAVAILABLE
+
+
+======================================================================
+FAIL: test_uncaptured_states_are_unavailable_and_preserve_original_facts (test_r2_payload_availability.PayloadAvailabilityTests.test_uncaptured_states_are_unavailable_and_preserve_original_facts) (operation='copy', profile='openai', phase='before_capture_commit')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<runtime-checkout>/tests/test_r2_payload_availability.py", line 63, in reject_payload
+    self.assertEqual(caught.exception.code, code)
+AssertionError: 'INTEGRITY_FAILURE' != 'UNAVAILABLE'
+- INTEGRITY_FAILURE
++ UNAVAILABLE
+
+
+======================================================================
+FAIL: test_uncaptured_states_are_unavailable_and_preserve_original_facts (test_r2_payload_availability.PayloadAvailabilityTests.test_uncaptured_states_are_unavailable_and_preserve_original_facts) (operation='read', profile='openai', phase='cancelled-after')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<runtime-checkout>/tests/test_r2_payload_availability.py", line 63, in reject_payload
+    self.assertEqual(caught.exception.code, code)
+AssertionError: 'INTEGRITY_FAILURE' != 'UNAVAILABLE'
+- INTEGRITY_FAILURE
++ UNAVAILABLE
+
+
+======================================================================
+FAIL: test_uncaptured_states_are_unavailable_and_preserve_original_facts (test_r2_payload_availability.PayloadAvailabilityTests.test_uncaptured_states_are_unavailable_and_preserve_original_facts) (operation='copy', profile='openai', phase='cancelled-after')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<runtime-checkout>/tests/test_r2_payload_availability.py", line 63, in reject_payload
+    self.assertEqual(caught.exception.code, code)
+AssertionError: 'INTEGRITY_FAILURE' != 'UNAVAILABLE'
+- INTEGRITY_FAILURE
++ UNAVAILABLE
+
+
+======================================================================
+FAIL: test_uncaptured_states_are_unavailable_and_preserve_original_facts (test_r2_payload_availability.PayloadAvailabilityTests.test_uncaptured_states_are_unavailable_and_preserve_original_facts) (operation='read', profile='local', phase='registered')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<runtime-checkout>/tests/test_r2_payload_availability.py", line 63, in reject_payload
+    self.assertEqual(caught.exception.code, code)
+AssertionError: 'INTEGRITY_FAILURE' != 'UNAVAILABLE'
+- INTEGRITY_FAILURE
++ UNAVAILABLE
+
+
+======================================================================
+FAIL: test_uncaptured_states_are_unavailable_and_preserve_original_facts (test_r2_payload_availability.PayloadAvailabilityTests.test_uncaptured_states_are_unavailable_and_preserve_original_facts) (operation='copy', profile='local', phase='registered')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<runtime-checkout>/tests/test_r2_payload_availability.py", line 63, in reject_payload
+    self.assertEqual(caught.exception.code, code)
+AssertionError: 'INTEGRITY_FAILURE' != 'UNAVAILABLE'
+- INTEGRITY_FAILURE
++ UNAVAILABLE
+
+
+======================================================================
+FAIL: test_uncaptured_states_are_unavailable_and_preserve_original_facts (test_r2_payload_availability.PayloadAvailabilityTests.test_uncaptured_states_are_unavailable_and_preserve_original_facts) (operation='read', profile='local', phase='cancelled-before')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<runtime-checkout>/tests/test_r2_payload_availability.py", line 63, in reject_payload
+    self.assertEqual(caught.exception.code, code)
+AssertionError: 'INTEGRITY_FAILURE' != 'UNAVAILABLE'
+- INTEGRITY_FAILURE
++ UNAVAILABLE
+
+
+======================================================================
+FAIL: test_uncaptured_states_are_unavailable_and_preserve_original_facts (test_r2_payload_availability.PayloadAvailabilityTests.test_uncaptured_states_are_unavailable_and_preserve_original_facts) (operation='copy', profile='local', phase='cancelled-before')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<runtime-checkout>/tests/test_r2_payload_availability.py", line 63, in reject_payload
+    self.assertEqual(caught.exception.code, code)
+AssertionError: 'INTEGRITY_FAILURE' != 'UNAVAILABLE'
+- INTEGRITY_FAILURE
++ UNAVAILABLE
+
+
+======================================================================
+FAIL: test_uncaptured_states_are_unavailable_and_preserve_original_facts (test_r2_payload_availability.PayloadAvailabilityTests.test_uncaptured_states_are_unavailable_and_preserve_original_facts) (operation='read', profile='local', phase='after_dispatch')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<runtime-checkout>/tests/test_r2_payload_availability.py", line 63, in reject_payload
+    self.assertEqual(caught.exception.code, code)
+AssertionError: 'INTEGRITY_FAILURE' != 'UNAVAILABLE'
+- INTEGRITY_FAILURE
++ UNAVAILABLE
+
+
+======================================================================
+FAIL: test_uncaptured_states_are_unavailable_and_preserve_original_facts (test_r2_payload_availability.PayloadAvailabilityTests.test_uncaptured_states_are_unavailable_and_preserve_original_facts) (operation='copy', profile='local', phase='after_dispatch')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<runtime-checkout>/tests/test_r2_payload_availability.py", line 63, in reject_payload
+    self.assertEqual(caught.exception.code, code)
+AssertionError: 'INTEGRITY_FAILURE' != 'UNAVAILABLE'
+- INTEGRITY_FAILURE
++ UNAVAILABLE
+
+
+======================================================================
+FAIL: test_uncaptured_states_are_unavailable_and_preserve_original_facts (test_r2_payload_availability.PayloadAvailabilityTests.test_uncaptured_states_are_unavailable_and_preserve_original_facts) (operation='read', profile='local', phase='after_remote')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<runtime-checkout>/tests/test_r2_payload_availability.py", line 63, in reject_payload
+    self.assertEqual(caught.exception.code, code)
+AssertionError: 'INTEGRITY_FAILURE' != 'UNAVAILABLE'
+- INTEGRITY_FAILURE
++ UNAVAILABLE
+
+
+======================================================================
+FAIL: test_uncaptured_states_are_unavailable_and_preserve_original_facts (test_r2_payload_availability.PayloadAvailabilityTests.test_uncaptured_states_are_unavailable_and_preserve_original_facts) (operation='copy', profile='local', phase='after_remote')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<runtime-checkout>/tests/test_r2_payload_availability.py", line 63, in reject_payload
+    self.assertEqual(caught.exception.code, code)
+AssertionError: 'INTEGRITY_FAILURE' != 'UNAVAILABLE'
+- INTEGRITY_FAILURE
++ UNAVAILABLE
+
+
+======================================================================
+FAIL: test_uncaptured_states_are_unavailable_and_preserve_original_facts (test_r2_payload_availability.PayloadAvailabilityTests.test_uncaptured_states_are_unavailable_and_preserve_original_facts) (operation='read', profile='local', phase='before_capture_commit')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<runtime-checkout>/tests/test_r2_payload_availability.py", line 63, in reject_payload
+    self.assertEqual(caught.exception.code, code)
+AssertionError: 'INTEGRITY_FAILURE' != 'UNAVAILABLE'
+- INTEGRITY_FAILURE
++ UNAVAILABLE
+
+
+======================================================================
+FAIL: test_uncaptured_states_are_unavailable_and_preserve_original_facts (test_r2_payload_availability.PayloadAvailabilityTests.test_uncaptured_states_are_unavailable_and_preserve_original_facts) (operation='copy', profile='local', phase='before_capture_commit')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<runtime-checkout>/tests/test_r2_payload_availability.py", line 63, in reject_payload
+    self.assertEqual(caught.exception.code, code)
+AssertionError: 'INTEGRITY_FAILURE' != 'UNAVAILABLE'
+- INTEGRITY_FAILURE
++ UNAVAILABLE
+
+
+======================================================================
+FAIL: test_uncaptured_states_are_unavailable_and_preserve_original_facts (test_r2_payload_availability.PayloadAvailabilityTests.test_uncaptured_states_are_unavailable_and_preserve_original_facts) (operation='read', profile='local', phase='cancelled-after')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<runtime-checkout>/tests/test_r2_payload_availability.py", line 63, in reject_payload
+    self.assertEqual(caught.exception.code, code)
+AssertionError: 'INTEGRITY_FAILURE' != 'UNAVAILABLE'
+- INTEGRITY_FAILURE
++ UNAVAILABLE
+
+
+======================================================================
+FAIL: test_uncaptured_states_are_unavailable_and_preserve_original_facts (test_r2_payload_availability.PayloadAvailabilityTests.test_uncaptured_states_are_unavailable_and_preserve_original_facts) (operation='copy', profile='local', phase='cancelled-after')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<runtime-checkout>/tests/test_r2_payload_availability.py", line 63, in reject_payload
+    self.assertEqual(caught.exception.code, code)
+AssertionError: 'INTEGRITY_FAILURE' != 'UNAVAILABLE'
+- INTEGRITY_FAILURE
++ UNAVAILABLE
+
+
+----------------------------------------------------------------------
+Ran 5 tests in 1.182s
+
+FAILED (failures=26)

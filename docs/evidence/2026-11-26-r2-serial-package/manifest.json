@@ -1,0 +1,9 @@
+{
+  "independent-consumer.json": "6c418b0721769cf9c40bb66a250a060eb7aa07b0c1da80680859e89ebf9026c2",
+  "validation.json": "0d18dbf2c4ca49e73cb802947988bda09559b308138755ad06a9873057387742",
+  "installed-tests.txt": "da1aa682c48609cefa2f9b6df8def3af7a800a0e8b025a4608d2871eaf9eb3e5",
+  "compile.json": "c951ffffa87fdc150e34c3a551da41f603c1c53eb4ef9ca39912f8e36f11c199",
+  "source-tests.txt": "9153b3a6933980085517a94b31a8b6b1f6c2d2cf08f21f61acca0b0ce4411b05",
+  "environment-preservation.json": "aa59e063fe518e96d444d0db5b70e2ab708efe4744afc27350c2176992b05c62",
+  "build-manifest.json": "944e01dbf207adb071620b630fec3a29788beb4a46b3738bd9ae56458d73fb53"
+}

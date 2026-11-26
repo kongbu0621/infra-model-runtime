@@ -1,0 +1,19 @@
+{
+  "source_commit": "ec9419b146994b6e001be2ab2f99880c6185f6cd",
+  "wheel": "infra_model_runtime-0.1.0a1-py3-none-any.whl",
+  "wheel_sha256": "174e0cdabe1eaaf9588bac3880dfd8ff0932cc288cca7bd94e53e4cf7c7d0043",
+  "modules": {
+    "infra_model_runtime/runtime.py": "01027d342e6dee0d9b2f915220aef3d5289927b05eb7c3ff08d1bb90ece50d2f",
+    "infra_model_runtime/_boundary.py": "c02175bdb9fc0056671b7179bc3932dd72e422c6c83e9ec0ac2a6ab5ff2340b3",
+    "infra_model_runtime/contracts.py": "d802ed9eec1d64dc8c767ba783e9f36d4c9a593c54cca40343c10ccb59e10228",
+    "infra_model_runtime/content.py": "46f99fd03181a2b2ce1070fcce37a1f78c555d7cef72a0a133cef99b0b359700",
+    "infra_model_runtime/storage.py": "afb7fff8288d52bd20da18444726388a01acf82398a579bd83d0d49f49112163",
+    "infra_model_runtime/protocol.py": "e31f2e0f1802ad18df122f07b680fc071b9ba8482dbc92100323270c3d287a8a",
+    "infra_model_runtime/__init__.py": "a2f5f1853ad7465fdfd8e6b791dfadfc6a337c1e7d96e50640e40d55d5e52bc8",
+    "infra_model_runtime/model.py": "6291a957388eb5b0112be54d4060699713ae20092680f9f834526de997359e40",
+    "infra_model_runtime/ports.py": "b794e530879dea634467a9d22fbe552cd267eb96f3bc805dc841c174cc154502",
+    "infra_model_runtime/credentials.py": "ed24be93df8e0f1caa9285d79a7392fe1cb881ac2fd2441142055ba710a31589",
+    "infra_model_runtime/configuration.py": "02fccb127cdad6f113e058f0823988f58424ab24a6879f5a9f26aa54974f8bc6",
+    "infra_model_runtime/transport.py": "68a23b744dd6c97b8edb8cfb38c0fe7abbd16f55461edcf4fd8466868c612ad3"
+  }
+}

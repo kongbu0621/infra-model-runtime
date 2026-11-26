@@ -1,0 +1,9 @@
+{
+  "previous_source": "afccbde065bbc20fd4485eb5ea5fc0ebfa477cf6",
+  "previous_wheel_sha256": "b9d42c09821d20423afb3ec11275ec25a2d66b8016d3c6736e8624f837839e0c",
+  "previous_installed_modules_verified": 12,
+  "current_source": "c720608edfaa1c22ebf05edaca8f32638e2c34a3",
+  "changed_runtime_files": [
+    "infra_model_runtime/model.py"
+  ]
+}

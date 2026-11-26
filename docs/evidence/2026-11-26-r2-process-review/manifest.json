@@ -1,0 +1,20 @@
+{
+  "runtime_source_commit": "8e52debf73f22a306bc607d5174d8a9e11d7a41e",
+  "test_source_commit": "e9171af19a35557847212d6d401dcf7250f9a221",
+  "new_test_methods": 1,
+  "sigkill_windows_per_protocol": 7,
+  "protocols": 2,
+  "source_tests": 130,
+  "installed_tests": 130,
+  "runtime_changed": false,
+  "reinstalled": false,
+  "real_models": "NOT_RUN",
+  "files": {
+    "build-manifest.json": "3927476f387ed2cc5aa358cc7ed3ee582785e03c7e5a8397cf79afbb64afb9dd",
+    "compile.json": "9507ca22b7d99464023c97a1344ca96eb58b3aaa91d2eedd15d360214b45cc2b",
+    "installed-tests.txt": "4a831ca8813182460eabf8830f1878475e9d8bbf9def5fd088ecfaa7ea3a993b",
+    "preservation.json": "f6e21d1e1d53e8273be6fef538db2128f9f92f18cc3f7f14eb7e06b0b547a2f2",
+    "process-tests.txt": "ee297b1fc22dfcdee7dd9707bf747562555690ee07c1584f855e0f82d7e1d23b",
+    "source-tests.txt": "669907dbef02ed452d75e3774f5ca528a9341a66de07182aa2b9ebe41bf448df"
+  }
+}

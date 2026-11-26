@@ -1,0 +1,9 @@
+{
+  "previous_runtime_source": "c720608edfaa1c22ebf05edaca8f32638e2c34a3",
+  "previous_wheel_sha256": "6f5755a2b82f5b1f7e18d83ce5afbca56a3d934ead7ccd6ba0159caef720d111",
+  "previous_modules_verified": 12,
+  "current_source": "8e52debf73f22a306bc607d5174d8a9e11d7a41e",
+  "changed_runtime_files": [
+    "infra_model_runtime/transport.py"
+  ]
+}

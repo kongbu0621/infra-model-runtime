@@ -1,0 +1,11 @@
+test_redacted_capture_stays_unknown_and_never_resends (test_r2_secret_capture.DurableSecretCaptureTests.test_redacted_capture_stays_unknown_and_never_resends) ... ok
+test_embedded_or_diagnostic_text_cannot_hide_escaped_credential (test_r2_secret_capture.SecretCaptureTests.test_embedded_or_diagnostic_text_cannot_hide_escaped_credential) ... ok
+test_invalid_json_cannot_hide_escaped_credential (test_r2_secret_capture.SecretCaptureTests.test_invalid_json_cannot_hide_escaped_credential) ... ok
+test_nonsecret_responses_remain_byte_exact (test_r2_secret_capture.SecretCaptureTests.test_nonsecret_responses_remain_byte_exact) ... ok
+test_real_http_capture_checks_encoded_echo_for_both_protocols (test_r2_secret_capture.SecretCaptureTests.test_real_http_capture_checks_encoded_echo_for_both_protocols) ... ok
+test_supported_escape_spellings_are_rejected (test_r2_secret_capture.SecretCaptureTests.test_supported_escape_spellings_are_rejected) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 1.570s
+
+OK

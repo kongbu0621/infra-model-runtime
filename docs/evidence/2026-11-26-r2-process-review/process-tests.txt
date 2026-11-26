@@ -1,0 +1,6 @@
+test_sigkill_windows_in_both_protocols_recover_original_request (test_r2_process_recovery.ProcessRecoveryTests.test_sigkill_windows_in_both_protocols_recover_original_request) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 4.951s
+
+OK

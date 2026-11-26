@@ -1,0 +1,20 @@
+{
+  "source_commit": "afccbde065bbc20fd4485eb5ea5fc0ebfa477cf6",
+  "previous_source_commit": "ec9419b146994b6e001be2ab2f99880c6185f6cd",
+  "old_regression_tests": 6,
+  "old_source_failures": 6,
+  "old_installed_failures": 6,
+  "final_source_tests": 110,
+  "final_installed_tests": 110,
+  "real_models": "NOT_RUN",
+  "files": {
+    "independent-consumer.json": "6c418b0721769cf9c40bb66a250a060eb7aa07b0c1da80680859e89ebf9026c2",
+    "before-source.txt": "92615e5b676a756c04e5912f857573500335f16f0a783fe142dc869e3a85e493",
+    "before-installed.txt": "491dff37a91201121e7282679b2e27a175202d383aa647d5717b63eef073f2e4",
+    "installed-tests.txt": "dc3b4a13543efcb651ccb2621105813a8ef19d7c68bb1232d89e9676f8fd02c8",
+    "compile.json": "483f93d225c65fe25f8cef37e6d6a3753d08d0b0302ec40eebd915f601c9a7db",
+    "source-tests.txt": "ccb0f75abc7299c5eef729616e40f4cc2432513d65a589f9f96bc91f070c21cc",
+    "environment-preservation.json": "f95b03551a3458812dcf0d0a0ebb97fbf50ec8a22ee42bf7f5b64dde6a4ebb2c",
+    "build-manifest.json": "575493b188753da6a259dbb5bb3e8312b1c3e8e4d60742c6cc2c391db0571a9f"
+  }
+}

@@ -1,0 +1,10 @@
+test_captured_empty_response_is_readable_and_exported_once (test_r2_payload_availability.PayloadAvailabilityTests.test_captured_empty_response_is_readable_and_exported_once) ... ok
+test_existing_capture_lost_bytes_still_fail_integrity_and_can_be_restored (test_r2_payload_availability.PayloadAvailabilityTests.test_existing_capture_lost_bytes_still_fail_integrity_and_can_be_restored) ... ok
+test_missing_request_is_not_found_without_export_or_new_records (test_r2_payload_availability.PayloadAvailabilityTests.test_missing_request_is_not_found_without_export_or_new_records) ... ok
+test_permission_is_checked_before_unavailable_and_export_has_no_io (test_r2_payload_availability.PayloadAvailabilityTests.test_permission_is_checked_before_unavailable_and_export_has_no_io) ... ok
+test_uncaptured_states_are_unavailable_and_preserve_original_facts (test_r2_payload_availability.PayloadAvailabilityTests.test_uncaptured_states_are_unavailable_and_preserve_original_facts) ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 1.388s
+
+OK

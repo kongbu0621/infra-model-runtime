@@ -1,0 +1,26 @@
+{
+  "runtime_source_commit": "9536de7d7b3078497f392c409ddc9735c37f89ef",
+  "test_source_commit": "9536de7d7b3078497f392c409ddc9735c37f89ef",
+  "previous_runtime_source_commit": "8e52debf73f22a306bc607d5174d8a9e11d7a41e",
+  "new_test_methods": 5,
+  "old_failure_subcases": 26,
+  "source_tests": 135,
+  "installed_tests": 135,
+  "legacy_stores": 6,
+  "real_models": "NOT_RUN",
+  "paths_redacted_in_published_logs": true,
+  "files": {
+    "after-targeted.txt": "e151b55e075e6345c930ac353d4d3155af45138145fb417075e160c384d5469f",
+    "before-installed.txt": "2c1b51498f7f5d5987ba0aa9c3bc10790c7458bfe35313cfba9571b369b5b0f5",
+    "before-source.txt": "269d7823612fc2be61b98727cf65e6c5c8b59f55d20896898468d28d584a998a",
+    "build-manifest.json": "e09846184ff9e4bef1da0400180daab64a90a88d905ebdabd548bd02818f8289",
+    "compile.json": "b3686a6bd4becd7f202e89c70bc0b609dfa4fb9966acb66a5876bd35a78837cf",
+    "environment-preservation.json": "f95b03551a3458812dcf0d0a0ebb97fbf50ec8a22ee42bf7f5b64dde6a4ebb2c",
+    "independent-consumer.json": "6c418b0721769cf9c40bb66a250a060eb7aa07b0c1da80680859e89ebf9026c2",
+    "installed-tests.txt": "3166e81c090a8279ed40ce86095897d217be21973842ca851adc848624f7c672",
+    "legacy-read.json": "0775a9b3ffd26e3eed1ddeb0ac73c8f280f32a69d8ddcaa1c1ee11c5c3f8ac5d",
+    "legacy-write.json": "faff4f0391a5acd0cf1cea2b2b8587612eb4298d8b7228a70e217f5ac1e40fc0",
+    "source-tests.txt": "48cb54c297a8892df8e801172d141127dafd07d95b6b5c92032a1c68b0a8e5b5",
+    "version-transition.json": "5a1ff515e1a75e5f3fe8e191b792685c9f826f45cc86099123f9504d174f290c"
+  }
+}

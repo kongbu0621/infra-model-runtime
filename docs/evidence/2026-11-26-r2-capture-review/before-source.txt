@@ -1,0 +1,199 @@
+test_redacted_capture_stays_unknown_and_never_resends (test_r2_secret_capture.DurableSecretCaptureTests.test_redacted_capture_stays_unknown_and_never_resends) ... 
+  test_redacted_capture_stays_unknown_and_never_resends (test_r2_secret_capture.DurableSecretCaptureTests.test_redacted_capture_stays_unknown_and_never_resends) (profile='openai', case='truncated') ... FAIL
+  test_redacted_capture_stays_unknown_and_never_resends (test_r2_secret_capture.DurableSecretCaptureTests.test_redacted_capture_stays_unknown_and_never_resends) (profile='openai', case='duplicate') ... FAIL
+  test_redacted_capture_stays_unknown_and_never_resends (test_r2_secret_capture.DurableSecretCaptureTests.test_redacted_capture_stays_unknown_and_never_resends) (profile='openai', case='embedded') ... FAIL
+  test_redacted_capture_stays_unknown_and_never_resends (test_r2_secret_capture.DurableSecretCaptureTests.test_redacted_capture_stays_unknown_and_never_resends) (profile='local', case='truncated') ... FAIL
+  test_redacted_capture_stays_unknown_and_never_resends (test_r2_secret_capture.DurableSecretCaptureTests.test_redacted_capture_stays_unknown_and_never_resends) (profile='local', case='duplicate') ... FAIL
+  test_redacted_capture_stays_unknown_and_never_resends (test_r2_secret_capture.DurableSecretCaptureTests.test_redacted_capture_stays_unknown_and_never_resends) (profile='local', case='embedded') ... FAIL
+test_embedded_or_diagnostic_text_cannot_hide_escaped_credential (test_r2_secret_capture.SecretCaptureTests.test_embedded_or_diagnostic_text_cannot_hide_escaped_credential) ... 
+  test_embedded_or_diagnostic_text_cannot_hide_escaped_credential (test_r2_secret_capture.SecretCaptureTests.test_embedded_or_diagnostic_text_cannot_hide_escaped_credential) (text_kind='{"echo":"\\u0073') ... FAIL
+  test_embedded_or_diagnostic_text_cannot_hide_escaped_credential (test_r2_secret_capture.SecretCaptureTests.test_embedded_or_diagnostic_text_cannot_hide_escaped_credential) (text_kind='{"x":0,"x":1,"e') ... FAIL
+  test_embedded_or_diagnostic_text_cannot_hide_escaped_credential (test_r2_secret_capture.SecretCaptureTests.test_embedded_or_diagnostic_text_cannot_hide_escaped_credential) (text_kind='peer diagnostic') ... FAIL
+  test_embedded_or_diagnostic_text_cannot_hide_escaped_credential (test_r2_secret_capture.SecretCaptureTests.test_embedded_or_diagnostic_text_cannot_hide_escaped_credential) (text_kind='["\\u0073\\u0079\\') ... FAIL
+test_invalid_json_cannot_hide_escaped_credential (test_r2_secret_capture.SecretCaptureTests.test_invalid_json_cannot_hide_escaped_credential) ... 
+  test_invalid_json_cannot_hide_escaped_credential (test_r2_secret_capture.SecretCaptureTests.test_invalid_json_cannot_hide_escaped_credential) (case='truncated') ... FAIL
+  test_invalid_json_cannot_hide_escaped_credential (test_r2_secret_capture.SecretCaptureTests.test_invalid_json_cannot_hide_escaped_credential) (case='duplicate') ... FAIL
+  test_invalid_json_cannot_hide_escaped_credential (test_r2_secret_capture.SecretCaptureTests.test_invalid_json_cannot_hide_escaped_credential) (case='invalid-utf8') ... FAIL
+  test_invalid_json_cannot_hide_escaped_credential (test_r2_secret_capture.SecretCaptureTests.test_invalid_json_cannot_hide_escaped_credential) (case='trailing-data') ... FAIL
+  test_invalid_json_cannot_hide_escaped_credential (test_r2_secret_capture.SecretCaptureTests.test_invalid_json_cannot_hide_escaped_credential) (case='deep') ... FAIL
+  test_invalid_json_cannot_hide_escaped_credential (test_r2_secret_capture.SecretCaptureTests.test_invalid_json_cannot_hide_escaped_credential) (case='many-nodes') ... FAIL
+test_nonsecret_responses_remain_byte_exact (test_r2_secret_capture.SecretCaptureTests.test_nonsecret_responses_remain_byte_exact) ... ok
+test_real_http_capture_checks_encoded_echo_for_both_protocols (test_r2_secret_capture.SecretCaptureTests.test_real_http_capture_checks_encoded_echo_for_both_protocols) ... 
+  test_real_http_capture_checks_encoded_echo_for_both_protocols (test_r2_secret_capture.SecretCaptureTests.test_real_http_capture_checks_encoded_echo_for_both_protocols) (suffix='/responses') ... FAIL
+  test_real_http_capture_checks_encoded_echo_for_both_protocols (test_r2_secret_capture.SecretCaptureTests.test_real_http_capture_checks_encoded_echo_for_both_protocols) (suffix='/chat/completions') ... FAIL
+test_supported_escape_spellings_are_rejected (test_r2_secret_capture.SecretCaptureTests.test_supported_escape_spellings_are_rejected) ... ok
+
+======================================================================
+FAIL: test_redacted_capture_stays_unknown_and_never_resends (test_r2_secret_capture.DurableSecretCaptureTests.test_redacted_capture_stays_unknown_and_never_resends) (profile='openai', case='truncated')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<review-evidence>/before-tests/test_r2_secret_capture.py", line 126, in test_redacted_capture_stays_unknown_and_never_resends
+    self.assertEqual(runtime.read_payload('example','job','response'),b'')
+AssertionError: b'{"echo":"\\u0073\\u0079\\u006e\\u0074\\u0[126 chars]06e"' != b''
+
+======================================================================
+FAIL: test_redacted_capture_stays_unknown_and_never_resends (test_r2_secret_capture.DurableSecretCaptureTests.test_redacted_capture_stays_unknown_and_never_resends) (profile='openai', case='duplicate')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<review-evidence>/before-tests/test_r2_secret_capture.py", line 126, in test_redacted_capture_stays_unknown_and_never_resends
+    self.assertEqual(runtime.read_payload('example','job','response'),b'')
+AssertionError: b'{"x":0,"x":1,"echo":"\\u0073\\u0079\\u006[139 chars]6e"}' != b''
+
+======================================================================
+FAIL: test_redacted_capture_stays_unknown_and_never_resends (test_r2_secret_capture.DurableSecretCaptureTests.test_redacted_capture_stays_unknown_and_never_resends) (profile='openai', case='embedded')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<review-evidence>/before-tests/test_r2_secret_capture.py", line 126, in test_redacted_capture_stays_unknown_and_never_resends
+    self.assertEqual(runtime.read_payload('example','job','response'),b'')
+AssertionError: b'{"error":null,"id":"resp-fixture","model"[498 chars]12}}' != b''
+
+======================================================================
+FAIL: test_redacted_capture_stays_unknown_and_never_resends (test_r2_secret_capture.DurableSecretCaptureTests.test_redacted_capture_stays_unknown_and_never_resends) (profile='local', case='truncated')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<review-evidence>/before-tests/test_r2_secret_capture.py", line 126, in test_redacted_capture_stays_unknown_and_never_resends
+    self.assertEqual(runtime.read_payload('example','job','response'),b'')
+AssertionError: b'{"echo":"\\u0073\\u0079\\u006e\\u0074\\u0[126 chars]06e"' != b''
+
+======================================================================
+FAIL: test_redacted_capture_stays_unknown_and_never_resends (test_r2_secret_capture.DurableSecretCaptureTests.test_redacted_capture_stays_unknown_and_never_resends) (profile='local', case='duplicate')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<review-evidence>/before-tests/test_r2_secret_capture.py", line 126, in test_redacted_capture_stays_unknown_and_never_resends
+    self.assertEqual(runtime.read_payload('example','job','response'),b'')
+AssertionError: b'{"x":0,"x":1,"echo":"\\u0073\\u0079\\u006[139 chars]6e"}' != b''
+
+======================================================================
+FAIL: test_redacted_capture_stays_unknown_and_never_resends (test_r2_secret_capture.DurableSecretCaptureTests.test_redacted_capture_stays_unknown_and_never_resends) (profile='local', case='embedded')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<review-evidence>/before-tests/test_r2_secret_capture.py", line 126, in test_redacted_capture_stays_unknown_and_never_resends
+    self.assertEqual(runtime.read_payload('example','job','response'),b'')
+AssertionError: b'{"choices":[{"finish_reason":"stop","inde[405 chars]12}}' != b''
+
+======================================================================
+FAIL: test_embedded_or_diagnostic_text_cannot_hide_escaped_credential (test_r2_secret_capture.SecretCaptureTests.test_embedded_or_diagnostic_text_cannot_hide_escaped_credential) (text_kind='{"echo":"\\u0073')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<review-evidence>/before-tests/test_r2_secret_capture.py", line 52, in test_embedded_or_diagnostic_text_cannot_hide_escaped_credential
+    self.rejected(json.dumps({'output_text':text}).encode())
+  File "<review-evidence>/before-tests/test_r2_secret_capture.py", line 38, in rejected
+    self.assertEqual(found,b'','encoded credential escaped the capture boundary')
+AssertionError: b'{"output_text": "{\\"echo\\":\\"\\\\u0073[190 chars]\""}' != b'' : encoded credential escaped the capture boundary
+
+======================================================================
+FAIL: test_embedded_or_diagnostic_text_cannot_hide_escaped_credential (test_r2_secret_capture.SecretCaptureTests.test_embedded_or_diagnostic_text_cannot_hide_escaped_credential) (text_kind='{"x":0,"x":1,"e')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<review-evidence>/before-tests/test_r2_secret_capture.py", line 52, in test_embedded_or_diagnostic_text_cannot_hide_escaped_credential
+    self.rejected(json.dumps({'output_text':text}).encode())
+  File "<review-evidence>/before-tests/test_r2_secret_capture.py", line 38, in rejected
+    self.assertEqual(found,b'','encoded credential escaped the capture boundary')
+AssertionError: b'{"output_text": "{\\"x\\":0,\\"x\\":1,\\"[211 chars]"}"}' != b'' : encoded credential escaped the capture boundary
+
+======================================================================
+FAIL: test_embedded_or_diagnostic_text_cannot_hide_escaped_credential (test_r2_secret_capture.SecretCaptureTests.test_embedded_or_diagnostic_text_cannot_hide_escaped_credential) (text_kind='peer diagnostic')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<review-evidence>/before-tests/test_r2_secret_capture.py", line 52, in test_embedded_or_diagnostic_text_cannot_hide_escaped_credential
+    self.rejected(json.dumps({'output_text':text}).encode())
+  File "<review-evidence>/before-tests/test_r2_secret_capture.py", line 38, in rejected
+    self.assertEqual(found,b'','encoded credential escaped the capture boundary')
+AssertionError: b'{"output_text": "peer diagnostic: \\\\u00[189 chars]6e"}' != b'' : encoded credential escaped the capture boundary
+
+======================================================================
+FAIL: test_embedded_or_diagnostic_text_cannot_hide_escaped_credential (test_r2_secret_capture.SecretCaptureTests.test_embedded_or_diagnostic_text_cannot_hide_escaped_credential) (text_kind='["\\u0073\\u0079\\')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<review-evidence>/before-tests/test_r2_secret_capture.py", line 52, in test_embedded_or_diagnostic_text_cannot_hide_escaped_credential
+    self.rejected(json.dumps({'output_text':text}).encode())
+  File "<review-evidence>/before-tests/test_r2_secret_capture.py", line 38, in rejected
+    self.assertEqual(found,b'','encoded credential escaped the capture boundary')
+AssertionError: b'{"output_text": "[\\"\\\\u0073\\\\u0079\\[189 chars]ng"}' != b'' : encoded credential escaped the capture boundary
+
+======================================================================
+FAIL: test_invalid_json_cannot_hide_escaped_credential (test_r2_secret_capture.SecretCaptureTests.test_invalid_json_cannot_hide_escaped_credential) (case='truncated')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<review-evidence>/before-tests/test_r2_secret_capture.py", line 43, in test_invalid_json_cannot_hide_escaped_credential
+    with self.subTest(case=name):self.rejected(raw)
+                                 ^^^^^^^^^^^^^^^^^^
+  File "<review-evidence>/before-tests/test_r2_secret_capture.py", line 38, in rejected
+    self.assertEqual(found,b'','encoded credential escaped the capture boundary')
+AssertionError: b'{"echo":"\\u0073\\u0079\\u006e\\u0074\\u0[119 chars]06e"' != b'' : encoded credential escaped the capture boundary
+
+======================================================================
+FAIL: test_invalid_json_cannot_hide_escaped_credential (test_r2_secret_capture.SecretCaptureTests.test_invalid_json_cannot_hide_escaped_credential) (case='duplicate')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<review-evidence>/before-tests/test_r2_secret_capture.py", line 43, in test_invalid_json_cannot_hide_escaped_credential
+    with self.subTest(case=name):self.rejected(raw)
+                                 ^^^^^^^^^^^^^^^^^^
+  File "<review-evidence>/before-tests/test_r2_secret_capture.py", line 38, in rejected
+    self.assertEqual(found,b'','encoded credential escaped the capture boundary')
+AssertionError: b'{"x":0,"x":1,"echo":"\\u0073\\u0079\\u006[132 chars]6e"}' != b'' : encoded credential escaped the capture boundary
+
+======================================================================
+FAIL: test_invalid_json_cannot_hide_escaped_credential (test_r2_secret_capture.SecretCaptureTests.test_invalid_json_cannot_hide_escaped_credential) (case='invalid-utf8')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<review-evidence>/before-tests/test_r2_secret_capture.py", line 43, in test_invalid_json_cannot_hide_escaped_credential
+    with self.subTest(case=name):self.rejected(raw)
+                                 ^^^^^^^^^^^^^^^^^^
+  File "<review-evidence>/before-tests/test_r2_secret_capture.py", line 38, in rejected
+    self.assertEqual(found,b'','encoded credential escaped the capture boundary')
+AssertionError: b'{"bad":"\xff","echo":"\\u0073\\u0079\\u00[133 chars]6e"}' != b'' : encoded credential escaped the capture boundary
+
+======================================================================
+FAIL: test_invalid_json_cannot_hide_escaped_credential (test_r2_secret_capture.SecretCaptureTests.test_invalid_json_cannot_hide_escaped_credential) (case='trailing-data')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<review-evidence>/before-tests/test_r2_secret_capture.py", line 43, in test_invalid_json_cannot_hide_escaped_credential
+    with self.subTest(case=name):self.rejected(raw)
+                                 ^^^^^^^^^^^^^^^^^^
+  File "<review-evidence>/before-tests/test_r2_secret_capture.py", line 38, in rejected
+    self.assertEqual(found,b'','encoded credential escaped the capture boundary')
+AssertionError: b'{"echo":"\\u0073\\u0079\\u006e\\u0074\\u0[126 chars]xtra' != b'' : encoded credential escaped the capture boundary
+
+======================================================================
+FAIL: test_invalid_json_cannot_hide_escaped_credential (test_r2_secret_capture.SecretCaptureTests.test_invalid_json_cannot_hide_escaped_credential) (case='deep')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<review-evidence>/before-tests/test_r2_secret_capture.py", line 43, in test_invalid_json_cannot_hide_escaped_credential
+    with self.subTest(case=name):self.rejected(raw)
+                                 ^^^^^^^^^^^^^^^^^^
+  File "<review-evidence>/before-tests/test_r2_secret_capture.py", line 38, in rejected
+    self.assertEqual(found,b'','encoded credential escaped the capture boundary')
+AssertionError: b'[[[[[[[[[[[[[[[[[[{"echo":"\\u0073\\u0079[156 chars]]]]]' != b'' : encoded credential escaped the capture boundary
+
+======================================================================
+FAIL: test_invalid_json_cannot_hide_escaped_credential (test_r2_secret_capture.SecretCaptureTests.test_invalid_json_cannot_hide_escaped_credential) (case='many-nodes')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<review-evidence>/before-tests/test_r2_secret_capture.py", line 43, in test_invalid_json_cannot_hide_escaped_credential
+    with self.subTest(case=name):self.rejected(raw)
+                                 ^^^^^^^^^^^^^^^^^^
+  File "<review-evidence>/before-tests/test_r2_secret_capture.py", line 38, in rejected
+    self.assertEqual(found,b'','encoded credential escaped the capture boundary')
+AssertionError: b'{"items":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0[32932 chars]6e"}' != b'' : encoded credential escaped the capture boundary
+
+======================================================================
+FAIL: test_real_http_capture_checks_encoded_echo_for_both_protocols (test_r2_secret_capture.SecretCaptureTests.test_real_http_capture_checks_encoded_echo_for_both_protocols) (suffix='/responses')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<review-evidence>/before-tests/test_r2_secret_capture.py", line 85, in test_real_http_capture_checks_encoded_echo_for_both_protocols
+    self.assertEqual(found,b'')
+AssertionError: b'{"echo":"\\u0073\\u0079\\u006e\\u0074\\u0[129 chars]ling' != b''
+
+======================================================================
+FAIL: test_real_http_capture_checks_encoded_echo_for_both_protocols (test_r2_secret_capture.SecretCaptureTests.test_real_http_capture_checks_encoded_echo_for_both_protocols) (suffix='/chat/completions')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<review-evidence>/before-tests/test_r2_secret_capture.py", line 85, in test_real_http_capture_checks_encoded_echo_for_both_protocols
+    self.assertEqual(found,b'')
+AssertionError: b'{"echo":"\\u0073\\u0079\\u006e\\u0074\\u0[129 chars]ling' != b''
+
+----------------------------------------------------------------------
+Ran 6 tests in 1.592s
+
+FAILED (failures=18)
