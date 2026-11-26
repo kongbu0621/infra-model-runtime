@@ -1,0 +1,13 @@
+{
+  "before": {
+    "rejected_revision": 9,
+    "code": "INTEGRITY_FAILURE",
+    "commit_state": "not_committed",
+    "previous_revision": 8,
+    "stored_bytes": 494416
+  },
+  "after": {
+    "completed": 16,
+    "stored_bytes": 889734
+  }
+}

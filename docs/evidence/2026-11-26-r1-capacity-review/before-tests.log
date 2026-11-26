@@ -1,0 +1,67 @@
+test_create_existing_store_has_structured_conflict_and_preserves_owner (test_r1_capacity_creation.CapacityCreationTests.test_create_existing_store_has_structured_conflict_and_preserves_owner) ... ERROR
+test_create_missing_parent_has_structured_storage_error_then_retries (test_r1_capacity_creation.CapacityCreationTests.test_create_missing_parent_has_structured_storage_error_then_retries) ... ERROR
+test_full_escaped_history_remains_readable_and_replayable (test_r1_capacity_creation.CapacityCreationTests.test_full_escaped_history_remains_readable_and_replayable) ... ERROR
+test_invalid_application_does_not_create_file_and_corrected_input_continues (test_r1_capacity_creation.CapacityCreationTests.test_invalid_application_does_not_create_file_and_corrected_input_continues) ... FAIL
+test_oversize_persisted_json_still_rejects_without_writes (test_r1_capacity_creation.CapacityCreationTests.test_oversize_persisted_json_still_rejects_without_writes) ... ok
+
+======================================================================
+ERROR: test_create_existing_store_has_structured_conflict_and_preserves_owner (test_r1_capacity_creation.CapacityCreationTests.test_create_existing_store_has_structured_conflict_and_preserves_owner)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/imr-r1-20261126/tests/test_r1_capacity_creation.py", line 77, in test_create_existing_store_has_structured_conflict_and_preserves_owner
+    error = self.failure('CONFLICT', lambda: Runtime.create(self.path, self.config))
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/imr-r1-20261126/tests/test_r1.py", line 44, in failure
+    fn()
+  File "/tmp/imr-r1-20261126/tests/test_r1_capacity_creation.py", line 77, in <lambda>
+    error = self.failure('CONFLICT', lambda: Runtime.create(self.path, self.config))
+                                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/imr-r1-20261126/src/infra_model_runtime/runtime.py", line 38, in create
+    fd = os.open(path, os.O_CREAT | os.O_EXCL | os.O_WRONLY, 0o600)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileExistsError: [Errno 17] File exists: '/tmp/tmp7fvwk968/runtime.sqlite'
+
+======================================================================
+ERROR: test_create_missing_parent_has_structured_storage_error_then_retries (test_r1_capacity_creation.CapacityCreationTests.test_create_missing_parent_has_structured_storage_error_then_retries)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/imr-r1-20261126/tests/test_r1_capacity_creation.py", line 84, in test_create_missing_parent_has_structured_storage_error_then_retries
+    error = self.failure('STORAGE_ERROR', lambda: Runtime.create(path, self.config))
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/imr-r1-20261126/tests/test_r1.py", line 44, in failure
+    fn()
+  File "/tmp/imr-r1-20261126/tests/test_r1_capacity_creation.py", line 84, in <lambda>
+    error = self.failure('STORAGE_ERROR', lambda: Runtime.create(path, self.config))
+                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/imr-r1-20261126/src/infra_model_runtime/runtime.py", line 38, in create
+    fd = os.open(path, os.O_CREAT | os.O_EXCL | os.O_WRONLY, 0o600)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/tmp/tmp8yc5oc05/missing/runtime.sqlite'
+
+======================================================================
+ERROR: test_full_escaped_history_remains_readable_and_replayable (test_r1_capacity_creation.CapacityCreationTests.test_full_escaped_history_remains_readable_and_replayable)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/imr-r1-20261126/tests/test_r1_capacity_creation.py", line 33, in test_full_escaped_history_remains_readable_and_replayable
+    observed.append(rt.observe(req.namespace, req.request_id,
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/imr-r1-20261126/src/infra_model_runtime/runtime.py", line 367, in observe
+    with self._transaction(("observe", namespace, request_id, str(observation.revision))) as db:
+  File "/usr/lib/python3.12/contextlib.py", line 144, in __exit__
+    next(self.gen)
+  File "/tmp/imr-r1-20261126/src/infra_model_runtime/runtime.py", line 104, in _transaction
+    raise RuntimeFailure(exc.code, state, identity) from None
+infra_model_runtime.contracts.RuntimeFailure: INTEGRITY_FAILURE
+
+======================================================================
+FAIL: test_invalid_application_does_not_create_file_and_corrected_input_continues (test_r1_capacity_creation.CapacityCreationTests.test_invalid_application_does_not_create_file_and_corrected_input_continues)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/imr-r1-20261126/tests/test_r1_capacity_creation.py", line 71, in test_invalid_application_does_not_create_file_and_corrected_input_continues
+    self.assertFalse(path.exists())
+AssertionError: True is not false
+
+----------------------------------------------------------------------
+Ran 5 tests in 0.344s
+
+FAILED (failures=1, errors=3)

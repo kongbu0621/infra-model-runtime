@@ -1,0 +1,34 @@
+{
+  "before-test-source.txt": {
+    "bytes": 4900,
+    "sha256": "5e973c6a9f1a92f603268cec4a7a3a7ce5f00e12a79808a9bfe8282ce40448f3"
+  },
+  "before-tests.log": {
+    "bytes": 5460,
+    "sha256": "3fdbda62f3b155c0995f730db4b54856fa633e530486d0803c026e59e3e7724b"
+  },
+  "before-validation.json": {
+    "bytes": 1219,
+    "sha256": "da8885856c55562623b49f771b3395a7d862bdf697ade6b0129899de09cea9f6"
+  },
+  "doc-checks.json": {
+    "bytes": 236,
+    "sha256": "5965795d1291453b9129eb193dfe8da0ff325eee0193026792a0289daa38e45e"
+  },
+  "payload-probe.json": {
+    "bytes": 241,
+    "sha256": "b1cfa64db8e33c8790694608756785b99b21551753f68c1b0c721d31aaddcfc1"
+  },
+  "source-manifest.json": {
+    "bytes": 1283,
+    "sha256": "442c2466c06a5554d808d4c0227ace69d729a05f8b30be706aa0a16935f10e59"
+  },
+  "tests.log": {
+    "bytes": 5961,
+    "sha256": "dce664da53c708f93c45f0f4af912e9aa50ff6e8cff004468f873934091e860f"
+  },
+  "validation.json": {
+    "bytes": 546,
+    "sha256": "729dd921c6fe2698ab6af7a7a6670f1d5129240acd29fbab38eaed474e46ba46"
+  }
+}
