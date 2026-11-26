@@ -1,0 +1,23 @@
+{
+  "status": "PASS",
+  "mode": "previous writer followed by current reader in separate processes",
+  "schema": "r1.store.v2",
+  "receipt_replays": 7,
+  "full_table_snapshot_preserved": true,
+  "budget_state_output_exact": true,
+  "source_files": {
+    "src/infra_model_runtime/__init__.py": "9d671698d622cff356b3d49a23b9f106b86206ef93bf697cbbc963eb0b6ea747",
+    "src/infra_model_runtime/contracts.py": "0104349d33fe7ef546bb5c72f7e005cc7758bba7533fc0929bd77e6c81be6575",
+    "src/infra_model_runtime/ports.py": "b794e530879dea634467a9d22fbe552cd267eb96f3bc805dc841c174cc154502",
+    "src/infra_model_runtime/runtime.py": "617c64077bb3bd1b5af7f8a122c2f85d4b4c8510ca1d15eb73bea53a34a8bdd3",
+    "src/infra_model_runtime/storage.py": "61c7ec462506b3507d5105d780827f86729d752a57aaa5c3a1bc056d43d4cc8d"
+  },
+  "previous_source_commit": "8e1ebf9a5eb91ff31d32a3cc737047540b79864b",
+  "current_source_commit": "850b06d4019e987dc4a9c797978832539eecb0a2",
+  "previous_source_files": {
+    "src/infra_model_runtime/__init__.py": "9d671698d622cff356b3d49a23b9f106b86206ef93bf697cbbc963eb0b6ea747",
+    "src/infra_model_runtime/contracts.py": "0104349d33fe7ef546bb5c72f7e005cc7758bba7533fc0929bd77e6c81be6575",
+    "src/infra_model_runtime/ports.py": "b794e530879dea634467a9d22fbe552cd267eb96f3bc805dc841c174cc154502",
+    "src/infra_model_runtime/runtime.py": "fd5ed0d536fa17302b3e5c8c3b28b331710c3ff0cae6bff1e69b4009b5341f48"
+  }
+}

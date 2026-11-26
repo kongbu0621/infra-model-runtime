@@ -1,0 +1,41 @@
+from dataclasses import asdict,replace
+import hashlib,json,sqlite3,sys
+from pathlib import Path
+source=Path(sys.argv[1]).resolve(); mode=sys.argv[2]; folder=Path(sys.argv[3])
+sys.path.insert(0,str(source/'src'))
+from infra_model_runtime import Config,Profile,Request,Runtime,Observation
+import infra_model_runtime
+assert Path(infra_model_runtime.__file__).resolve().is_relative_to(source)
+folder.mkdir(exist_ok=True)
+path=folder/'previous.sqlite'; baseline=folder/'original.json'
+config=Config((Profile('local','v1','model'),Profile('other','v1','model-other')),'local')
+changed=replace(config,default='other',call_limit=0,output_unit_limit=0)
+request=Request('compat','one','task','original',('local','other'),10,1000)
+observations=(Observation(2,False,'unknown',output_units=3),Observation(7,True,'ok','answer'),Observation(16,True,'ok','answer',4))
+def snap():
+ with sqlite3.connect(path) as db:
+  names=[r[0] for r in db.execute("SELECT name FROM sqlite_master WHERE type='table' ORDER BY name")]
+  return {n:db.execute('SELECT * FROM '+n+' ORDER BY rowid').fetchall() for n in names}
+def json_value(value):return json.loads(json.dumps(value,sort_keys=True))
+if mode=='write':
+ rt=Runtime.create(path,config); register=rt.register(request);rt.issue('compat','one',now_ms=100)
+ receipts=[rt.observe('compat','one',obs) for obs in observations]
+ cancel=rt.cancel('compat','one','stop');configure=rt.configure('lower',1,changed)
+ app=rt.change_application('noop','noop',lambda tx,command:tx.execute('SELECT 1'))
+ result=dict(register=asdict(register),observations=[asdict(r) for r in receipts],cancel=asdict(cancel),configure=asdict(configure),application=asdict(app),snapshot=snap(),budget=asdict(rt.budget()),state=asdict(rt.status('compat','one')),output=rt.read_result('compat','one',history=True))
+ baseline.write_text(json.dumps(result,ensure_ascii=False,indent=2)+'\n')
+else:
+ original=json.loads(baseline.read_text()); rt=Runtime(path)
+ assert json_value(snap())==original['snapshot']
+ assert json_value(asdict(rt.register(request)))==original['register']
+ for obs,receipt in reversed(list(zip(observations,original['observations']))):
+  assert json_value(asdict(rt.observe('compat','one',obs)))==receipt
+ assert json_value(asdict(rt.cancel('compat','one','stop')))==original['cancel']
+ assert json_value(asdict(rt.configure('lower',1,changed)))==original['configure']
+ def forbidden(tx,command):raise AssertionError('control callback executed during replay')
+ assert json_value(asdict(rt.change_application('noop','noop',forbidden)))==original['application']
+ assert json_value(asdict(rt.budget()))==original['budget']
+ assert json_value(asdict(rt.status('compat','one')))==original['state']
+ assert rt.read_result('compat','one',history=True)==original['output']
+ assert json_value(snap())==original['snapshot']
+ print(json.dumps(dict(status='PASS',mode='previous writer followed by current reader in separate processes',schema='r1.store.v2',receipt_replays=7,full_table_snapshot_preserved=True,budget_state_output_exact=True,source_files={str(p.relative_to(source)):hashlib.sha256(p.read_bytes()).hexdigest() for p in sorted((source/'src').rglob('*.py'))})))

@@ -1,0 +1,137 @@
+{
+  "register": {
+    "operation": "register",
+    "identity": [
+      "compat",
+      "one"
+    ],
+    "revision": 1,
+    "fingerprint": "0732255cd027b5a7bb6e278e6288a2f9131a7385ff00b8e85a16daa3200bd76b",
+    "version": "r1.receipt.v1"
+  },
+  "observations": [
+    {
+      "operation": "observe",
+      "identity": [
+        "compat",
+        "one"
+      ],
+      "revision": 2,
+      "fingerprint": "8fb94d9ba764328ebb5a1c8ae3ebc57334ebc828670ea141b048c7a32cd12c1f",
+      "version": "r1.receipt.v1"
+    },
+    {
+      "operation": "observe",
+      "identity": [
+        "compat",
+        "one"
+      ],
+      "revision": 7,
+      "fingerprint": "55e39a41e636ed977e55b8f4f20ca6e05bf7a41803d6d5b6eca961975f026f7f",
+      "version": "r1.receipt.v1"
+    },
+    {
+      "operation": "observe",
+      "identity": [
+        "compat",
+        "one"
+      ],
+      "revision": 16,
+      "fingerprint": "2606a16127681b15f717b7fa5e0927fbdee6f35dcaac0529ac6da9704bd9e334",
+      "version": "r1.receipt.v1"
+    }
+  ],
+  "cancel": {
+    "operation": "cancel",
+    "identity": [
+      "compat",
+      "one",
+      "stop"
+    ],
+    "revision": 1,
+    "fingerprint": "b2d30cffe6198dbda11b9529770bdff1f01af2dc157ff54be070ddf794bb0607",
+    "version": "r1.receipt.v1"
+  },
+  "configure": {
+    "operation": "configure",
+    "identity": [
+      "lower"
+    ],
+    "revision": 2,
+    "fingerprint": "5cb1058e297b400d263184649c4d6561fd810a8f90e1753fa2a350369db201a9",
+    "version": "r1.receipt.v1"
+  },
+  "application": {
+    "operation": "application",
+    "identity": [
+      "noop"
+    ],
+    "revision": 1,
+    "fingerprint": "a48838a5da63ab6652e7925667e233cbe0bbc1d60c5516137773ffc361c15485",
+    "version": "r1.receipt.v1"
+  },
+  "snapshot": {
+    "rt_calls": [
+      [
+        "compat",
+        "one",
+        "{\"cancellations\":{\"stop\":{\"fingerprint\":\"b2d30cffe6198dbda11b9529770bdff1f01af2dc157ff54be070ddf794bb0607\",\"identity\":[\"compat\",\"one\",\"stop\"],\"operation\":\"cancel\",\"revision\":1,\"version\":\"r1.receipt.v1\"}},\"cancelled\":true,\"configuration_revision\":1,\"issued\":true,\"observation_revision\":16,\"observations\":{\"16\":{\"observation\":{\"outcome\":\"ok\",\"output_text\":\"answer\",\"output_units\":4,\"revision\":16,\"terminal\":true,\"version\":\"r1.observation.v1\"},\"receipt\":{\"fingerprint\":\"2606a16127681b15f717b7fa5e0927fbdee6f35dcaac0529ac6da9704bd9e334\",\"identity\":[\"compat\",\"one\"],\"operation\":\"observe\",\"revision\":16,\"version\":\"r1.receipt.v1\"}},\"2\":{\"observation\":{\"outcome\":\"unknown\",\"output_text\":null,\"output_units\":3,\"revision\":2,\"terminal\":false,\"version\":\"r1.observation.v1\"},\"receipt\":{\"fingerprint\":\"8fb94d9ba764328ebb5a1c8ae3ebc57334ebc828670ea141b048c7a32cd12c1f\",\"identity\":[\"compat\",\"one\"],\"operation\":\"observe\",\"revision\":2,\"version\":\"r1.receipt.v1\"}},\"7\":{\"observation\":{\"outcome\":\"ok\",\"output_text\":\"answer\",\"output_units\":null,\"revision\":7,\"terminal\":true,\"version\":\"r1.observation.v1\"},\"receipt\":{\"fingerprint\":\"55e39a41e636ed977e55b8f4f20ca6e05bf7a41803d6d5b6eca961975f026f7f\",\"identity\":[\"compat\",\"one\"],\"operation\":\"observe\",\"revision\":7,\"version\":\"r1.receipt.v1\"}}},\"outcome\":\"ok\",\"output_reserved\":0,\"output_text\":\"answer\",\"output_units\":4,\"permit_digest\":\"b43a0f93894e0f1b1d104880c930ba16eee970f45a1202d0c12c5d31fc040b02\",\"profile\":{\"capabilities\":[\"text\"],\"enabled\":true,\"model\":\"model\",\"name\":\"local\",\"revision\":\"v1\"},\"quarantined\":false,\"receipt\":{\"fingerprint\":\"0732255cd027b5a7bb6e278e6288a2f9131a7385ff00b8e85a16daa3200bd76b\",\"identity\":[\"compat\",\"one\"],\"operation\":\"register\",\"revision\":1,\"version\":\"r1.receipt.v1\"},\"request\":{\"admission_ref\":null,\"allowed_profiles\":[\"local\",\"other\"],\"deadline_ms\":1000,\"input_text\":\"original\",\"namespace\":\"compat\",\"output_contract\":\"text.v1\",\"output_limit\":10,\"request_id\":\"one\",\"required_capabilities\":[\"text\"],\"task\":\"task\",\"version\":\"r1.request.v1\"},\"terminal\":true,\"usage_final\":true}",
+        "b058f0ce11f2a507dbb7da428bf191dd258a674a8403cfb96085c324318e9f2d"
+      ]
+    ],
+    "rt_controls": [
+      [
+        "configure",
+        "lower",
+        "{\"intent\":\"5cb1058e297b400d263184649c4d6561fd810a8f90e1753fa2a350369db201a9\",\"receipt\":{\"fingerprint\":\"5cb1058e297b400d263184649c4d6561fd810a8f90e1753fa2a350369db201a9\",\"identity\":[\"lower\"],\"operation\":\"configure\",\"revision\":2,\"version\":\"r1.receipt.v1\"}}",
+        "efcf1031f4096b0a4c4448355a64db13af2e40ef053b55d1fe41a8e68dac2ae6"
+      ],
+      [
+        "application",
+        "noop",
+        "{\"intent\":\"a48838a5da63ab6652e7925667e233cbe0bbc1d60c5516137773ffc361c15485\",\"receipt\":{\"fingerprint\":\"a48838a5da63ab6652e7925667e233cbe0bbc1d60c5516137773ffc361c15485\",\"identity\":[\"noop\"],\"operation\":\"application\",\"revision\":1,\"version\":\"r1.receipt.v1\"}}",
+        "b7804bb8df86542195afd8f50623f2d726abb8e06c081137845bb0ff1f0851cb"
+      ]
+    ],
+    "rt_meta": [
+      [
+        1,
+        "{\"application\":\"standalone.v1\",\"clock_ms\":100,\"config\":{\"budget_pool\":\"default-budget\",\"call_limit\":0,\"default\":\"other\",\"input_byte_limit\":1048576,\"max_requests\":64,\"output_unit_limit\":0,\"profiles\":[{\"capabilities\":[\"text\"],\"enabled\":true,\"model\":\"model\",\"name\":\"local\",\"revision\":\"v1\"},{\"capabilities\":[\"text\"],\"enabled\":true,\"model\":\"model-other\",\"name\":\"other\",\"revision\":\"v1\"}],\"resource_group\":\"default-resource\",\"version\":\"r1.config.v1\"},\"control_count\":2,\"request_count\":1,\"revision\":2,\"schema\":\"r1.store.v2\",\"store_id\":\"574ce3c526e6cc8ae6dd7c7b061ff939\"}",
+        "ac756c2c034c38f13866976c9776a0483ee63186ba5e67a438e53ea1086dad1b"
+      ]
+    ]
+  },
+  "budget": {
+    "issued_calls": 1,
+    "input_bytes": 8,
+    "output_used": 4,
+    "output_reserved": 0,
+    "execution_occupied": 0,
+    "quarantined": false
+  },
+  "state": {
+    "namespace": "compat",
+    "request_id": "one",
+    "profile": {
+      "name": "local",
+      "revision": "v1",
+      "model": "model",
+      "capabilities": [
+        "text"
+      ],
+      "enabled": true
+    },
+    "configuration_revision": 1,
+    "issued": true,
+    "cancelled": true,
+    "terminal": true,
+    "outcome": "ok",
+    "output_units": 4,
+    "usage_final": true,
+    "output_reserved": 0,
+    "observation_revision": 16,
+    "result_sha256": "0db52f4076c082518412afd3dd3576e2cb0c63703fd7fed5e23ade60efef31d9",
+    "version": "r1.state.v2"
+  },
+  "output": "answer"
+}
