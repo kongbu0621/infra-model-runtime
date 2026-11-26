@@ -1,0 +1,8 @@
+test_external_write_failures_keep_original_identity_and_read_before_retry (test_r2_copy_recovery.CopyRecoveryTests.test_external_write_failures_keep_original_identity_and_read_before_retry) ... ok
+test_intent_and_verification_commit_windows_keep_original_key (test_r2_copy_recovery.CopyRecoveryTests.test_intent_and_verification_commit_windows_keep_original_key) ... ok
+test_uncertain_external_reads_never_become_absence_or_verified_copies (test_r2_copy_recovery.CopyRecoveryTests.test_uncertain_external_reads_never_become_absence_or_verified_copies) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 4.995s
+
+OK

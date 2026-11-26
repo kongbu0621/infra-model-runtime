@@ -1,6 +1,6 @@
 # Working in this repository
 
-当前接续为 R2 串行包候选，先读 docs/R2_CONTRACT.md、docs/R2_VALIDATION.md 与 docs/R2_PAYLOAD_REVIEW.md。运行/测试/公共原环境安装为 9536de7；已修复未捕获响应误报存储损坏，读取/导出返回 UNAVAILABLE，真缺失仍报完整性失败。源码/安装各 135 项通过，旧安装写入的六个合成库由新安装准确接续。12 模块与 wheel/RECORD 一致，仅公共项目原候选环境更新，其他环境文件/链接保持；消费者业务安装未变。前轮实际 SIGKILL 与捕获修复保留各自版本。运行包复用 R1 事务核心，r2.store.v1 与旧 R1 合成库互相拒绝。后续按 R3 消费/迁移缺口接续，所有新 PR 不自动合并。
+当前接续为 R2 串行包候选，先读 docs/R2_CONTRACT.md、docs/R2_VALIDATION.md 与 docs/R2_COPY_REVIEW.md。运行/公共原候选安装保持 9536de7，新增测试 0626a14；源码/安装各 138 项通过，含三个新增方法内的 48 组内容导出提交与 I/O 恢复组合。12 模块、原 wheel/RECORD 与完整环境保持，本轮无新运行修复或安装。前轮响应可用性修复与六个旧库接续证据保留。消费者业务安装未变；运行包复用 R1 事务核心，r2.store.v1 与旧 R1 合成库互相拒绝。后续按 R3 消费/迁移缺口接续，所有新 PR 不自动合并。
 
 ## R1 历史基线
 

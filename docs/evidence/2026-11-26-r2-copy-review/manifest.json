@@ -1,0 +1,19 @@
+{
+  "runtime_source_commit": "9536de7d7b3078497f392c409ddc9735c37f89ef",
+  "test_source_commit": "0626a1475bbea3fdc15d0b33f70f0b0f15cf682a",
+  "new_test_methods": 3,
+  "controlled_recovery_subcases": 48,
+  "source_tests": 138,
+  "installed_tests": 138,
+  "runtime_changed": false,
+  "reinstalled": false,
+  "real_models": "NOT_RUN",
+  "files": {
+    "build-manifest.json": "e09846184ff9e4bef1da0400180daab64a90a88d905ebdabd548bd02818f8289",
+    "compile.json": "77c0923bab5c94dda2c3ee2907bb6267b8ccb39d8c4728f370faaf0722b4f3f6",
+    "installed-tests.txt": "cafd3c11bc7f894c2fde3f47bfb50d36f655f07b3e2d6a8994da3b8a77ba8a4f",
+    "preservation.json": "4ec584f8bcac093aca8c230a55c2a6babda9118283a348956c56715c12976828",
+    "source-tests.txt": "104b98afc0071a22ba86499d58a6f5ce8fc59e924a2a9b4aee112a16882dc68d",
+    "targeted-tests.txt": "0b10e1190ea31459d7ca07765acb55d717ca9fe9d67088dfcb43d7231ea302c0"
+  }
+}
