@@ -1,0 +1,10 @@
+{
+  "previous_runtime_source_commit": "8e52debf73f22a306bc607d5174d8a9e11d7a41e",
+  "runtime_source_commit": "9536de7d7b3078497f392c409ddc9735c37f89ef",
+  "changed_modules": [
+    "infra_model_runtime/model.py"
+  ],
+  "unchanged_modules": 11,
+  "previous_wheel_sha256": "cad87d18f12e3869300e3f3587fafd8dddedceb1a8c8d102e57cb7ff3209b222",
+  "wheel_sha256": "458eeb273273d61450a57f65cacdf35ea3458ec8a04c901a97f179ca218053be"
+}

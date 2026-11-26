@@ -1,6 +1,6 @@
 # Working in this repository
 
-当前接续为 R2 串行包候选，先读 docs/R2_CONTRACT.md、docs/R2_VALIDATION.md 与 docs/R2_PROCESS_REVIEW.md。运行/安装保持 8e52deb，新增测试 e9171af；源码/安装完整套件各 130 项通过，含两协议各七个真实 SIGKILL 恢复窗口。12 个运行模块与现有 wheel/RECORD 一致，原环境 31,969 个非缓存文件/链接未变，本轮没有新运行修复或重新安装。前轮捕获/历史修复与包外示例证据保留。运行包复用 R1 事务核心，r2.store.v1 与旧 R1 合成库互相拒绝；消费者业务安装保持。下一步按验收缺口接续 R2/R3，所有新 PR 不自动合并。
+当前接续为 R2 串行包候选，先读 docs/R2_CONTRACT.md、docs/R2_VALIDATION.md 与 docs/R2_PAYLOAD_REVIEW.md。运行/测试/公共原环境安装为 9536de7；已修复未捕获响应误报存储损坏，读取/导出返回 UNAVAILABLE，真缺失仍报完整性失败。源码/安装各 135 项通过，旧安装写入的六个合成库由新安装准确接续。12 模块与 wheel/RECORD 一致，仅公共项目原候选环境更新，其他环境文件/链接保持；消费者业务安装未变。前轮实际 SIGKILL 与捕获修复保留各自版本。运行包复用 R1 事务核心，r2.store.v1 与旧 R1 合成库互相拒绝。后续按 R3 消费/迁移缺口接续，所有新 PR 不自动合并。
 
 ## R1 历史基线
 

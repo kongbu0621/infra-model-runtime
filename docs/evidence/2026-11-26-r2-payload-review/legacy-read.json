@@ -1,0 +1,1 @@
+{"legacy_stores": 6, "writer_commit": "8e52debf73f22a306bc607d5174d8a9e11d7a41e", "reader_commit": "9536de7d7b3078497f392c409ddc9735c37f89ef", "original_receipts_and_sql_records_preserved": true, "new_sends": 0, "actual_package": "<project-venv>/lib/python3.12/site-packages/infra_model_runtime/__init__.py"}
