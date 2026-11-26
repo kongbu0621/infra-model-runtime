@@ -294,6 +294,14 @@ class R1Tests(unittest.TestCase):
         with sqlite3.connect(path) as db:
             self.assertFalse(db.execute("SELECT name FROM sqlite_master WHERE name LIKE 'app_%'").fetchall())
 
+    def test_standalone_missing_runtime_row_cannot_recreate_empty_budget(self):
+        path=self.path.parent/'standalone.sqlite'
+        rt=Runtime.create(path,self.config)
+        rt.register(self.request());rt.issue('test','one',now_ms=100)
+        with sqlite3.connect(path) as db:db.execute('DELETE FROM rt_calls')
+        self.failure('INTEGRITY_FAILURE',lambda:rt.register(self.request()))
+        self.failure('INTEGRITY_FAILURE',lambda:Runtime(path),'not_applicable')
+
     def test_missing_partial_or_other_application_store_is_not_initialized(self):
         missing=self.path.parent/"missing.sqlite"
         self.failure("STORAGE_ERROR",lambda:Runtime(missing),"not_applicable")

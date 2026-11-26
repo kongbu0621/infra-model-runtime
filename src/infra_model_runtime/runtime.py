@@ -47,7 +47,7 @@ class Runtime:
             db.execute("CREATE TABLE rt_calls (namespace TEXT, request_id TEXT, body TEXT NOT NULL, digest TEXT NOT NULL, PRIMARY KEY(namespace, request_id))")
             db.execute("CREATE TABLE rt_controls (operation TEXT, control_id TEXT, body TEXT NOT NULL, digest TEXT NOT NULL, PRIMARY KEY(operation, control_id))")
             instance._save_meta(db, dict(schema="r1.store.v1", store_id=instance._store_id,
-                application=instance.application.identity, config=asdict(config), revision=1, clock_ms=0))
+                application=instance.application.identity, config=asdict(config), revision=1, clock_ms=0, request_count=0))
             instance._hook(db, "initialize", schema=True)
         return instance
 
@@ -153,11 +153,13 @@ class Runtime:
     def _metadata(self, db):
         try:
             value = self._unpack(db.execute("SELECT body,digest FROM rt_meta WHERE id=1").fetchone())
-            require(set(value) == {"schema", "store_id", "application", "config", "revision", "clock_ms"}, "INTEGRITY_FAILURE")
+            require(set(value) == {"schema", "store_id", "application", "config", "revision", "clock_ms", "request_count"}, "INTEGRITY_FAILURE")
             require(value["schema"] == "r1.store.v1" and value["application"] == self.application.identity, "INTEGRITY_FAILURE")
             require(type(value["store_id"]) is str and len(value["store_id"]) == 32, "INTEGRITY_FAILURE")
             tables = {row[0] for row in db.execute("SELECT name FROM sqlite_master WHERE type='table'")}
             require({"rt_meta", "rt_calls", "rt_controls"} <= tables, "INTEGRITY_FAILURE")
+            integer(value["request_count"], 0, 256)
+            require(db.execute("SELECT count(*) FROM rt_calls").fetchone()[0] == value["request_count"], "INTEGRITY_FAILURE")
             require(self._store_id is None or self._store_id == value["store_id"], "INTEGRITY_FAILURE")
             restore(Config, value["config"])
             integer(value["revision"], 1)
@@ -301,6 +303,8 @@ class Runtime:
                 receipt=asdict(receipt), issued=False, cancelled=False, terminal=False, outcome="unknown",
                 output_text=None, output_units=None, usage_final=False, output_reserved=0, observation_revision=0,
                 observations={}, cancellations={}, quarantined=False))
+            meta["request_count"] += 1
+            self._save_meta(db, meta)
             return receipt
 
     def issue(self, namespace, request_id, *, now_ms):
