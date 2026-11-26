@@ -1,6 +1,6 @@
 # Working in this repository
 
-当前接续为 R2 串行包候选，先读 docs/R2_CONTRACT.md、docs/R2_VALIDATION.md 与 docs/R2_BOUNDARY_REVIEW.md。固定运行/安装源码 afccbde，12 个运行模块一致，源码/安装各 110 项检查及仓外两协议示例通过。运行包复用 R1 事务核心，r2.store.v1 与旧合成库互相拒绝；只在本项目原环境验证，不替换现有业务安装。下一步按验收缺口接续 R2/R3；旧 R1 过程按原时点保留。所有新 PR 不自动合并。
+当前接续为 R2 串行包候选，先读 docs/R2_CONTRACT.md、docs/R2_VALIDATION.md 、docs/R2_BOUNDARY_REVIEW.md 与 docs/R2_RECOVERY_RECHECK.md。固定运行/安装源码 afccbde，测试接续为 81511bc；12 个运行模块一致，源码/安装各 115 项检查及仓外两协议示例通过。运行包复用 R1 事务核心，r2.store.v1 与旧合成库互相拒绝；只在本项目原环境验证，不替换现有业务安装。下一步按验收缺口接续 R2/R3；旧 R1 过程按原时点保留。所有新 PR 不自动合并。
 
 ## R1 历史基线
 

@@ -1,0 +1,18 @@
+{
+  "runtime_source_commit": "afccbde065bbc20fd4485eb5ea5fc0ebfa477cf6",
+  "test_source_commit": "81511bcbf61bad612ed72cbf1fff8ca21497ec4b",
+  "source_tests": 115,
+  "installed_tests": 115,
+  "recovery_and_accounting_subcases": 29,
+  "dns_mutant_rejected": true,
+  "reinstalled": false,
+  "real_models": "NOT_RUN",
+  "files": {
+    "dns-oracle-mutation.txt": "1ac516f7405dbb51e99fceba2daf0ffe9592d17540c97f8e05dec6076d0395d1",
+    "preservation.json": "950bbaa610b5a6abec7fcaab9cc68dfcb0fe1eb8a066adaabe0ee7030c4650ad",
+    "installed-tests.txt": "d3023c47e7b86a761db71bb88cfd7aa9e8d6bbc35219c776be651c55aa41a010",
+    "compile.json": "7e005d40000ce6007b19d245cdbdfbfcae45300180c8e5ecc1cc286d0bb50aff",
+    "source-tests.txt": "eef1befc496931b142c50018f63ba16a2dc56c2fcd84eb449e5052999543655d",
+    "build-manifest.json": "575493b188753da6a259dbb5bb3e8312b1c3e8e4d60742c6cc2c391db0571a9f"
+  }
+}

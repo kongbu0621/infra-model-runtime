@@ -1,0 +1,15 @@
+test_blocked_dns_is_entered_by_exact_package_then_child_is_reaped (test_r2_dns.DNSDeadlineTests.test_blocked_dns_is_entered_by_exact_package_then_child_is_reaped) ... FAIL
+
+======================================================================
+FAIL: test_blocked_dns_is_entered_by_exact_package_then_child_is_reaped (test_r2_dns.DNSDeadlineTests.test_blocked_dns_is_entered_by_exact_package_then_child_is_reaped)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<source>/tests/test_r2_dns.py", line 33, in test_blocked_dns_is_entered_by_exact_package_then_child_is_reaped
+    self.assertTrue(marker.exists(),'child did not enter the injected DNS boundary')
+AssertionError: False is not true : child did not enter the injected DNS boundary
+
+----------------------------------------------------------------------
+Ran 1 test in 0.013s
+
+FAILED (failures=1)
+{"dns_never_entered": true, "new_test_rejected_early_child_failure": true, "exact_assertion_verified": true}
