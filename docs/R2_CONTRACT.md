@@ -30,6 +30,7 @@
 | `run(namespace, request_id)` | 在凭据预检后，事务内复核原批准、目标、取消、截止、应用条件及预算，再发放一次。已经发放的请求只尝试本地恢复，不能重得发送令牌 |
 | `recover(namespace, request_id)` | 仅结算原已保存响应；没有响应时保留 UNKNOWN，不查询供应商、不重新生成 |
 | `cancel(namespace, request_id, control_id)` | 发放前阻止发送；发放后只确认本地取消，不声称远端停止、不释放未知占用 |
+| `control_status(control_id)` | 查询原配置/批准/撤销回执；批准提交丢确认后，即使凭据已丢失也可确认原管理结果，不读取秘密或新增操作 |
 | `status` / `list_calls(namespace, after=..., limit=32)` / `budget` | 原状态、最多 64 条分页、准确累计账；状态与原登记回执不同 |
 | `read_result(..., history=False)` | 读取可用 JSON 对象文本；取消后当前读取拒绝，历史读取另查应用权限 |
 | `read_payload(..., role)` / `copy_payload(..., port)` | 原准确输入、wire、响应的获准历史读取/可选导出；不触发生成 |

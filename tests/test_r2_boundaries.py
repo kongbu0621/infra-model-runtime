@@ -159,6 +159,29 @@ class R2BoundaryTests(unittest.TestCase):
         self.path.chmod(0o600)
         self.assertEqual(ModelRuntime(self.path).read_result('example','job'),output)
 
+    def test_approval_commit_loss_can_be_queried_after_secret_disappears(self):
+        import os
+        self.path=Path(self.tmp.name)/'approval-loss.sqlite'
+        cfg=configuration();cfg['profiles']['openai']['credential_ref']='env:R2_APPROVAL_SECRET'
+        self.runtime=ModelRuntime.create(self.path,encoded(cfg))
+        store=self.runtime._store;commit=store._commit;armed=[False]
+        def write(db,*args,**kwargs):
+            original(db,*args,**kwargs);armed[0]=True
+        def lose(db):
+            commit(db)
+            if armed[0]:armed[0]=False;raise OSError('approval acknowledgement lost')
+        original=store._save_control
+        with patch.dict(os.environ,{'R2_APPROVAL_SECRET':'synthetic-approval'}),patch.object(store,'_save_control',side_effect=write),patch.object(store,'_commit',side_effect=lose):
+            self.assertEqual(self.error('STORAGE_ERROR',self.approve).commit_state,'unknown')
+        self.runtime=ModelRuntime(self.path)
+        receipt=self.runtime.control_status('approval')
+        self.assertEqual(receipt.identity,('approval',))
+        self.assertEqual(receipt.operation,'application')
+        self.assertEqual(self.runtime.control_status('approval'),receipt)
+        self.error('NOT_FOUND',lambda:self.runtime.control_status('absent'))
+        self.assertEqual(self.runtime.budget().issued_calls,0)
+        self.assertEqual(len(self.sends),0)
+
     def test_noncanonical_configuration_order_is_accepted_and_canonicalized(self):
         cfg=configuration();cfg['profiles']=dict(reversed(list(cfg['profiles'].items())))
         path=Path(self.tmp.name)/'order.sqlite'

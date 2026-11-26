@@ -491,3 +491,10 @@ class ModelRuntime:
                 s._hook(db, 'read', restore(Request, call['request']), state, True, None, readonly=True)
                 result.append(state)
             return tuple(result)
+
+    def control_status(self, control_id):
+        """Read an original management receipt without re-resolving credentials."""
+        identifier(control_id);s = self._store
+        with s._transaction(('control-status', control_id), readonly=True) as db:
+            item = s._data(db, 'rt_model_controls', control_id)
+            return restore(Receipt, item['receipt'])
