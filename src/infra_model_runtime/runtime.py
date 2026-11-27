@@ -315,7 +315,7 @@ class Runtime:
             return old
         meta = self._metadata(db)
         require(meta["revision"] == expected_revision, "CONFLICT")
-        if self._calls(db):
+        if self._request_capacity_used(db):
             require((config.budget_pool, config.resource_group) ==
                 (meta["config"]["budget_pool"], meta["config"]["resource_group"]), "CONFLICT")
         meta.update(config=asdict(config), revision=meta["revision"] + 1)

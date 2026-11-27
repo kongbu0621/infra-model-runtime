@@ -106,3 +106,33 @@ class ClosedHistoryTests(unittest.TestCase):
             raw=encoded(body)
             db.execute('UPDATE rt_host SET body=?,digest=? WHERE id=1',(raw.decode(),hashlib.sha256(raw).hexdigest()));db.commit()
         self.error('INTEGRITY_FAILURE',lambda:HostedModelRuntime(self.path,self.app,host=self.host,content=self.content,closed_history=self.old))
+
+    def test_historical_requests_bind_pool_and_resource_before_first_new_request(self):
+        self.attach()
+        before=self.r.budget()
+        for field in ('budget_pool','resource_group'):
+            changed=configuration();changed['policy'][field]='different'
+            self.error('CONFLICT',lambda:self.r.configure('rename-'+field,1,encoded(changed)))
+            self.assertEqual(self.r.budget(),before)
+        # A legitimate profile change still works at the original revision:
+        # rejected changes must leave both configuration and control history alone.
+        changed=configuration();changed['active_profile']='local'
+        receipt=self.r.configure('profile-only',1,encoded(changed))
+        reopened=HostedModelRuntime(self.path,self.app,host=self.host,content=self.content,closed_history=self.old)
+        self.assertEqual(reopened.configure('profile-only',1,encoded(changed)),receipt)
+        self.assertEqual(reopened.budget(),before)
+
+    def test_unsent_historical_requests_also_bind_configuration_identity(self):
+        self.attach(replace(self.old,issued_calls=0,input_bytes=0,output_used=0))
+        for field in ('budget_pool','resource_group'):
+            changed=configuration();changed['policy'][field]='different'
+            self.error('CONFLICT',lambda:self.r.configure('rename-'+field,1,encoded(changed)))
+        self.assertEqual(self.r.budget().issued_calls,0)
+
+    def test_empty_historical_baseline_keeps_pre_request_configuration_behavior(self):
+        self.attach(ClosedHistory('a'*64,0,0,0,0,0))
+        changed=configuration()
+        changed['policy'].update(budget_pool='different',resource_group='different')
+        receipt=self.r.configure('before-any-request',1,encoded(changed))
+        self.assertEqual(self.r.configure('before-any-request',1,encoded(changed)),receipt)
+        self.assertEqual(self.r.budget().issued_calls,0)
