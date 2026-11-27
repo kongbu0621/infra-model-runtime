@@ -1,5 +1,21 @@
 # PR #7 宿主、权限与内容确认复核
 
+## 再复核：内容确认事务的提交与丢确认窗口
+
+2026-11-27；测试提交 `c6dbd21a7f6cac64d0dfa99d8eb20da99634cd66`，运行源码保持 `999e374`。本轮未确认新的运行缺陷；增加三个专项方法，分别检查 input、wire、response 的四个窗口：COMMIT 前检查失败、进入提交但 SQL 尚未执行、SQL 已提交但确认丢失、提交已确认后报错。
+
+四个窗口分别得到 `not_committed`、`unknown`、`unknown`、`committed`，均保留准确的 `content-confirm` 操作身份。两个 unknown 分别核验了实际未提交和已提交的状态，不能仅根据错误码猜测写入结果。内容端口已保存的 bytes 保持；重开后用原身份确认，原槽不额外写入，最终每个调用仅一次模型发送。结算后逐字段比较完整预算，重复恢复不改变协调库记录。
+
+| 检查 | 本轮结果 |
+| --- | --- |
+| 新增源码专项 | 3 个方法通过，内含 12 个提交窗口；窗口与方法数不相加 |
+| 原候选 wheel 解包 R3 套件 | 27 项通过，零失败/错误/跳过；13 个运行模块与源码逐字节匹配 |
+| 编译与复用 | 新增 1 个文件三级编译通过，Python 3.11 仅语法检查；此前 43 个 Python 文件摘要未变，完整源码 165 项及原编译结果按准确来源复用，不记作本轮重跑 |
+
+复用 wheel SHA-256 `200b6995c4cf4c348116785ead65f1f009792e13dace685de495a328848bcfb6`；未重新构建或安装。证据：[汇总](evidence/2026-11-27-pr7-commit-boundary/validation.json)、[新增源码专项](evidence/2026-11-27-pr7-commit-boundary/source.txt)、[候选报告](evidence/2026-11-27-pr7-commit-boundary/candidate.json)、[候选日志](evidence/2026-11-27-pr7-commit-boundary/candidate.txt)、[编译与未变文件摘要](evidence/2026-11-27-pr7-commit-boundary/compile.json)。
+
+测试脚手架初稿遗漏事务外 checkpoint，出现 IndexError 并影响后续子例；已增加活动事务判断，最终测试仍要求目标故障准确触发。[初稿日志](evidence/2026-11-27-pr7-commit-boundary/harness-draft.txt)保留，不计为产品缺陷。当前验证是受控异常与实际 SQLite 提交，不等同进程强杀、设备断电、网络文件系统或所有并发调度；R3 迁移及正式部署边界保持。
+
 ## 再复核：宿主表名单的输入分类
 
 2026-11-27；修复源码 `999e374e4d35ee4e67fb360edf85af7a5b72e1c6`。宿主名单原来先执行去重集合，再检查元素类型；tuple 中含 list、dict 或 set 时泄漏 Python `TypeError`，没有按公共合同返回 `INVALID_INPUT`。现在先验证容器、数量及每个表名，再检查重复；所有这些检查都发生在宿主 guard 和数据库访问之前。

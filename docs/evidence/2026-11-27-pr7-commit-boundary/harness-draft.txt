@@ -1,0 +1,82 @@
+test_input_confirmation_commit_boundaries (test_r3_confirmation_commit.ConfirmationCommitTests.test_input_confirmation_commit_boundaries) ... ok
+test_response_confirmation_commit_boundaries (test_r3_confirmation_commit.ConfirmationCommitTests.test_response_confirmation_commit_boundaries) ... 
+  test_response_confirmation_commit_boundaries (test_r3_confirmation_commit.ConfirmationCommitTests.test_response_confirmation_commit_boundaries) (role='response', window='before_commit') ... ERROR
+  test_response_confirmation_commit_boundaries (test_r3_confirmation_commit.ConfirmationCommitTests.test_response_confirmation_commit_boundaries) (role='response', window='commit_before_sql') ... FAIL
+  test_response_confirmation_commit_boundaries (test_r3_confirmation_commit.ConfirmationCommitTests.test_response_confirmation_commit_boundaries) (role='response', window='commit_after_sql') ... FAIL
+  test_response_confirmation_commit_boundaries (test_r3_confirmation_commit.ConfirmationCommitTests.test_response_confirmation_commit_boundaries) (role='response', window='after_commit') ... FAIL
+test_wire_confirmation_commit_boundaries (test_r3_confirmation_commit.ConfirmationCommitTests.test_wire_confirmation_commit_boundaries) ... ok
+
+======================================================================
+ERROR: test_response_confirmation_commit_boundaries (test_r3_confirmation_commit.ConfirmationCommitTests.test_response_confirmation_commit_boundaries) (role='response', window='before_commit')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/imr-r3-20261127/tests/test_r3_confirmation_commit.py", line 65, in exercise
+    self.r.run('example', key)
+  File "/tmp/imr-r3-20261127/src/infra_model_runtime/hosted.py", line 274, in run
+    return super().run(namespace, request_id)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/imr-r3-20261127/src/infra_model_runtime/model.py", line 418, in run
+    s._checkpoint('after_dispatch')
+  File "/usr/lib/python3.12/unittest/mock.py", line 1134, in __call__
+    return self._mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/mock.py", line 1138, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/mock.py", line 1199, in _execute_mock_call
+    result = effect(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/imr-r3-20261127/tests/test_r3_confirmation_commit.py", line 31, in check
+    if active[-1] == target and not fired and stage == window:
+       ~~~~~~^^^^
+IndexError: list index out of range
+
+======================================================================
+FAIL: test_response_confirmation_commit_boundaries (test_r3_confirmation_commit.ConfirmationCommitTests.test_response_confirmation_commit_boundaries) (role='response', window='commit_before_sql')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/imr-r3-20261127/tests/test_r3_confirmation_commit.py", line 66, in exercise
+    self.assertEqual(fired, [window])
+AssertionError: Lists differ: [] != ['commit_before_sql']
+
+Second list contains 1 additional elements.
+First extra element 0:
+'commit_before_sql'
+
+- []
++ ['commit_before_sql']
+
+======================================================================
+FAIL: test_response_confirmation_commit_boundaries (test_r3_confirmation_commit.ConfirmationCommitTests.test_response_confirmation_commit_boundaries) (role='response', window='commit_after_sql')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/imr-r3-20261127/tests/test_r3_confirmation_commit.py", line 66, in exercise
+    self.assertEqual(fired, [window])
+AssertionError: Lists differ: [] != ['commit_after_sql']
+
+Second list contains 1 additional elements.
+First extra element 0:
+'commit_after_sql'
+
+- []
++ ['commit_after_sql']
+
+======================================================================
+FAIL: test_response_confirmation_commit_boundaries (test_r3_confirmation_commit.ConfirmationCommitTests.test_response_confirmation_commit_boundaries) (role='response', window='after_commit')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/imr-r3-20261127/tests/test_r3_confirmation_commit.py", line 66, in exercise
+    self.assertEqual(fired, [window])
+AssertionError: Lists differ: [] != ['after_commit']
+
+Second list contains 1 additional elements.
+First extra element 0:
+'after_commit'
+
+- []
++ ['after_commit']
+
+----------------------------------------------------------------------
+Ran 3 tests in 1.797s
+
+FAILED (failures=3, errors=1)
