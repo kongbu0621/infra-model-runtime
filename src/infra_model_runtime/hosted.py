@@ -67,8 +67,9 @@ def _binding(host, content, closed_history=None):
     identifier(host.identity); identifier(content.identity)
     tables = host.read_tables
     require(type(tables) is tuple and len(tables) <= 32)
+    # SQLite identifiers fold ASCII case; aliases do not grant rt_* access.
     require(all(type(t) is str and re.fullmatch(r'[A-Za-z_][A-Za-z0-9_]{0,63}', t)
-                and not t.startswith('rt_') for t in tables))
+                and not t.lower().startswith('rt_') for t in tables))
     require(len(set(tables)) == len(tables))
     value = dict(host=host.identity, content=content.identity, read_tables=sorted(tables))
     require(closed_history is None or type(closed_history) is ClosedHistory)
@@ -255,7 +256,8 @@ class HostedModelRuntime(ModelRuntime):
         store = cls._new_store(path, application, host, content, closed_history)
         store._store_id = secrets.token_hex(16)
         with store._transaction(('attach',), initializing=True) as db:
-            require(not db.execute("SELECT 1 FROM sqlite_master WHERE name GLOB 'rt_*'").fetchone(), 'CONFLICT')
+            # Check every object kind, including ASCII case aliases.
+            require(not db.execute("SELECT 1 FROM sqlite_master WHERE lower(name) GLOB 'rt_*'").fetchone(), 'CONFLICT')
             db.execute(_HOST_DDL)
             store._put(db, 'rt_host', 1, store.binding)
             store._initialize(db, _core(cfg), lambda s, conn: cls._setup(s, conn, cfg))
