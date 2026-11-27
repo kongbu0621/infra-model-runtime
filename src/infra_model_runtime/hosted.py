@@ -60,8 +60,9 @@ class _HostedStore(_ModelStore):
             self._reentry_violation = True
             raise RuntimeFailure('PORT_REENTRY')
         self._guard_active = True
+        self._reentry_violation = False
         guard = None
-        entered = completed = False
+        entered = inner_started = completed = False
         failure = None
         try:
             require(_binding(self.host, self.content) == self.binding, 'STALE')
@@ -69,6 +70,10 @@ class _HostedStore(_ModelStore):
             check = guard.__enter__()
             entered = True
             check()
+            # Runtime starts its own poison scope. Reject an entry violation
+            # before that scope can reset it, even if the host caught it.
+            require(not self._reentry_violation, 'PORT_VIOLATION')
+            inner_started = True
             with super()._transaction(identity, **options) as db:
                 yield db
                 check()
@@ -76,6 +81,10 @@ class _HostedStore(_ModelStore):
             completed = True
         except BaseException as exc:
             failure = exc
+            if not inner_started and isinstance(exc, Exception):
+                failure = RuntimeFailure(exc.code if isinstance(exc, RuntimeFailure) else 'STORAGE_ERROR',
+                    'not_applicable' if options.get('readonly') else 'not_committed', identity)
+                raise failure from None
             raise
         finally:
             try:
@@ -85,6 +94,7 @@ class _HostedStore(_ModelStore):
                         # transaction error or erase its original commit state.
                         guard.__exit__(type(failure) if failure else None, failure,
                                        failure.__traceback__ if failure else None)
+                        require(not self._reentry_violation, 'PORT_VIOLATION')
                     except BaseException as exc:
                         if failure is None:
                             if not isinstance(exc, Exception):
@@ -224,6 +234,15 @@ class HostedModelRuntime(ModelRuntime):
         found = s.content.read(key)
         require(_binding(s.host, s.content) == s.binding, 'STALE')
         if found is None and confirm and not item['verified']:
+            # External I/O released the host lock. Another handle may already
+            # have confirmed this slot; do not use our stale intent to repair
+            # subsequently missing content from coordinator staging.
+            with s._transaction(('content-write-check', namespace, request_id, role), readonly=True) as db:
+                current = s._unpack(db.execute(
+                    'SELECT body,digest FROM rt_model_copies WHERE namespace=? AND request_id=? AND role=?',
+                    (namespace, request_id, role)).fetchone())
+                require(not current['verified'], 'INTEGRITY_FAILURE')
+            require(_binding(s.host, s.content) == s.binding, 'STALE')
             s.content.put_if_absent(key, raw)
             require(_binding(s.host, s.content) == s.binding, 'STALE')
             found = s.content.read(key)
@@ -286,4 +305,6 @@ class HostedModelRuntime(ModelRuntime):
         require(port is self._store.content, 'DENIED')
         # Explicit copy is a user-visible read, unlike internal persistence.
         self._snapshot(namespace, request_id)
-        return self._content(namespace, request_id, role, confirm=True)[0]
+        key = self._content(namespace, request_id, role, confirm=True)[0]
+        self._snapshot(namespace, request_id)
+        return key
