@@ -1,5 +1,20 @@
 # PR #7 宿主、权限与内容确认复核
 
+## 再复核：宿主表名单的输入分类
+
+2026-11-27；修复源码 `999e374e4d35ee4e67fb360edf85af7a5b72e1c6`。宿主名单原来先执行去重集合，再检查元素类型；tuple 中含 list、dict 或 set 时泄漏 Python `TypeError`，没有按公共合同返回 `INVALID_INPUT`。现在先验证容器、数量及每个表名，再检查重复；所有这些检查都发生在宿主 guard 和数据库访问之前。
+
+新增一个测试方法覆盖九种非法名单，并核对 guard 零进入、协调库完整快照保持，以及恢复合法名单后重开和提交成功。三个不可哈希元素在旧版分别触发错误，见[旧版反例](evidence/2026-11-27-pr7-integrity-review/before.txt)。这是一个输入校验顺序缺陷，不将三个子例重复计为三个产品问题。
+
+| 检查 | 本轮结果 |
+| --- | --- |
+| 完整源码 | 165 项通过，零失败/错误/跳过，包含原 R1/R2 与 R3 回归 |
+| 新候选 wheel 解包 | 24 项 R3 专项通过；13 个运行模块逐字节匹配修复源码，所有已加载 Runtime 模块来源正确 |
+| 编译 | 43 个文件，优化级别 0/1/2；Python 3.11 仅语法检查 |
+| 环境 | GX10 / Linux aarch64 / Python 3.12.3，复用原项目解释器；临时合成数据 |
+
+新 wheel SHA-256：`200b6995c4cf4c348116785ead65f1f009792e13dace685de495a328848bcfb6`。证据：[汇总](evidence/2026-11-27-pr7-integrity-review/validation.json)、[源码日志](evidence/2026-11-27-pr7-integrity-review/source.txt)、[候选报告](evidence/2026-11-27-pr7-integrity-review/candidate.json)、[候选日志](evidence/2026-11-27-pr7-integrity-review/candidate.txt)、[编译摘要](evidence/2026-11-27-pr7-integrity-review/compile.json)。本轮没有安装、部署或合并；旧业务迁移、真实模型及完整 R3 验收边界保持。下方各轮结果保留原版本，不累加。
+
 ## 再复核：接受其他句柄已完成的准确内容确认
 
 2026-11-27，修复源码 `aeefff35ca5d240f777b732c7f9da87313c37c32`。在上一轮 `10e8f80` 上继续检查合法交错，发现写前复查把“别的句柄已经确认”直接当作内容损坏。另一句柄正常保存并确认 input/wire/response 后，原句柄仍可能报 `INTEGRITY_FAILURE`；响应场景会中断本可完成的结算。

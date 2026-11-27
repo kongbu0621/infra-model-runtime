@@ -1,0 +1,42 @@
+{
+  "date": "2026-11-27",
+  "environment": "GX10 / Linux aarch64 / Python 3.12.3",
+  "source_commit": "999e374e4d35ee4e67fb360edf85af7a5b72e1c6",
+  "before_product_commit": "7112905dad73a55a8334d6a5ac32e10857f11766",
+  "installed": false,
+  "deployed": false,
+  "source_test_count": 165,
+  "candidate_test_count": 24,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 0,
+  "runtime_source_commit": "999e374e4d35ee4e67fb360edf85af7a5b72e1c6",
+  "runtime_wheel_sha256": "200b6995c4cf4c348116785ead65f1f009792e13dace685de495a328848bcfb6",
+  "files": {
+    "before.txt": "d33a7110003b30c13b9c3b2c2fa04f68d6f62abb45afa054e3b49f0de11be58d",
+    "candidate.json": "38e957dc146a64c588b488555ecf6d1a580b68a06a92cc4c0f3ecf4e44ffa1e6",
+    "candidate.txt": "563ea9f4be79abfb79628d76cefba84b082a0643c451f238ab1397256db002c2",
+    "compile.json": "93e04456dcd5c2a4f86825667654651f856c62d75216110e1cb58588b21f1e07",
+    "source.txt": "0df3f47c0a3f3aa1ea3d0a01b30e24b38aa2f36e4a93be06e42c11fe65a0c8e0"
+  },
+  "before_result": {
+    "test_methods": 1,
+    "errors": 3,
+    "reason": "TypeError for list/dict/set allowlist entries"
+  },
+  "package_files_match_source": {
+    "__init__.py": "8d3a82b862fd09e52ff395784ce569630bfc48e66423bdaf4b99f99c06fece11",
+    "_boundary.py": "c02175bdb9fc0056671b7179bc3932dd72e422c6c83e9ec0ac2a6ab5ff2340b3",
+    "configuration.py": "02fccb127cdad6f113e058f0823988f58424ab24a6879f5a9f26aa54974f8bc6",
+    "content.py": "46f99fd03181a2b2ce1070fcce37a1f78c555d7cef72a0a133cef99b0b359700",
+    "contracts.py": "d802ed9eec1d64dc8c767ba783e9f36d4c9a593c54cca40343c10ccb59e10228",
+    "credentials.py": "ed24be93df8e0f1caa9285d79a7392fe1cb881ac2fd2441142055ba710a31589",
+    "hosted.py": "fbf025e28fc3b511a91103d483b04b37cb2d7ff21f67b25d0415e0ba9cd0d6b0",
+    "model.py": "ee9a3fb005ce536a35df87ebd24300d6b963d4923f2d4177ec1a18c6c04382e5",
+    "ports.py": "35744ef0b932d784a2036602b9bcc9c93b5bcdab15cf2aba429c22c254826642",
+    "protocol.py": "e31f2e0f1802ad18df122f07b680fc071b9ba8482dbc92100323270c3d287a8a",
+    "runtime.py": "734d3c49ff8a02c88859f77a5933d1ba7e6ef9db1dd57f0496094e24429d1b6f",
+    "storage.py": "de82b85446d1c860f2e9213b3620dc987a27f4ae089fae7e53aa24ee10594b04",
+    "transport.py": "7bbe665402c3e865a1e4292a37582a765147effc5d433c20d210cbc7d0158668"
+  }
+}
