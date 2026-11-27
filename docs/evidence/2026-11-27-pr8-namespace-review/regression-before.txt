@@ -1,0 +1,96 @@
+test_attach_rejects_all_reserved_object_kinds_before_writing (test_r3_namespace_case.NamespaceCaseTests.test_attach_rejects_all_reserved_object_kinds_before_writing) ...
+  test_attach_rejects_all_reserved_object_kinds_before_writing (test_r3_namespace_case.NamespaceCaseTests.test_attach_rejects_all_reserved_object_kinds_before_writing) (kind='TABLE', name='RT_Future') ... FAIL
+  test_attach_rejects_all_reserved_object_kinds_before_writing (test_r3_namespace_case.NamespaceCaseTests.test_attach_rejects_all_reserved_object_kinds_before_writing) (kind='TABLE', name='Rt_meta') ... FAIL
+  test_attach_rejects_all_reserved_object_kinds_before_writing (test_r3_namespace_case.NamespaceCaseTests.test_attach_rejects_all_reserved_object_kinds_before_writing) (kind='VIEW', name='rT_Future') ... FAIL
+  test_attach_rejects_all_reserved_object_kinds_before_writing (test_r3_namespace_case.NamespaceCaseTests.test_attach_rejects_all_reserved_object_kinds_before_writing) (kind='INDEX', name='RT_FutureIndex') ... FAIL
+  test_attach_rejects_all_reserved_object_kinds_before_writing (test_r3_namespace_case.NamespaceCaseTests.test_attach_rejects_all_reserved_object_kinds_before_writing) (kind='TRIGGER', name='Rt_FutureTrigger') ... FAIL
+test_private_table_aliases_reject_before_host_entry (test_r3_namespace_case.NamespaceCaseTests.test_private_table_aliases_reject_before_host_entry) ...
+  test_private_table_aliases_reject_before_host_entry (test_r3_namespace_case.NamespaceCaseTests.test_private_table_aliases_reject_before_host_entry) (name='RT_META') ... FAIL
+  test_private_table_aliases_reject_before_host_entry (test_r3_namespace_case.NamespaceCaseTests.test_private_table_aliases_reject_before_host_entry) (name='Rt_Host') ... FAIL
+  test_private_table_aliases_reject_before_host_entry (test_r3_namespace_case.NamespaceCaseTests.test_private_table_aliases_reject_before_host_entry) (name='rT_unknown') ... FAIL
+test_similar_unreserved_names_and_case_sensitive_values_remain_legal (test_r3_namespace_case.NamespaceCaseTests.test_similar_unreserved_names_and_case_sensitive_values_remain_legal) ... ok
+
+======================================================================
+FAIL: test_attach_rejects_all_reserved_object_kinds_before_writing (test_r3_namespace_case.NamespaceCaseTests.test_attach_rejects_all_reserved_object_kinds_before_writing) (kind='TABLE', name='RT_Future')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/imr-r3-20261127/tests/test_r3_namespace_case.py", line 33, in test_attach_rejects_all_reserved_object_kinds_before_writing
+    with self.assertRaises(RuntimeFailure) as caught:
+AssertionError: RuntimeFailure not raised
+
+======================================================================
+FAIL: test_attach_rejects_all_reserved_object_kinds_before_writing (test_r3_namespace_case.NamespaceCaseTests.test_attach_rejects_all_reserved_object_kinds_before_writing) (kind='TABLE', name='Rt_meta')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/imr-r3-20261127/tests/test_r3_namespace_case.py", line 36, in test_attach_rejects_all_reserved_object_kinds_before_writing
+    self.assertEqual((caught.exception.code, caught.exception.commit_state), ('CONFLICT', 'not_committed'))
+AssertionError: Tuples differ: ('STORAGE_ERROR', 'not_committed') != ('CONFLICT', 'not_committed')
+
+First differing element 0:
+'STORAGE_ERROR'
+'CONFLICT'
+
+- ('STORAGE_ERROR', 'not_committed')
++ ('CONFLICT', 'not_committed')
+
+======================================================================
+FAIL: test_attach_rejects_all_reserved_object_kinds_before_writing (test_r3_namespace_case.NamespaceCaseTests.test_attach_rejects_all_reserved_object_kinds_before_writing) (kind='VIEW', name='rT_Future')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/imr-r3-20261127/tests/test_r3_namespace_case.py", line 33, in test_attach_rejects_all_reserved_object_kinds_before_writing
+    with self.assertRaises(RuntimeFailure) as caught:
+AssertionError: RuntimeFailure not raised
+
+======================================================================
+FAIL: test_attach_rejects_all_reserved_object_kinds_before_writing (test_r3_namespace_case.NamespaceCaseTests.test_attach_rejects_all_reserved_object_kinds_before_writing) (kind='INDEX', name='RT_FutureIndex')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/imr-r3-20261127/tests/test_r3_namespace_case.py", line 33, in test_attach_rejects_all_reserved_object_kinds_before_writing
+    with self.assertRaises(RuntimeFailure) as caught:
+AssertionError: RuntimeFailure not raised
+
+======================================================================
+FAIL: test_attach_rejects_all_reserved_object_kinds_before_writing (test_r3_namespace_case.NamespaceCaseTests.test_attach_rejects_all_reserved_object_kinds_before_writing) (kind='TRIGGER', name='Rt_FutureTrigger')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/imr-r3-20261127/tests/test_r3_namespace_case.py", line 33, in test_attach_rejects_all_reserved_object_kinds_before_writing
+    with self.assertRaises(RuntimeFailure) as caught:
+AssertionError: RuntimeFailure not raised
+
+======================================================================
+FAIL: test_private_table_aliases_reject_before_host_entry (test_r3_namespace_case.NamespaceCaseTests.test_private_table_aliases_reject_before_host_entry) (name='RT_META')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/imr-r3-20261127/tests/test_r3_namespace_case.py", line 53, in test_private_table_aliases_reject_before_host_entry
+    self.assertEqual(caught.exception.code, 'INVALID_INPUT')
+AssertionError: 'STORAGE_ERROR' != 'INVALID_INPUT'
+- STORAGE_ERROR
++ INVALID_INPUT
+
+
+======================================================================
+FAIL: test_private_table_aliases_reject_before_host_entry (test_r3_namespace_case.NamespaceCaseTests.test_private_table_aliases_reject_before_host_entry) (name='Rt_Host')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/imr-r3-20261127/tests/test_r3_namespace_case.py", line 53, in test_private_table_aliases_reject_before_host_entry
+    self.assertEqual(caught.exception.code, 'INVALID_INPUT')
+AssertionError: 'STORAGE_ERROR' != 'INVALID_INPUT'
+- STORAGE_ERROR
++ INVALID_INPUT
+
+
+======================================================================
+FAIL: test_private_table_aliases_reject_before_host_entry (test_r3_namespace_case.NamespaceCaseTests.test_private_table_aliases_reject_before_host_entry) (name='rT_unknown')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/imr-r3-20261127/tests/test_r3_namespace_case.py", line 53, in test_private_table_aliases_reject_before_host_entry
+    self.assertEqual(caught.exception.code, 'INVALID_INPUT')
+AssertionError: 'STORAGE_ERROR' != 'INVALID_INPUT'
+- STORAGE_ERROR
++ INVALID_INPUT
+
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.216s
+
+FAILED (failures=8)

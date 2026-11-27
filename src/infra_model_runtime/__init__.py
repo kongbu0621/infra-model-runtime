@@ -15,5 +15,5 @@ __all__ += ["Generation", "ModelRuntime", "ModelStatus"]
 from .content import ContentKey, ContentPort
 __all__ += ["ContentKey", "ContentPort"]
 
-from .hosted import CoordinatorHost, HostedModelRuntime
-__all__ += ["CoordinatorHost", "HostedModelRuntime"]
+from .hosted import ClosedHistory, CoordinatorHost, HostedModelRuntime
+__all__ += ["ClosedHistory", "CoordinatorHost", "HostedModelRuntime"]

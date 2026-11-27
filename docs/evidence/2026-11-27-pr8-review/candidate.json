@@ -1,0 +1,40 @@
+{
+  "status": "PASS",
+  "tests": 37,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 0,
+  "python": "3.12.3 (main, Jul 15 2026, 23:46:41) [GCC 13.3.0]",
+  "runtime_wheel_sha256": "6b73da173a031a1b8eed753de889403b77119c304ccbfcb188f321a2c8690b74",
+  "runtime": "candidate wheel extracted, not installed",
+  "package_files": {
+    "__init__.py": "ad3ca4490ddc66afad58f15909578402d1ca7bff1105f0e0336d367158dad204",
+    "_boundary.py": "c02175bdb9fc0056671b7179bc3932dd72e422c6c83e9ec0ac2a6ab5ff2340b3",
+    "configuration.py": "02fccb127cdad6f113e058f0823988f58424ab24a6879f5a9f26aa54974f8bc6",
+    "content.py": "46f99fd03181a2b2ce1070fcce37a1f78c555d7cef72a0a133cef99b0b359700",
+    "contracts.py": "d802ed9eec1d64dc8c767ba783e9f36d4c9a593c54cca40343c10ccb59e10228",
+    "credentials.py": "ed24be93df8e0f1caa9285d79a7392fe1cb881ac2fd2441142055ba710a31589",
+    "hosted.py": "2ce085ad716733b38993e8ac0732a801083f352f50da3b43177aa1057f02b458",
+    "model.py": "96c048eeff0a4207ca890b01a05b38c256a78e3a247150310aebea4693136587",
+    "ports.py": "35744ef0b932d784a2036602b9bcc9c93b5bcdab15cf2aba429c22c254826642",
+    "protocol.py": "e31f2e0f1802ad18df122f07b680fc071b9ba8482dbc92100323270c3d287a8a",
+    "runtime.py": "900429e93e854cacee593262aa70bac0a040362557553cdf98b5e0ce60c639f9",
+    "storage.py": "de82b85446d1c860f2e9213b3620dc987a27f4ae089fae7e53aa24ee10594b04",
+    "transport.py": "7bbe665402c3e865a1e4292a37582a765147effc5d433c20d210cbc7d0158668"
+  },
+  "loaded_modules": [
+    "infra_model_runtime",
+    "infra_model_runtime._boundary",
+    "infra_model_runtime.configuration",
+    "infra_model_runtime.content",
+    "infra_model_runtime.contracts",
+    "infra_model_runtime.credentials",
+    "infra_model_runtime.hosted",
+    "infra_model_runtime.model",
+    "infra_model_runtime.ports",
+    "infra_model_runtime.protocol",
+    "infra_model_runtime.runtime",
+    "infra_model_runtime.storage",
+    "infra_model_runtime.transport"
+  ]
+}

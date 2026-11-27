@@ -101,6 +101,11 @@ class _ModelStore(Runtime):
     _schema = 'r2.store.v1'
     _json_limit = 8 * 1024 * 1024
 
+    def _payload_capacity_used(self, db):
+        return sum(len(c['request']['input_text'].encode('utf-8')) +
+                   self._job(db, c['request']['namespace'], c['request']['request_id'])['wire_length'] +
+                   protocol.MAX_RESPONSE for c in self._calls(db))
+
     def _metadata(self, db):
         configuration.private(self.path.lstat())
         return super()._metadata(db)
@@ -263,6 +268,12 @@ class _ModelStore(Runtime):
 
 class ModelRuntime:
     """R2 candidate API. One local store, one slot, explicit approvals, frozen calls."""
+
+    @staticmethod
+    def validate_configuration(configuration_bytes):
+        """Return canonical configuration bytes without I/O or granting approval."""
+        return encoded(configuration.parse(configuration_bytes))
+
     def __init__(self, path, application=None):
         self._store = _ModelStore(path, application)
 
@@ -361,7 +372,7 @@ class ModelRuntime:
             _, wire = protocol.prepare(profile, request.input_text, request.output_limit, approval['contract'])
             calls = s._calls(db)
             require(sum(not c['issued'] and not c['cancelled'] for c in calls) < cfg['policy']['max_queued'], 'LIMIT')
-            reserved = sum(len(c['request']['input_text'].encode('utf-8')) + s._job(db, c['request']['namespace'], c['request']['request_id'])['wire_length'] + protocol.MAX_RESPONSE for c in calls)
+            reserved = s._payload_capacity_used(db)
             require(reserved + len(request.input_text.encode('utf-8')) + len(wire) + protocol.MAX_RESPONSE <= cfg['policy']['max_payload_bytes'], 'LIMIT')
             receipt = s._register(db, request)
             s._save_job(db, ns, rid, dict(profile=profile, approval_id=approval_id, wire_length=len(wire), capture=None,

@@ -1,0 +1,97 @@
+test_missing_or_replaced_binding_layout_rejects_open_and_existing_handle (test_r3_host_layout.HostLayoutTests.test_missing_or_replaced_binding_layout_rejects_open_and_existing_handle) ...
+  test_missing_or_replaced_binding_layout_rejects_open_and_existing_handle (test_r3_host_layout.HostLayoutTests.test_missing_or_replaced_binding_layout_rejects_open_and_existing_handle) (mode='missing') ... FAIL
+  test_missing_or_replaced_binding_layout_rejects_open_and_existing_handle (test_r3_host_layout.HostLayoutTests.test_missing_or_replaced_binding_layout_rejects_open_and_existing_handle) (mode='columns') ... FAIL
+  test_missing_or_replaced_binding_layout_rejects_open_and_existing_handle (test_r3_host_layout.HostLayoutTests.test_missing_or_replaced_binding_layout_rejects_open_and_existing_handle) (mode='view') ... FAIL
+  test_missing_or_replaced_binding_layout_rejects_open_and_existing_handle (test_r3_host_layout.HostLayoutTests.test_missing_or_replaced_binding_layout_rejects_open_and_existing_handle) (mode='float-id') ... FAIL
+  test_missing_or_replaced_binding_layout_rejects_open_and_existing_handle (test_r3_host_layout.HostLayoutTests.test_missing_or_replaced_binding_layout_rejects_open_and_existing_handle) (mode='text-id') ... FAIL
+  test_missing_or_replaced_binding_layout_rejects_open_and_existing_handle (test_r3_host_layout.HostLayoutTests.test_missing_or_replaced_binding_layout_rejects_open_and_existing_handle) (mode='empty') ... FAIL
+test_valid_existing_host_table_reopens_with_original_budget (test_r3_host_layout.HostLayoutTests.test_valid_existing_host_table_reopens_with_original_budget) ... ok
+
+======================================================================
+FAIL: test_missing_or_replaced_binding_layout_rejects_open_and_existing_handle (test_r3_host_layout.HostLayoutTests.test_missing_or_replaced_binding_layout_rejects_open_and_existing_handle) (mode='missing')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/imr-r3-20261127/tests/test_r3_host_layout.py", line 37, in test_missing_or_replaced_binding_layout_rejects_open_and_existing_handle
+    self.assertEqual((caught.exception.code,caught.exception.commit_state),('INTEGRITY_FAILURE','not_applicable'))
+AssertionError: Tuples differ: ('STORAGE_ERROR', 'not_applicable') != ('INTEGRITY_FAILURE', 'not_applicable')
+
+First differing element 0:
+'STORAGE_ERROR'
+'INTEGRITY_FAILURE'
+
+- ('STORAGE_ERROR', 'not_applicable')
++ ('INTEGRITY_FAILURE', 'not_applicable')
+
+======================================================================
+FAIL: test_missing_or_replaced_binding_layout_rejects_open_and_existing_handle (test_r3_host_layout.HostLayoutTests.test_missing_or_replaced_binding_layout_rejects_open_and_existing_handle) (mode='columns')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/imr-r3-20261127/tests/test_r3_host_layout.py", line 37, in test_missing_or_replaced_binding_layout_rejects_open_and_existing_handle
+    self.assertEqual((caught.exception.code,caught.exception.commit_state),('INTEGRITY_FAILURE','not_applicable'))
+AssertionError: Tuples differ: ('STORAGE_ERROR', 'not_applicable') != ('INTEGRITY_FAILURE', 'not_applicable')
+
+First differing element 0:
+'STORAGE_ERROR'
+'INTEGRITY_FAILURE'
+
+- ('STORAGE_ERROR', 'not_applicable')
++ ('INTEGRITY_FAILURE', 'not_applicable')
+
+======================================================================
+FAIL: test_missing_or_replaced_binding_layout_rejects_open_and_existing_handle (test_r3_host_layout.HostLayoutTests.test_missing_or_replaced_binding_layout_rejects_open_and_existing_handle) (mode='view')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/imr-r3-20261127/tests/test_r3_host_layout.py", line 36, in test_missing_or_replaced_binding_layout_rejects_open_and_existing_handle
+    with self.assertRaises(RuntimeFailure) as caught:operation()
+AssertionError: RuntimeFailure not raised
+
+======================================================================
+FAIL: test_missing_or_replaced_binding_layout_rejects_open_and_existing_handle (test_r3_host_layout.HostLayoutTests.test_missing_or_replaced_binding_layout_rejects_open_and_existing_handle) (mode='float-id')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/imr-r3-20261127/tests/test_r3_host_layout.py", line 36, in test_missing_or_replaced_binding_layout_rejects_open_and_existing_handle
+    with self.assertRaises(RuntimeFailure) as caught:operation()
+AssertionError: RuntimeFailure not raised
+
+======================================================================
+FAIL: test_missing_or_replaced_binding_layout_rejects_open_and_existing_handle (test_r3_host_layout.HostLayoutTests.test_missing_or_replaced_binding_layout_rejects_open_and_existing_handle) (mode='text-id')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/imr-r3-20261127/tests/test_r3_host_layout.py", line 37, in test_missing_or_replaced_binding_layout_rejects_open_and_existing_handle
+    self.assertEqual((caught.exception.code,caught.exception.commit_state),('INTEGRITY_FAILURE','not_applicable'))
+AssertionError: Tuples differ: ('NOT_FOUND', 'not_applicable') != ('INTEGRITY_FAILURE', 'not_applicable')
+
+First differing element 0:
+'NOT_FOUND'
+'INTEGRITY_FAILURE'
+
+- ('NOT_FOUND', 'not_applicable')
+?    -   ^ ^^
+
++ ('INTEGRITY_FAILURE', 'not_applicable')
+?   +  ++++++  ^^^ ^^
+
+
+======================================================================
+FAIL: test_missing_or_replaced_binding_layout_rejects_open_and_existing_handle (test_r3_host_layout.HostLayoutTests.test_missing_or_replaced_binding_layout_rejects_open_and_existing_handle) (mode='empty')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/imr-r3-20261127/tests/test_r3_host_layout.py", line 37, in test_missing_or_replaced_binding_layout_rejects_open_and_existing_handle
+    self.assertEqual((caught.exception.code,caught.exception.commit_state),('INTEGRITY_FAILURE','not_applicable'))
+AssertionError: Tuples differ: ('NOT_FOUND', 'not_applicable') != ('INTEGRITY_FAILURE', 'not_applicable')
+
+First differing element 0:
+'NOT_FOUND'
+'INTEGRITY_FAILURE'
+
+- ('NOT_FOUND', 'not_applicable')
+?    -   ^ ^^
+
++ ('INTEGRITY_FAILURE', 'not_applicable')
+?   +  ++++++  ^^^ ^^
+
+
+----------------------------------------------------------------------
+Ran 2 tests in 0.350s
+
+FAILED (failures=6)

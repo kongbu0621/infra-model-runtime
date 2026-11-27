@@ -1,0 +1,16 @@
+test_stored_origin_preserves_exact_numeric_types (test_r3_closed_history.ClosedHistoryTests.test_stored_origin_preserves_exact_numeric_types) ... FAIL
+
+======================================================================
+FAIL: test_stored_origin_preserves_exact_numeric_types (test_r3_closed_history.ClosedHistoryTests.test_stored_origin_preserves_exact_numeric_types)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/imr-r3-20261127/tests/test_r3_closed_history.py", line 108, in test_stored_origin_preserves_exact_numeric_types
+    self.error('INTEGRITY_FAILURE',lambda:HostedModelRuntime(self.path,self.app,host=self.host,content=self.content,closed_history=self.old))
+  File "/tmp/imr-r3-20261127/tests/test_r3_closed_history.py", line 36, in error
+    with self.assertRaises(RuntimeFailure) as caught: fn()
+AssertionError: RuntimeFailure not raised
+
+----------------------------------------------------------------------
+Ran 1 test in 0.043s
+
+FAILED (failures=1)

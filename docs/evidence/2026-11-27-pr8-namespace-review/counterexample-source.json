@@ -1,0 +1,9 @@
+{
+  "before_commit": "01bcea8285c1eebbeaac24cef1294657d3ce9317",
+  "modules": {
+    "src/infra_model_runtime/hosted.py": "11e626bbc50f104ac1ec48f39ed32e6faa686973756b37b9a9401f4d48c6bd69"
+  },
+  "test_file": "tests/test_r3_namespace_case.py",
+  "test_sha256": "54b8b2306ae7eea235453e585f4286c76551d9cd34142edefe4eea62361a083e",
+  "public_runtime_before": "93f10fe7ebb83b91ee7cad96b334510dcd4cd9bd"
+}

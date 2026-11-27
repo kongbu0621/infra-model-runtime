@@ -1,0 +1,16 @@
+test_historical_requests_bind_pool_and_resource_before_first_new_request (test_r3_closed_history.ClosedHistoryTests.test_historical_requests_bind_pool_and_resource_before_first_new_request) ... FAIL
+
+======================================================================
+FAIL: test_historical_requests_bind_pool_and_resource_before_first_new_request (test_r3_closed_history.ClosedHistoryTests.test_historical_requests_bind_pool_and_resource_before_first_new_request)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/imr-r3-20261127/tests/test_r3_closed_history.py", line 115, in test_historical_requests_bind_pool_and_resource_before_first_new_request
+    self.error('CONFLICT',lambda:self.r.configure('rename-'+field,1,encoded(changed)))
+  File "/tmp/imr-r3-20261127/tests/test_r3_closed_history.py", line 36, in error
+    with self.assertRaises(RuntimeFailure) as caught: fn()
+AssertionError: RuntimeFailure not raised
+
+----------------------------------------------------------------------
+Ran 1 test in 0.051s
+
+FAILED (failures=1)
