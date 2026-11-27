@@ -3,6 +3,8 @@ from contextlib import closing
 from dataclasses import replace
 from pathlib import Path
 import sqlite3
+import json
+import hashlib
 import tempfile
 import time
 import unittest
@@ -95,3 +97,12 @@ class ClosedHistoryTests(unittest.TestCase):
         self.r.approve('approval','openai',account='synthetic',service_revision='fixture',capability_contract=CONTRACT)
         self.error('LIMIT',lambda:self.r.submit(self.req))
         self.assertEqual(self.r.budget().issued_calls,2)
+
+    def test_stored_origin_preserves_exact_numeric_types(self):
+        self.attach()
+        with closing(sqlite3.connect(self.path)) as db:
+            body=json.loads(db.execute('SELECT body FROM rt_host WHERE id=1').fetchone()[0])
+            body['closed_history']['payload_reserved']=False  # False == 0 is not an exact historical value.
+            raw=encoded(body)
+            db.execute('UPDATE rt_host SET body=?,digest=? WHERE id=1',(raw.decode(),hashlib.sha256(raw).hexdigest()));db.commit()
+        self.error('INTEGRITY_FAILURE',lambda:HostedModelRuntime(self.path,self.app,host=self.host,content=self.content,closed_history=self.old))

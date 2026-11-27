@@ -81,7 +81,7 @@ class _HostedStore(_ModelStore):
         # A hosted coordinator inherits host privacy/binding validation; it is
         # not a newly created R2 mode-0600 file. The host must protect its root.
         meta = Runtime._metadata(self, db)
-        require(self._data(db, 'rt_host', 1) == self.binding, 'INTEGRITY_FAILURE')
+        require(encode(self._data(db, 'rt_host', 1)) == encode(self.binding), 'INTEGRITY_FAILURE')
         require(db.execute('SELECT count(*) FROM rt_host').fetchone()[0] == 1, 'INTEGRITY_FAILURE')
         if self.closed_history is not None:
             require(meta['request_count'] + self.closed_history.request_count <= 256 and
