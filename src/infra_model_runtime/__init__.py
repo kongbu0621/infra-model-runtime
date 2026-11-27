@@ -9,8 +9,11 @@ __all__ = ["ApplicationPort", "Budget", "CallState", "Config", "IssuePermit",
            "Runtime", "RuntimeFailure"]
 
 from .model import Generation, ModelRuntime, ModelStatus
-__version__ = "0.1.0a1"
+__version__ = "0.1.0a2"
 __all__ += ["Generation", "ModelRuntime", "ModelStatus"]
 
 from .content import ContentKey, ContentPort
 __all__ += ["ContentKey", "ContentPort"]
+
+from .hosted import CoordinatorHost, HostedModelRuntime
+__all__ += ["CoordinatorHost", "HostedModelRuntime"]

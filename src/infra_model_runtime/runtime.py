@@ -70,15 +70,18 @@ class Runtime:
         instance._active = False
         instance._store_id = secrets.token_hex(16)
         with instance._transaction(("create",), initializing=True) as db:
-            db.execute("CREATE TABLE rt_meta (id INTEGER PRIMARY KEY, body TEXT NOT NULL, digest TEXT NOT NULL)")
-            db.execute("CREATE TABLE rt_calls (namespace TEXT, request_id TEXT, body TEXT NOT NULL, digest TEXT NOT NULL, PRIMARY KEY(namespace, request_id))")
-            db.execute("CREATE TABLE rt_controls (operation TEXT, control_id TEXT, body TEXT NOT NULL, digest TEXT NOT NULL, PRIMARY KEY(operation, control_id))")
-            instance._save_meta(db, dict(schema=instance._schema, store_id=instance._store_id,
-                application=instance.application.identity, config=asdict(config), revision=1,
-                clock_ms=0, request_count=0, control_count=0))
-            setup(instance, db)
-            instance._hook(db, "initialize", schema=True)
+            instance._initialize(db, config, setup)
         return instance
+
+    def _initialize(self, db, config, setup):
+        db.execute("CREATE TABLE rt_meta (id INTEGER PRIMARY KEY, body TEXT NOT NULL, digest TEXT NOT NULL)")
+        db.execute("CREATE TABLE rt_calls (namespace TEXT, request_id TEXT, body TEXT NOT NULL, digest TEXT NOT NULL, PRIMARY KEY(namespace, request_id))")
+        db.execute("CREATE TABLE rt_controls (operation TEXT, control_id TEXT, body TEXT NOT NULL, digest TEXT NOT NULL, PRIMARY KEY(operation, control_id))")
+        self._save_meta(db, dict(schema=self._schema, store_id=self._store_id,
+            application=self.application.identity, config=asdict(config), revision=1,
+            clock_ms=0, request_count=0, control_count=0))
+        setup(self, db)
+        self._hook(db, "initialize", schema=True)
 
     def _checkpoint(self, stage):
         """Private fault-injection seam; not a provider or application hook."""
@@ -155,8 +158,11 @@ class Runtime:
                         raise RuntimeFailure("STORAGE_ERROR", "not_applicable" if readonly else
                                              ("committed" if committed else "unknown"), identity) from None
 
+    def _application_transaction(self, db, **options):
+        return LocalTransaction(db, **options)
+
     def _hook(self, db, name, *args, schema=False, readonly=False):
-        tx = LocalTransaction(db, schema=schema, readonly=readonly)
+        tx = self._application_transaction(db, schema=schema, readonly=readonly)
         try:
             try:
                 result = getattr(self.application, name)(tx, *args)

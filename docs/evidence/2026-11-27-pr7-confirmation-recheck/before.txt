@@ -1,0 +1,80 @@
+test_other_handle_confirms_captured_response_before_original_settlement (test_r3_confirmation_recheck.ConfirmationRecheckTests.test_other_handle_confirms_captured_response_before_original_settlement) ... ERROR
+test_other_handle_finishes_pending_input_or_wire_without_false_corruption (test_r3_confirmation_recheck.ConfirmationRecheckTests.test_other_handle_finishes_pending_input_or_wire_without_false_corruption) ... 
+  test_other_handle_finishes_pending_input_or_wire_without_false_corruption (test_r3_confirmation_recheck.ConfirmationRecheckTests.test_other_handle_finishes_pending_input_or_wire_without_false_corruption) (role='input') ... ERROR
+  test_other_handle_finishes_pending_input_or_wire_without_false_corruption (test_r3_confirmation_recheck.ConfirmationRecheckTests.test_other_handle_finishes_pending_input_or_wire_without_false_corruption) (role='wire') ... ERROR
+
+======================================================================
+ERROR: test_other_handle_confirms_captured_response_before_original_settlement (test_r3_confirmation_recheck.ConfirmationRecheckTests.test_other_handle_confirms_captured_response_before_original_settlement)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/imr-r3-20261127/tests/test_r3_confirmation_recheck.py", line 47, in test_other_handle_confirms_captured_response_before_original_settlement
+    result = self.r.run('example', 'job')
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/imr-r3-20261127/src/infra_model_runtime/hosted.py", line 270, in run
+    return super().run(namespace, request_id)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/imr-r3-20261127/src/infra_model_runtime/model.py", line 441, in run
+    return self.recover(namespace, request_id)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/imr-r3-20261127/src/infra_model_runtime/hosted.py", line 279, in recover
+    self._content(namespace, request_id, 'response', confirm=True)
+  File "/tmp/imr-r3-20261127/src/infra_model_runtime/hosted.py", line 240, in _content
+    with s._transaction(('content-write-check', namespace, request_id, role), readonly=True) as db:
+  File "/usr/lib/python3.12/contextlib.py", line 158, in __exit__
+    self.gen.throw(value)
+  File "/tmp/imr-r3-20261127/src/infra_model_runtime/hosted.py", line 77, in _transaction
+    with super()._transaction(identity, **options) as db:
+  File "/usr/lib/python3.12/contextlib.py", line 158, in __exit__
+    self.gen.throw(value)
+  File "/tmp/imr-r3-20261127/src/infra_model_runtime/runtime.py", line 134, in _transaction
+    raise RuntimeFailure(exc.code, state, identity) from None
+infra_model_runtime.contracts.RuntimeFailure: INTEGRITY_FAILURE
+
+======================================================================
+ERROR: test_other_handle_finishes_pending_input_or_wire_without_false_corruption (test_r3_confirmation_recheck.ConfirmationRecheckTests.test_other_handle_finishes_pending_input_or_wire_without_false_corruption) (role='input')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/imr-r3-20261127/tests/test_r3_confirmation_recheck.py", line 28, in test_other_handle_finishes_pending_input_or_wire_without_false_corruption
+    result = self.r.copy_payload('example', 'job', role, self.content)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/imr-r3-20261127/src/infra_model_runtime/hosted.py", line 308, in copy_payload
+    key = self._content(namespace, request_id, role, confirm=True)[0]
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/imr-r3-20261127/src/infra_model_runtime/hosted.py", line 240, in _content
+    with s._transaction(('content-write-check', namespace, request_id, role), readonly=True) as db:
+  File "/usr/lib/python3.12/contextlib.py", line 158, in __exit__
+    self.gen.throw(value)
+  File "/tmp/imr-r3-20261127/src/infra_model_runtime/hosted.py", line 77, in _transaction
+    with super()._transaction(identity, **options) as db:
+  File "/usr/lib/python3.12/contextlib.py", line 158, in __exit__
+    self.gen.throw(value)
+  File "/tmp/imr-r3-20261127/src/infra_model_runtime/runtime.py", line 134, in _transaction
+    raise RuntimeFailure(exc.code, state, identity) from None
+infra_model_runtime.contracts.RuntimeFailure: INTEGRITY_FAILURE
+
+======================================================================
+ERROR: test_other_handle_finishes_pending_input_or_wire_without_false_corruption (test_r3_confirmation_recheck.ConfirmationRecheckTests.test_other_handle_finishes_pending_input_or_wire_without_false_corruption) (role='wire')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/imr-r3-20261127/tests/test_r3_confirmation_recheck.py", line 28, in test_other_handle_finishes_pending_input_or_wire_without_false_corruption
+    result = self.r.copy_payload('example', 'job', role, self.content)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/imr-r3-20261127/src/infra_model_runtime/hosted.py", line 308, in copy_payload
+    key = self._content(namespace, request_id, role, confirm=True)[0]
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/imr-r3-20261127/src/infra_model_runtime/hosted.py", line 240, in _content
+    with s._transaction(('content-write-check', namespace, request_id, role), readonly=True) as db:
+  File "/usr/lib/python3.12/contextlib.py", line 158, in __exit__
+    self.gen.throw(value)
+  File "/tmp/imr-r3-20261127/src/infra_model_runtime/hosted.py", line 77, in _transaction
+    with super()._transaction(identity, **options) as db:
+  File "/usr/lib/python3.12/contextlib.py", line 158, in __exit__
+    self.gen.throw(value)
+  File "/tmp/imr-r3-20261127/src/infra_model_runtime/runtime.py", line 134, in _transaction
+    raise RuntimeFailure(exc.code, state, identity) from None
+infra_model_runtime.contracts.RuntimeFailure: INTEGRITY_FAILURE
+
+----------------------------------------------------------------------
+Ran 2 tests in 0.240s
+
+FAILED (errors=3)

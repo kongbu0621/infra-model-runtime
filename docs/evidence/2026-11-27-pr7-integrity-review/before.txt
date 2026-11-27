@@ -1,0 +1,60 @@
+test_malformed_allowlist_has_public_error_and_no_guard_or_write (test_r3_host_binding_input.HostBindingInputTests.test_malformed_allowlist_has_public_error_and_no_guard_or_write) ... 
+  test_malformed_allowlist_has_public_error_and_no_guard_or_write (test_r3_host_binding_input.HostBindingInputTests.test_malformed_allowlist_has_public_error_and_no_guard_or_write) (tables=([],)) ... ERROR
+  test_malformed_allowlist_has_public_error_and_no_guard_or_write (test_r3_host_binding_input.HostBindingInputTests.test_malformed_allowlist_has_public_error_and_no_guard_or_write) (tables=({},)) ... ERROR
+  test_malformed_allowlist_has_public_error_and_no_guard_or_write (test_r3_host_binding_input.HostBindingInputTests.test_malformed_allowlist_has_public_error_and_no_guard_or_write) (tables=({'materials'},)) ... ERROR
+
+======================================================================
+ERROR: test_malformed_allowlist_has_public_error_and_no_guard_or_write (test_r3_host_binding_input.HostBindingInputTests.test_malformed_allowlist_has_public_error_and_no_guard_or_write) (tables=([],))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/imr-r3-20261127/tests/test_r3_host_binding_input.py", line 22, in test_malformed_allowlist_has_public_error_and_no_guard_or_write
+    HostedModelRuntime(self.path, self.app, host=self.host, content=self.content)
+  File "/tmp/imr-r3-20261127/src/infra_model_runtime/hosted.py", line 170, in __init__
+    store = self._new_store(path, application, host, content)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/imr-r3-20261127/src/infra_model_runtime/hosted.py", line 182, in _new_store
+    store.binding = _binding(host, content)
+                    ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/imr-r3-20261127/src/infra_model_runtime/hosted.py", line 40, in _binding
+    require(type(tables) is tuple and len(tables) <= 32 and len(set(tables)) == len(tables))
+                                                                ^^^^^^^^^^^
+TypeError: unhashable type: 'list'
+
+======================================================================
+ERROR: test_malformed_allowlist_has_public_error_and_no_guard_or_write (test_r3_host_binding_input.HostBindingInputTests.test_malformed_allowlist_has_public_error_and_no_guard_or_write) (tables=({},))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/imr-r3-20261127/tests/test_r3_host_binding_input.py", line 22, in test_malformed_allowlist_has_public_error_and_no_guard_or_write
+    HostedModelRuntime(self.path, self.app, host=self.host, content=self.content)
+  File "/tmp/imr-r3-20261127/src/infra_model_runtime/hosted.py", line 170, in __init__
+    store = self._new_store(path, application, host, content)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/imr-r3-20261127/src/infra_model_runtime/hosted.py", line 182, in _new_store
+    store.binding = _binding(host, content)
+                    ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/imr-r3-20261127/src/infra_model_runtime/hosted.py", line 40, in _binding
+    require(type(tables) is tuple and len(tables) <= 32 and len(set(tables)) == len(tables))
+                                                                ^^^^^^^^^^^
+TypeError: unhashable type: 'dict'
+
+======================================================================
+ERROR: test_malformed_allowlist_has_public_error_and_no_guard_or_write (test_r3_host_binding_input.HostBindingInputTests.test_malformed_allowlist_has_public_error_and_no_guard_or_write) (tables=({'materials'},))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/imr-r3-20261127/tests/test_r3_host_binding_input.py", line 22, in test_malformed_allowlist_has_public_error_and_no_guard_or_write
+    HostedModelRuntime(self.path, self.app, host=self.host, content=self.content)
+  File "/tmp/imr-r3-20261127/src/infra_model_runtime/hosted.py", line 170, in __init__
+    store = self._new_store(path, application, host, content)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/imr-r3-20261127/src/infra_model_runtime/hosted.py", line 182, in _new_store
+    store.binding = _binding(host, content)
+                    ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/imr-r3-20261127/src/infra_model_runtime/hosted.py", line 40, in _binding
+    require(type(tables) is tuple and len(tables) <= 32 and len(set(tables)) == len(tables))
+                                                                ^^^^^^^^^^^
+TypeError: unhashable type: 'set'
+
+----------------------------------------------------------------------
+Ran 1 test in 0.067s
+
+FAILED (errors=3)

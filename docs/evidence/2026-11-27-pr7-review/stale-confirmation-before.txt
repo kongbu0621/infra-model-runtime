@@ -1,0 +1,16 @@
+test_confirmation_by_another_handle_is_not_recreated (test_r3_host_review.HostReviewTests.test_confirmation_by_another_handle_is_not_recreated) ... FAIL
+
+======================================================================
+FAIL: test_confirmation_by_another_handle_is_not_recreated (test_r3_host_review.HostReviewTests.test_confirmation_by_another_handle_is_not_recreated)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/imr-r3-20261127/tests/test_r3_host_review.py", line 50, in test_confirmation_by_another_handle_is_not_recreated
+    self.error('INTEGRITY_FAILURE', lambda: self.r.copy_payload('example', 'job', 'input', self.content))
+  File "/tmp/imr-r3-20261127/tests/test_r3_hosted.py", line 74, in error
+    with self.assertRaises(RuntimeFailure) as caught: fn()
+AssertionError: RuntimeFailure not raised
+
+----------------------------------------------------------------------
+Ran 1 test in 0.103s
+
+FAILED (failures=1)

@@ -1,0 +1,8 @@
+test_input_confirmation_commit_boundaries (test_r3_confirmation_commit.ConfirmationCommitTests.test_input_confirmation_commit_boundaries) ... ok
+test_response_confirmation_commit_boundaries (test_r3_confirmation_commit.ConfirmationCommitTests.test_response_confirmation_commit_boundaries) ... ok
+test_wire_confirmation_commit_boundaries (test_r3_confirmation_commit.ConfirmationCommitTests.test_wire_confirmation_commit_boundaries) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 2.861s
+
+OK

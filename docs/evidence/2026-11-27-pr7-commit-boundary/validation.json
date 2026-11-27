@@ -1,0 +1,31 @@
+{
+  "date": "2026-11-27",
+  "environment": "GX10 / Linux aarch64 / Python 3.12.3",
+  "test_commit": "c6dbd21a7f6cac64d0dfa99d8eb20da99634cd66",
+  "runtime_source_commit": "999e374e4d35ee4e67fb360edf85af7a5b72e1c6",
+  "runtime_wheel_sha256": "200b6995c4cf4c348116785ead65f1f009792e13dace685de495a328848bcfb6",
+  "source_test_count": 3,
+  "controlled_scenarios": 12,
+  "candidate_test_count": 27,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 0,
+  "product_changes": false,
+  "installed": false,
+  "deployed": false,
+  "original_code_unchanged": true,
+  "compiled_new_files": 1,
+  "unchanged_previous_python_files": 43,
+  "files": {
+    "candidate.json": "a75fbb02c49e31900567e3ae193985674c842c14ca4a70dce57d6823353d4ca4",
+    "candidate.txt": "e5090ef9d5c12be3ebf3486f8ae5ed9ca7b7ddd3cc87029e624c0be3e785ec61",
+    "compile.json": "f79762f91012e6b581c59c1f742a41112b3508d50ced1333a218070ad4e497f5",
+    "harness-draft.txt": "94ff5629eb9c0c07d69baa56d7a8765f94485232118c72e010453e3d2439b821",
+    "source.txt": "76de86e530dd49fe67190978049da3c15b7994755c20d5bc63417db42dd23bf3"
+  },
+  "initial_failure": "Test harness IndexError at checkpoint outside transaction; corrected and target fault firing verified. Not a product finding.",
+  "limits": [
+    "controlled exceptions around actual SQLite commit; not process kill or power loss",
+    "synthetic workspace; no production migration or real model"
+  ]
+}
