@@ -1,0 +1,24 @@
+{
+  "status": "PASS",
+  "tests": 23,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 0,
+  "wheel_sha256": "cf3742c704b749ee218f8cc9bb76ff2f5bbff1e4bd8db703aeab21e34358c26d",
+  "wheel_runtime_files_match_source": {
+    "infra_model_runtime/runtime.py": "734d3c49ff8a02c88859f77a5933d1ba7e6ef9db1dd57f0496094e24429d1b6f",
+    "infra_model_runtime/_boundary.py": "c02175bdb9fc0056671b7179bc3932dd72e422c6c83e9ec0ac2a6ab5ff2340b3",
+    "infra_model_runtime/contracts.py": "d802ed9eec1d64dc8c767ba783e9f36d4c9a593c54cca40343c10ccb59e10228",
+    "infra_model_runtime/content.py": "46f99fd03181a2b2ce1070fcce37a1f78c555d7cef72a0a133cef99b0b359700",
+    "infra_model_runtime/storage.py": "de82b85446d1c860f2e9213b3620dc987a27f4ae089fae7e53aa24ee10594b04",
+    "infra_model_runtime/protocol.py": "e31f2e0f1802ad18df122f07b680fc071b9ba8482dbc92100323270c3d287a8a",
+    "infra_model_runtime/__init__.py": "8d3a82b862fd09e52ff395784ce569630bfc48e66423bdaf4b99f99c06fece11",
+    "infra_model_runtime/model.py": "ee9a3fb005ce536a35df87ebd24300d6b963d4923f2d4177ec1a18c6c04382e5",
+    "infra_model_runtime/ports.py": "35744ef0b932d784a2036602b9bcc9c93b5bcdab15cf2aba429c22c254826642",
+    "infra_model_runtime/credentials.py": "ed24be93df8e0f1caa9285d79a7392fe1cb881ac2fd2441142055ba710a31589",
+    "infra_model_runtime/hosted.py": "8dac23ad39dc9b51d34aa5081d1fad45311a35c58b266b5bcd23eeadcb6e41dd",
+    "infra_model_runtime/configuration.py": "02fccb127cdad6f113e058f0823988f58424ab24a6879f5a9f26aa54974f8bc6",
+    "infra_model_runtime/transport.py": "7bbe665402c3e865a1e4292a37582a765147effc5d433c20d210cbc7d0158668"
+  },
+  "installed": false
+}

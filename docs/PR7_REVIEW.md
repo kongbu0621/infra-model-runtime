@@ -1,5 +1,25 @@
 # PR #7 宿主、权限与内容确认复核
 
+## 再复核：接受其他句柄已完成的准确内容确认
+
+2026-11-27，修复源码 `aeefff35ca5d240f777b732c7f9da87313c37c32`。在上一轮 `10e8f80` 上继续检查合法交错，发现写前复查把“别的句柄已经确认”直接当作内容损坏。另一句柄正常保存并确认 input/wire/response 后，原句柄仍可能报 `INTEGRITY_FAILURE`；响应场景会中断本可完成的结算。
+
+现在先看最新确认标记：仍未确认才允许首次保存；已确认则只读回实际内容。准确 bytes 可继续，缺失、不同字节或错误类型仍拒绝，禁止从暂存重建已确认内容。这保留了上轮缺失拒绝规则，同时修复正常进展的误报。
+
+| 检查 | 本轮结果 |
+| --- | --- |
+| 旧版复现 | 两个新方法的 input、wire、response 三个场景均误报，见[旧版日志](evidence/2026-11-27-pr7-confirmation-recheck/before.txt) |
+| 新增边界 | 双句柄受控交错的准确内容只读接续、原响应结算、错误字节/类型拒绝，以及确认后中断再重开；没有额外内容写入或重复 POST |
+| 完整源码 | 164 项通过，零失败/错误/跳过；包含此前缺失拒绝、读权、宿主锁与 R1/R2 回归 |
+| 候选解包 | 23 项 R3 专项通过；13 个运行模块与修复源码逐字节一致，加载来源均在候选目录 |
+| 编译 | 42 文件，优化级别 0/1/2；Python 3.11 仅语法检查 |
+
+新 wheel SHA-256：`cf3742c704b749ee218f8cc9bb76ff2f5bbff1e4bd8db703aeab21e34358c26d`。验证继续使用 GX10 / Linux aarch64 / Python 3.12.3 原项目解释器；没有安装或部署。
+
+证据：[汇总](evidence/2026-11-27-pr7-confirmation-recheck/validation.json)、[源码日志](evidence/2026-11-27-pr7-confirmation-recheck/source.txt)、[候选报告](evidence/2026-11-27-pr7-confirmation-recheck/candidate.json)、[候选日志](evidence/2026-11-27-pr7-confirmation-recheck/candidate.txt)、[编译摘要](evidence/2026-11-27-pr7-confirmation-recheck/compile.json)。新交错为同进程两个独立句柄的确定顺序，不等于所有多进程调度或存储故障已验收；跨组件全局原子性、旧业务迁移和真实部署仍未完成。
+
+## 首次复核（历史记录）
+
 2026-11-27；修复源码 `10e8f80ffb2e2b4828c16235693caaffaf04f5a7`，继续原 PR #7。源码版本仍为 `0.1.0a2` 候选，没有安装或部署。首轮 `813da037` 的 155/14 项保留原时点，不能代替本次修复验收。
 
 ## 确认的问题及修复
