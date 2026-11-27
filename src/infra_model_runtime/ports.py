@@ -15,7 +15,11 @@ class LocalTransaction:
     """A bounded, thread-local, callback-scoped application SQL port."""
     version = "r1.transaction.v1"
 
-    def __init__(self, connection, *, schema=False, readonly=False):
+    def __init__(self, connection, *, schema=False, readonly=False, read_tables=(),
+                 max_rows=256, max_bytes=32768, max_parameter=16384, read_functions=()):
+        self._read_functions = frozenset(read_functions)
+        self._read_tables = frozenset(read_tables)
+        self._max_rows, self._max_bytes, self._max_parameter = max_rows, max_bytes, max_parameter
         self._connection = connection
         self._thread = threading.get_ident()
         self._active = True
@@ -27,7 +31,7 @@ class LocalTransaction:
         owned = type(first) is str and first.startswith("app_")
         allowed = action == sqlite3.SQLITE_SELECT
         if action == sqlite3.SQLITE_READ:
-            allowed = owned or (self._schema and first == "sqlite_master")
+            allowed = owned or first in self._read_tables or (self._schema and first == "sqlite_master")
         if action in (sqlite3.SQLITE_INSERT, sqlite3.SQLITE_UPDATE, sqlite3.SQLITE_DELETE):
             allowed = not self._readonly and (owned or (self._schema and first == "sqlite_master"))
         if action == sqlite3.SQLITE_CREATE_TABLE:
@@ -36,6 +40,8 @@ class LocalTransaction:
             allowed = self._schema and type(second) is str and second.startswith("app_")
         if action == sqlite3.SQLITE_REINDEX:
             allowed = self._schema and (owned or (first or "").startswith("sqlite_autoindex_app_"))
+        if action == sqlite3.SQLITE_FUNCTION:
+            allowed = second in self._read_functions
         if database not in (None, "main") or trigger is not None:
             allowed = False
         if not allowed:
@@ -56,7 +62,7 @@ class LocalTransaction:
             for value in parameters:
                 require(value is None or type(value) in (str, bytes, int), "PORT_VIOLATION")
                 if type(value) in (str, bytes):
-                    require(len(value.encode("utf-8") if type(value) is str else value) <= 16384, "PORT_LIMIT")
+                    require(len(value.encode("utf-8") if type(value) is str else value) <= self._max_parameter, "PORT_LIMIT")
                 if type(value) is int:
                     require(-(2**63) <= value < 2**63, "PORT_LIMIT")
             self._connection.set_authorizer(self._authorize)
@@ -72,11 +78,11 @@ class LocalTransaction:
             self._connection.set_progress_handler(progress, 1000)
             cursor = self._connection.execute(sql, parameters)
             try:
-                rows = tuple(tuple(row) for row in cursor.fetchmany(257))
-                require(len(rows) <= 256, "PORT_LIMIT")
+                rows = tuple(tuple(row) for row in cursor.fetchmany(self._max_rows + 1))
+                require(len(rows) <= self._max_rows, "PORT_LIMIT")
                 size = sum(len(v.encode("utf-8") if type(v) is str else v)
                            for row in rows for v in row if type(v) in (str, bytes))
-                require(size <= 32768, "PORT_LIMIT")
+                require(size <= self._max_bytes, "PORT_LIMIT")
                 require(self._connection.in_transaction, "PORT_VIOLATION")
                 return Rows(rows, cursor.rowcount)
             except BaseException:

@@ -269,17 +269,19 @@ class ModelRuntime:
     @classmethod
     def create(cls, path, configuration_bytes, application=None):
         cfg = configuration.parse(configuration_bytes)
-        def setup(store, db):
-            for table in ('rt_model_meta', 'rt_model_configs', 'rt_model_controls'):
-                db.execute(f'CREATE TABLE {table} (id PRIMARY KEY, body TEXT NOT NULL, digest TEXT NOT NULL)')
-            db.execute('CREATE TABLE rt_model_copies (namespace TEXT, request_id TEXT, role TEXT, body TEXT NOT NULL, digest TEXT NOT NULL, PRIMARY KEY(namespace,request_id,role))')
-            db.execute('CREATE TABLE rt_model_jobs (namespace TEXT, request_id TEXT, body TEXT NOT NULL, digest TEXT NOT NULL, PRIMARY KEY(namespace,request_id))')
-            db.execute('CREATE TABLE rt_model_payloads (namespace TEXT, request_id TEXT, role TEXT, data BLOB NOT NULL, sha TEXT NOT NULL, length INTEGER NOT NULL, PRIMARY KEY(namespace,request_id,role))')
-            store._put(db, 'rt_model_meta', 1, dict(key=secrets.token_hex(32), approvals={}))
-            store._put(db, 'rt_model_configs', 1, cfg)
         instance = object.__new__(cls)
-        instance._store = _ModelStore._create(path, _core(cfg), application, setup)
+        instance._store = _ModelStore._create(path, _core(cfg), application, lambda store, db: cls._setup(store, db, cfg))
         return instance
+
+    @staticmethod
+    def _setup(store, db, cfg):
+        for table in ('rt_model_meta', 'rt_model_configs', 'rt_model_controls'):
+            db.execute(f'CREATE TABLE {table} (id PRIMARY KEY, body TEXT NOT NULL, digest TEXT NOT NULL)')
+        db.execute('CREATE TABLE rt_model_copies (namespace TEXT, request_id TEXT, role TEXT, body TEXT NOT NULL, digest TEXT NOT NULL, PRIMARY KEY(namespace,request_id,role))')
+        db.execute('CREATE TABLE rt_model_jobs (namespace TEXT, request_id TEXT, body TEXT NOT NULL, digest TEXT NOT NULL, PRIMARY KEY(namespace,request_id))')
+        db.execute('CREATE TABLE rt_model_payloads (namespace TEXT, request_id TEXT, role TEXT, data BLOB NOT NULL, sha TEXT NOT NULL, length INTEGER NOT NULL, PRIMARY KEY(namespace,request_id,role))')
+        store._put(db, 'rt_model_meta', 1, dict(key=secrets.token_hex(32), approvals={}))
+        store._put(db, 'rt_model_configs', 1, cfg)
 
     def configuration(self):
         s = self._store
