@@ -18,6 +18,8 @@ from .model import ModelRuntime, ModelStatus, _ModelStore, _core, _observed
 from .ports import ApplicationPort, LocalTransaction
 from .runtime import Runtime
 
+_HOST_DDL = 'CREATE TABLE rt_host (id PRIMARY KEY, body TEXT NOT NULL, digest TEXT NOT NULL)'
+
 
 class CoordinatorHost:
     """Trusted host contract. guard(path) yields a binding check.
@@ -81,8 +83,11 @@ class _HostedStore(_ModelStore):
         # A hosted coordinator inherits host privacy/binding validation; it is
         # not a newly created R2 mode-0600 file. The host must protect its root.
         meta = Runtime._metadata(self, db)
-        require(encode(self._data(db, 'rt_host', 1)) == encode(self.binding), 'INTEGRITY_FAILURE')
+        schema = db.execute("SELECT type,sql FROM sqlite_master WHERE name='rt_host'").fetchone()
+        require(schema is not None and tuple(schema) == ('table', _HOST_DDL), 'INTEGRITY_FAILURE')
         require(db.execute('SELECT count(*) FROM rt_host').fetchone()[0] == 1, 'INTEGRITY_FAILURE')
+        require(not db.execute("SELECT 1 FROM rt_host WHERE typeof(id)!='integer' OR id!=1 LIMIT 1").fetchone(), 'INTEGRITY_FAILURE')
+        require(encode(self._data(db, 'rt_host', 1)) == encode(self.binding), 'INTEGRITY_FAILURE')
         if self.closed_history is not None:
             require(meta['request_count'] + self.closed_history.request_count <= 256 and
                     meta['control_count'] + self.closed_history.control_slots <= 128, 'INTEGRITY_FAILURE')
@@ -251,7 +256,7 @@ class HostedModelRuntime(ModelRuntime):
         store._store_id = secrets.token_hex(16)
         with store._transaction(('attach',), initializing=True) as db:
             require(not db.execute("SELECT 1 FROM sqlite_master WHERE name GLOB 'rt_*'").fetchone(), 'CONFLICT')
-            db.execute('CREATE TABLE rt_host (id PRIMARY KEY, body TEXT NOT NULL, digest TEXT NOT NULL)')
+            db.execute(_HOST_DDL)
             store._put(db, 'rt_host', 1, store.binding)
             store._initialize(db, _core(cfg), lambda s, conn: cls._setup(s, conn, cfg))
         instance = object.__new__(cls)
