@@ -37,9 +37,10 @@ class CoordinatorHost:
 def _binding(host, content):
     identifier(host.identity); identifier(content.identity)
     tables = host.read_tables
-    require(type(tables) is tuple and len(tables) <= 32 and len(set(tables)) == len(tables))
+    require(type(tables) is tuple and len(tables) <= 32)
     require(all(type(t) is str and re.fullmatch(r'[A-Za-z_][A-Za-z0-9_]{0,63}', t)
                 and not t.startswith('rt_') for t in tables))
+    require(len(set(tables)) == len(tables))
     return dict(host=host.identity, content=content.identity, read_tables=sorted(tables))
 
 
