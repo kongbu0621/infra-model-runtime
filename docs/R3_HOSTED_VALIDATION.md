@@ -1,5 +1,7 @@
 # R3 宿主与内容确认验证
 
+最新同日复核见 [PR #7 修复与验收](PR7_REVIEW.md)：修复源码 `10e8f80`，完整源码 160 项、新 wheel 专项 19 项通过。下方是首轮 `813da037` 与其 wheel 的历史记录。
+
 2026-11-27；运行载荷提交 `813da0379526cac19cbae339d7ddd202abd799db`，候选版本 `0.1.0a2`。本次未安装，既有 `9536de7 / 0.1.0a1` 项目环境保持。使用 GX10 / Linux aarch64 / Python 3.12.3 原项目解释器；准确文件摘要和构建见 [validation.json](evidence/2026-11-27-r3-hosted/validation.json)。
 
 | 检查 | 结果 | 范围 |

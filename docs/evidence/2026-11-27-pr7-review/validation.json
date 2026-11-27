@@ -1,0 +1,21 @@
+{
+  "date": "2026-11-27",
+  "environment": "GX10 / Linux aarch64 / Python 3.12.3",
+  "source_commit": "10e8f80ffb2e2b4828c16235693caaffaf04f5a7",
+  "public_runtime_commit": "10e8f80ffb2e2b4828c16235693caaffaf04f5a7",
+  "installed": false,
+  "deployed": false,
+  "source_test_count": 160,
+  "candidate_test_count": 19,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 0,
+  "logs": {
+    "before.txt": "d398454a7ea403026a02e6315eaef70befacc30943c6155e9b385c633b8b2074",
+    "stale-confirmation-before.txt": "487801f656a676370a44d2d8ba94a0cc7520474d343162fdd0af6c7c8c47ed58",
+    "source.txt": "80d7506159ef457b07ab4fedadd250e38ff62f1b99d1f0859b3712c81a7a8d02",
+    "candidate.txt": "d41564c29ad6efd86a99198f658a5e6d2391cb21ac2d263372a65fec1bb6e004",
+    "candidate.json": "d02a7572a1f5a91a58bb7a5bc676369223880f7c0e4e4383f47dc71baafd7238",
+    "compile.json": "b49ad138b38756ef7eae6bf1a6a895714ed8cf7fa36d3ad5363fb36aa24aee97"
+  }
+}
