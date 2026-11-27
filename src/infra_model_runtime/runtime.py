@@ -280,7 +280,13 @@ class Runtime:
             saved = self._unpack(row)
             require(saved["intent"] == intent, "CONFLICT")
             return restore(Receipt, saved["receipt"])
-        require(db.execute("SELECT count(*) FROM rt_controls").fetchone()[0] < 128, "LIMIT")
+        require(self._control_capacity_used(db) < 128, "LIMIT")
+
+    def _control_capacity_used(self, db):
+        return db.execute("SELECT count(*) FROM rt_controls").fetchone()[0]
+
+    def _request_capacity_used(self, db):
+        return len(self._calls(db))
 
     def _save_control(self, db, operation, control_id, intent, receipt, *, meta=None):
         if meta is None:
@@ -370,7 +376,7 @@ class Runtime:
             return restore(Receipt, old["receipt"])
         meta = self._metadata(db)
         config = restore(Config, meta["config"])
-        require(len(self._calls(db)) < config.max_requests, "LIMIT")
+        require(self._request_capacity_used(db) < config.max_requests, "LIMIT")
         profile = next(p for p in config.profiles if p.name == config.default)
         require(profile.enabled and profile.name in request.allowed_profiles, "DENIED")
         require(set(request.required_capabilities) <= set(profile.capabilities), "DENIED")

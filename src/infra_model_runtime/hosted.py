@@ -5,7 +5,7 @@ all rt_* tables; application hooks receive only a bounded SQL port. Content I/O
 never runs while a coordinator transaction or host guard is held.
 """
 from contextlib import contextmanager
-from dataclasses import asdict
+from dataclasses import asdict, dataclass
 from pathlib import Path
 import hashlib
 import re
@@ -13,7 +13,7 @@ import secrets
 
 from . import configuration
 from .content import ContentKey
-from .contracts import RuntimeFailure, Request, encode, fingerprint, identifier, require, restore
+from .contracts import Budget, RuntimeFailure, Request, encode, fingerprint, identifier, integer, require, restore
 from .model import ModelRuntime, ModelStatus, _ModelStore, _core, _observed
 from .ports import ApplicationPort, LocalTransaction
 from .runtime import Runtime
@@ -34,14 +34,44 @@ class CoordinatorHost:
         raise NotImplementedError
 
 
-def _binding(host, content):
+@dataclass(frozen=True)
+class ClosedHistory:
+    """Immutable accounting origin for a trusted, sealed legacy history.
+
+    Only fully resolved history is supported. The host must retain and verify
+    the source and exclude old writers. This is neither an approval nor an
+    importer for pending calls, reservations or uncertain usage.
+    """
+    source_sha256: str
+    issued_calls: int
+    input_bytes: int
+    output_used: int
+    request_count: int
+    control_slots: int
+    payload_reserved: int = 0
+    version: str = 'r3.closed-history.v1'
+
+    def __post_init__(self):
+        require(type(self.source_sha256) is str and re.fullmatch('[0-9a-f]{64}', self.source_sha256) is not None)
+        require(type(self.version) is str and self.version == 'r3.closed-history.v1')
+        integer(self.request_count, 0, 256); integer(self.control_slots, 0, 128)
+        integer(self.issued_calls, 0, self.request_count)
+        integer(self.input_bytes); integer(self.output_used)
+        integer(self.payload_reserved, 0, 134217728)
+        require(self.issued_calls > 0 or self.input_bytes == self.output_used == 0)
+
+
+def _binding(host, content, closed_history=None):
     identifier(host.identity); identifier(content.identity)
     tables = host.read_tables
     require(type(tables) is tuple and len(tables) <= 32)
     require(all(type(t) is str and re.fullmatch(r'[A-Za-z_][A-Za-z0-9_]{0,63}', t)
                 and not t.startswith('rt_') for t in tables))
     require(len(set(tables)) == len(tables))
-    return dict(host=host.identity, content=content.identity, read_tables=sorted(tables))
+    value = dict(host=host.identity, content=content.identity, read_tables=sorted(tables))
+    require(closed_history is None or type(closed_history) is ClosedHistory)
+    if closed_history is not None: value['closed_history'] = asdict(closed_history)
+    return value
 
 
 class _HostedStore(_ModelStore):
@@ -53,7 +83,27 @@ class _HostedStore(_ModelStore):
         meta = Runtime._metadata(self, db)
         require(self._data(db, 'rt_host', 1) == self.binding, 'INTEGRITY_FAILURE')
         require(db.execute('SELECT count(*) FROM rt_host').fetchone()[0] == 1, 'INTEGRITY_FAILURE')
+        if self.closed_history is not None:
+            require(meta['request_count'] + self.closed_history.request_count <= 256 and
+                    meta['control_count'] + self.closed_history.control_slots <= 128, 'INTEGRITY_FAILURE')
         return meta
+
+    def _budget(self, db):
+        current = super()._budget(db)
+        old = self.closed_history
+        if old is None: return current
+        return Budget(current.issued_calls + old.issued_calls, current.input_bytes + old.input_bytes,
+                      current.output_used + old.output_used, current.output_reserved,
+                      current.execution_occupied, current.quarantined)
+
+    def _request_capacity_used(self, db):
+        return super()._request_capacity_used(db) + (0 if self.closed_history is None else self.closed_history.request_count)
+
+    def _control_capacity_used(self, db):
+        return super()._control_capacity_used(db) + (0 if self.closed_history is None else self.closed_history.control_slots)
+
+    def _payload_capacity_used(self, db):
+        return super()._payload_capacity_used(db) + (0 if self.closed_history is None else self.closed_history.payload_reserved)
 
     @contextmanager
     def _transaction(self, identity, **options):
@@ -66,7 +116,7 @@ class _HostedStore(_ModelStore):
         entered = inner_started = completed = False
         failure = None
         try:
-            require(_binding(self.host, self.content) == self.binding, 'STALE')
+            require(_binding(self.host, self.content, self.closed_history) == self.binding, 'STALE')
             guard = self.host.guard(self.path)
             check = guard.__enter__()
             entered = True
@@ -78,7 +128,7 @@ class _HostedStore(_ModelStore):
             with super()._transaction(identity, **options) as db:
                 yield db
                 check()
-                require(_binding(self.host, self.content) == self.binding, 'STALE')
+                require(_binding(self.host, self.content, self.closed_history) == self.binding, 'STALE')
             completed = True
         except BaseException as exc:
             failure = exc
@@ -167,20 +217,21 @@ class HostedModelRuntime(ModelRuntime):
     is damage, never a reason to recreate it from staging or send another POST.
     Existing R2 stores must not be opened through this class (or vice versa).
     """
-    def __init__(self, path, application, *, host, content):
-        store = self._new_store(path, application, host, content)
+    def __init__(self, path, application, *, host, content, closed_history=None):
+        store = self._new_store(path, application, host, content, closed_history)
         with store._transaction(('open',), readonly=True) as db:
             store._store_id = store._metadata(db)['store_id']
         self._store = store
 
     @staticmethod
-    def _new_store(path, application, host, content):
+    def _new_store(path, application, host, content, closed_history=None):
         require(isinstance(application, ApplicationPort))
         identifier(application.identity)
         store = object.__new__(_HostedStore)
         store.path = Path(path).absolute()
         store.application, store.host, store.content = application, host, content
-        store.binding = _binding(host, content)
+        store.binding = _binding(host, content, closed_history)
+        store.closed_history = closed_history
         store._active, store._store_id = False, None
         return store
 
@@ -189,14 +240,14 @@ class HostedModelRuntime(ModelRuntime):
         raise RuntimeFailure('INVALID_INPUT', identity=('use-attach',))
 
     @classmethod
-    def attach(cls, path, configuration_bytes, application, *, host, content):
+    def attach(cls, path, configuration_bytes, application, *, host, content, closed_history=None):
         """Initialize rt_* atomically in an existing coordinator; never replace it.
 
         A second attach conflicts, including ambiguous prior commit. Reopen the
         original binding to inspect instead. Host rejects unsupported old state.
         """
         cfg = configuration.parse(configuration_bytes)
-        store = cls._new_store(path, application, host, content)
+        store = cls._new_store(path, application, host, content, closed_history)
         store._store_id = secrets.token_hex(16)
         with store._transaction(('attach',), initializing=True) as db:
             require(not db.execute("SELECT 1 FROM sqlite_master WHERE name GLOB 'rt_*'").fetchone(), 'CONFLICT')
@@ -231,9 +282,9 @@ class HostedModelRuntime(ModelRuntime):
                 item = s._unpack(row)
                 require(item['target'] == s.binding['content'] and item['key'] == asdict(key), 'INTEGRITY_FAILURE')
             require(confirm or item['verified'], 'CONTENT_PENDING')
-        require(_binding(s.host, s.content) == s.binding, 'STALE')
+        require(_binding(s.host, s.content, s.closed_history) == s.binding, 'STALE')
         found = s.content.read(key)
-        require(_binding(s.host, s.content) == s.binding, 'STALE')
+        require(_binding(s.host, s.content, s.closed_history) == s.binding, 'STALE')
         if found is None and confirm and not item['verified']:
             # External I/O released the host lock. Another handle may already
             # have confirmed this slot; do not use our stale intent to repair
@@ -242,16 +293,16 @@ class HostedModelRuntime(ModelRuntime):
                 current = s._unpack(db.execute(
                     'SELECT body,digest FROM rt_model_copies WHERE namespace=? AND request_id=? AND role=?',
                     (namespace, request_id, role)).fetchone())
-            require(_binding(s.host, s.content) == s.binding, 'STALE')
+            require(_binding(s.host, s.content, s.closed_history) == s.binding, 'STALE')
             if not current['verified']:
                 s.content.put_if_absent(key, raw)
-                require(_binding(s.host, s.content) == s.binding, 'STALE')
+                require(_binding(s.host, s.content, s.closed_history) == s.binding, 'STALE')
             # A peer's confirmation can be legitimate progress after our stale
             # absence read. Verify its actual bytes without a replacement write;
             # missing or corrupt confirmed content still fails below.
             found = s.content.read(key)
         require(type(found) is bytes and found == raw, 'INTEGRITY_FAILURE')
-        require(_binding(s.host, s.content) == s.binding, 'STALE')
+        require(_binding(s.host, s.content, s.closed_history) == s.binding, 'STALE')
         with s._transaction(('content-confirm', namespace, request_id, role), readonly=not confirm) as db:
             if confirm:
                 item['verified'] = True
