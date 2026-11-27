@@ -136,3 +136,48 @@ class ClosedHistoryTests(unittest.TestCase):
         receipt=self.r.configure('before-any-request',1,encoded(changed))
         self.assertEqual(self.r.configure('before-any-request',1,encoded(changed)),receipt)
         self.assertEqual(self.r.budget().issued_calls,0)
+
+    def test_old_accounting_survives_lost_content_ack_cancel_and_settlement(self):
+        self.attach()
+        self.r.approve('approval','openai',account='synthetic',service_revision='fixture',capability_contract=CONTRACT)
+        receipt=self.r.submit(self.req)
+        put=self.content.put_if_absent
+        def save_then_lose_ack(key,raw):
+            put(key,raw)
+            if key.role=='response':raise OSError('synthetic content acknowledgment loss')
+        with patch.object(transport,'invoke',return_value=(dict(status=200,complete=True,sent='response_received'),response())) as send:
+            with patch.object(self.content,'put_if_absent',side_effect=save_then_lose_ack):
+                with self.assertRaises(OSError):self.r.run('example','job')
+            wire=send.call_args.args[2]
+            pending=self.r.budget()
+            self.assertEqual((pending.issued_calls,pending.input_bytes,pending.output_used,pending.output_reserved,pending.execution_occupied),
+                             (3,400+len(wire),8,32,1))
+            self.r=HostedModelRuntime(self.path,self.app,host=self.host,content=self.content,closed_history=self.old)
+            self.r.cancel('example','job','cancel')
+            self.cfg['active_profile']='local'
+            self.r.configure('switch',1,encoded(self.cfg))
+            self.assertEqual(self.r.budget(),pending)
+            writes=self.content.writes
+            self.r.recover('example','job')
+            final=self.r.budget()
+            self.assertEqual((final.issued_calls,final.input_bytes,final.output_used,final.output_reserved,final.execution_occupied),
+                             (3,400+len(wire),10,0,0))
+            self.assertEqual(self.r.submit(self.req),receipt)
+            self.r.run('example','job')
+            self.assertEqual(self.r.budget(),final)
+            self.assertEqual((send.call_count,self.content.writes),(1,writes))
+
+    def test_unknown_new_call_keeps_history_and_reservation_after_reopen(self):
+        self.attach()
+        self.r.approve('approval','openai',account='synthetic',service_revision='fixture',capability_contract=CONTRACT)
+        self.r.submit(self.req)
+        with patch.object(transport,'invoke',return_value=(dict(status=None,complete=False,sent='maybe_sent'),b'')) as send:
+            self.r.run('example','job')
+            before=self.r.budget()
+            self.assertEqual((before.issued_calls,before.output_used,before.output_reserved,before.execution_occupied),(3,8,32,1))
+            self.assertEqual(before.input_bytes,400+len(send.call_args.args[2]))
+            self.r=HostedModelRuntime(self.path,self.app,host=self.host,content=self.content,closed_history=self.old)
+            self.r.cancel('example','job','cancel')
+            self.r.recover('example','job');self.r.run('example','job')
+            self.assertEqual(self.r.budget(),before)
+            self.assertEqual(send.call_count,1)
