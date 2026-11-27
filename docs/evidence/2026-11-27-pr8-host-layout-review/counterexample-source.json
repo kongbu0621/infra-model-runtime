@@ -1,0 +1,9 @@
+{
+  "before_commit": "28f710b5c434ae4b864625bbd621fc477532cdb5",
+  "before_module": "src/infra_model_runtime/hosted.py",
+  "before_module_sha256": "2ce085ad716733b38993e8ac0732a801083f352f50da3b43177aa1057f02b458",
+  "test_file": "tests/test_r3_host_layout.py",
+  "test_sha256": "516cf11a30ea3aab03d1fd83fed68a6b4ca2f6fe4cf23314a3b17c14a75c6b43",
+  "method": "New regression methods executed against unchanged pre-fix source; subsequent fixed source verification retained separately",
+  "public_runtime_before": "12d6c20a419a6eda17a83762c8ad61737c6af2d4"
+}
