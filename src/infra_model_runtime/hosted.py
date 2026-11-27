@@ -241,10 +241,13 @@ class HostedModelRuntime(ModelRuntime):
                 current = s._unpack(db.execute(
                     'SELECT body,digest FROM rt_model_copies WHERE namespace=? AND request_id=? AND role=?',
                     (namespace, request_id, role)).fetchone())
-                require(not current['verified'], 'INTEGRITY_FAILURE')
             require(_binding(s.host, s.content) == s.binding, 'STALE')
-            s.content.put_if_absent(key, raw)
-            require(_binding(s.host, s.content) == s.binding, 'STALE')
+            if not current['verified']:
+                s.content.put_if_absent(key, raw)
+                require(_binding(s.host, s.content) == s.binding, 'STALE')
+            # A peer's confirmation can be legitimate progress after our stale
+            # absence read. Verify its actual bytes without a replacement write;
+            # missing or corrupt confirmed content still fails below.
             found = s.content.read(key)
         require(type(found) is bytes and found == raw, 'INTEGRITY_FAILURE')
         require(_binding(s.host, s.content) == s.binding, 'STALE')
